@@ -14,7 +14,6 @@
 
 #include "NFLogMgr.h"
 #include "NFCheck.h"
-#include "../../../../game/LieRen/NFLogicComm/NFServerLogicMessage/proto_svr_common.pb.h"
 #include "NFComm/NFPluginModule/NFJson2PB/NFPbToJson.h"
 #include "NFComm/NFPluginModule/NFJson2PB/NFJsonToPb.h"
 #include "NFComm/NFCore/NFStringUtility.h"
