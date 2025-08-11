@@ -1505,13 +1505,16 @@ int WelfareNodeDBDataUnion::ResumeInit()
 
 void WelfareNodeDBDataUnion::Init()
 {
+    uninit_which_m_stData();
     which_m_stData = 0;
     m_stPddBuy1.Init();
+    uninit_which_m_stData2();
     which_m_stData2 = 0;
 }
 
 bool WelfareNodeDBDataUnion::FromPb(const NFrameComm::WelfareNodeDBDataUnion& cc)
 {
+    init_which_m_stData(cc.m_stData_case());
     switch (cc.m_stData_case())
     {
     case WelfareNodeDBDataUnion_test_string_tag:
@@ -1571,8 +1574,8 @@ bool WelfareNodeDBDataUnion::FromPb(const NFrameComm::WelfareNodeDBDataUnion& cc
     case 0:
         break;
     }
-    which_m_stData = cc.m_stData_case();
     if (!m_stPddBuy1.FromPb(cc.m_stpddbuy1())) return false;
+    init_which_m_stData2(cc.m_stData2_case());
     switch (cc.m_stData2_case())
     {
     case WelfareNodeDBDataUnion_m_dwBuyCount2_tag:
@@ -1584,7 +1587,6 @@ bool WelfareNodeDBDataUnion::FromPb(const NFrameComm::WelfareNodeDBDataUnion& cc
     case 0:
         break;
     }
-    which_m_stData2 = cc.m_stData2_case();
     return true;
 }
 
@@ -1776,6 +1778,7 @@ void WelfareNodeDBDataUnion::uninit_which_m_stData() {
     case 0:
         break;
     }
+    which_m_stData = 0;
 }
 
 NFShmString<FRAME_ENUM_STRING_NUM>* WelfareNodeDBDataUnion::get_m_stData_test_string() {
@@ -2011,6 +2014,7 @@ void WelfareNodeDBDataUnion::uninit_which_m_stData2() {
     case 0:
         break;
     }
+    which_m_stData2 = 0;
 }
 
 uint32_t* WelfareNodeDBDataUnion::get_m_stData2_m_dwBuyCount2() {

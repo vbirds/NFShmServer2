@@ -7,6 +7,15 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFDataStream.h
+ * @brief 内存数据流类定义
+ * 
+ * 此文件定义了一个内存数据流类，用于在内存中进行数据的读写操作。
+ * 该类封装了内存中的数据流，提供了类似文件流的接口，支持读写操作、
+ * 随机访问、容量管理等功能。
+ */
+
 #pragma once
 
 #include <string>
@@ -19,169 +28,337 @@
 
 #include "NFPlatform.h"
 
-// The class encapsulates data stream in memory.
+/**
+ * @brief 内存数据流类
+ * 
+ * NFDataStream类封装了内存中的数据流操作，提供了高效的数据读写功能。
+ * 该类主要特性包括：
+ * 
+ * - 内存管理：自动管理内存分配和释放
+ * - 双向读写：支持读写操作，维护独立的读写位置
+ * - 容量扩展：根据需要自动扩展内存容量
+ * - 字节序支持：提供小端序的读写操作
+ * - 文件操作：支持从文件读取和写入到文件
+ * - 状态管理：维护读写操作的状态信息
+ * 
+ * 使用方法：
+ * @code
+ * NFDataStream stream(1024);  // 创建1KB容量的流
+ * stream.Write("Hello", 5);   // 写入数据
+ * stream.SeekReadIndex(0);    // 重置读位置
+ * char buffer[6];
+ * stream.Read(buffer, 5);     // 读取数据
+ * buffer[5] = '\0';
+ * @endcode
+ */
 class _NFExport NFDataStream
 {
 public:
+	/**
+	 * @brief 数据流状态枚举
+	 * 
+	 * 定义了数据流操作的各种状态，用于错误检测和状态管理。
+	 */
 	enum Status
 	{
+		/** @brief 正常状态，没有错误 */
 		kGood = 0,
+		/** @brief 读操作错误状态 */
 		kReadBad = 1 << 1,
+		/** @brief 写操作错误状态 */
 		kWriteBad = 1 << 2,
 	};
 
 public:
+	/**
+	 * @brief 默认构造函数
+	 * 创建一个空的数据流
+	 */
 	NFDataStream();
 
-	// Construct with memory size.
+	/**
+	 * @brief 构造函数（指定容量）
+	 * 创建一个具有指定内存大小的数据流
+	 * @param buf_size 缓冲区大小（字节）
+	 */
 	explicit NFDataStream(size_t buf_size);
 
-	// Construct with outside memory and size.
-	// @note if need_free is true, the memory pointed by d will be released by calling free(...)
-	//       when this instance is released, so d MUST be allocated by call to malloc(...)
+	/**
+	 * @brief 构造函数（外部内存）
+	 * 使用外部内存创建数据流
+	 * @param d 指向外部内存的指针
+	 * @param len 内存长度
+	 * @param need_free 是否需要释放内存，如果为true，则内存必须由malloc()分配
+	 * @note 如果need_free为true，指针d指向的内存将在实例释放时通过free()释放，
+	 *       因此d必须通过malloc()分配
+	 */
 	explicit NFDataStream(void* d, size_t len, bool need_free);
 
+	/**
+	 * @brief 析构函数
+	 * 释放数据流占用的内存资源
+	 */
 	~NFDataStream();
 
+	/**
+	 * @brief 获取容量
+	 * @return uint32_t 数据流的总容量（字节）
+	 */
 	uint32_t Capacity() const
 	{
 		return capacity_;
 	}
 
-	// Assure convert to text.
-	// @note Add ending null to the stream, but do not change the data size.
+	/**
+	 * @brief 转换为文本
+	 * 在流的末尾添加空字符，但不改变数据大小
+	 * @note 添加结束空字符到流中，但不改变数据大小
+	 */
 	void ToText();
 
-	// Query whether the read operation is bad.
+	/**
+	 * @brief 查询读操作是否错误
+	 * @return bool 如果读操作处于错误状态则返回true
+	 */
 	bool IsReadBad() const;
 
-	// Query whether the write operation is bad.
+	/**
+	 * @brief 查询写操作是否错误
+	 * @return bool 如果写操作处于错误状态则返回true
+	 */
 	bool IsWriteBad() const;
 
-	// Sets stats of the file.
-	// @param bits - kWriteBad or kReadBad or 0 or kWriteBad|kReadBad
+	/**
+	 * @brief 设置流的状态
+	 * @param bits 状态位 - kWriteBad或kReadBad或0或kWriteBad|kReadBad
+	 */
 	void SetStatus(uint32_t bits);
 
-	// Open the raw file and read all the file data to this memory data stream
-	// @note It is only a helper method.
+	/**
+	 * @brief 从文件读取数据
+	 * 打开指定文件并将所有文件数据读取到此内存数据流中
+	 * @param filename 文件名
+	 * @return bool 成功返回true，失败返回false
+	 * @note 这只是一个辅助方法
+	 */
 	bool ReadFile(const string& filename);
 
-	// @brief: Helper method to save data to a disk file.
-	// @param[in]: const string& filename, the path name of the file, it can include dir path
-	// @return: bool
+	/**
+	 * @brief 将数据保存到文件
+	 * 将数据流中的数据保存到磁盘文件的辅助方法
+	 * @param filename 文件路径名，可以包含目录路径
+	 * @return bool 成功返回true，失败返回false
+	 */
 	bool WriteFile(const string& filename);
 
-	// Read data form data stream, the result is stored in buf
-	// @remark The read count is in len,it may be lesser than the buf_len,
-	//         the len will be zero if read nothing or there is an error occurred
-	// @param  buf: the buffer which the result will be stored
-	// @param  buf_len: the buf length in byte
-	// @return the return value is true if read succeed, else false
+	/**
+	 * @brief 从数据流中读取数据
+	 * 从数据流中读取数据，结果存储在buf中
+	 * @param buf 存储结果的缓冲区
+	 * @param buf_len 缓冲区长度（字节）
+	 * @return bool 读取成功返回true，否则返回false
+	 * @note 实际读取的字节数在len中，可能小于buf_len，
+	 *       如果没有读取到数据或发生错误，len将为零
+	 */
 	bool Read(void* buf, size_t buf_len);
 
-	// Write a value to data stream
-	// @param  v: the value which will be written
-	// @note   the return value is true if write succeed, else false
+	/**
+	 * @brief 写入单个字节
+	 * 向数据流写入一个字节值
+	 * @param ch 要写入的字节值
+	 * @return bool 写入成功返回true，否则返回false
+	 */
 	bool Write(int8_t ch);
 
-	// Read 4 bytes from this data stream, the data in this stream is Little Endian
-	//  In little endian CPU system:
-	//      char* pc = pU32;
-	//      buffer_[0] -> pc[0]
-	//      buffer_[1] -> pc[1]
-	//      buffer_[2] -> pc[2]
-	//      buffer_[3] -> pc[3]
-	//  In big endian CPU system:
-	//      char* pc = pint;
-	//      buffer_[0] -> pc[3]
-	//      buffer_[1] -> pc[2]
-	//      buffer_[2] -> pc[1]
-	//      buffer_[3] -> pc[0]
-	// @param  pint : the value will stored there
-	// @return the return value is true if read succeed, else false
+	/**
+	 * @brief 读取小端序32位无符号整数
+	 * 
+	 * 从数据流中读取4个字节，数据以小端序存储：
+	 * 在小端CPU系统中：
+	 *     char* pc = pU32;
+	 *     buffer_[0] -> pc[0]
+	 *     buffer_[1] -> pc[1]
+	 *     buffer_[2] -> pc[2]
+	 *     buffer_[3] -> pc[3]
+	 * 在大端CPU系统中：
+	 *     char* pc = pint;
+	 *     buffer_[0] -> pc[3]
+	 *     buffer_[1] -> pc[2]
+	 *     buffer_[2] -> pc[1]
+	 *     buffer_[3] -> pc[0]
+	 * 
+	 * @param pU32 存储值的位置
+	 * @return bool 读取成功返回true，否则返回false
+	 */
 	bool ReadLE(uint32_t* pU32);
 
-	// Write 4 bytes int data to this data stream, the data in this stream is Little Endian
-	//  In little endian CPU system:
-	//      char* pc = &i;
-	//      pc[0] -> buffer_[0]
-	//      pc[1] -> buffer_[1]
-	//      pc[2] -> buffer_[2]
-	//      pc[3] -> buffer_[3]
-	//  In big endian CPU system:
-	//      char* pc = &i;
-	//      pc[3] -> buffer_[0]
-	//      pc[2] -> buffer_[1]
-	//      pc[1] -> buffer_[2]
-	//      pc[0] -> buffer_[3]
-	// @param  i : the int which will be written
-	// @return true if write successfully, else false
+	/**
+	 * @brief 写入小端序32位无符号整数
+	 * 
+	 * 向数据流写入4字节整数数据，数据以小端序存储：
+	 * 在小端CPU系统中：
+	 *     char* pc = &i;
+	 *     pc[0] -> buffer_[0]
+	 *     pc[1] -> buffer_[1]
+	 *     pc[2] -> buffer_[2]
+	 *     pc[3] -> buffer_[3]
+	 * 在大端CPU系统中：
+	 *     char* pc = &i;
+	 *     pc[3] -> buffer_[0]
+	 *     pc[2] -> buffer_[1]
+	 *     pc[1] -> buffer_[2]
+	 *     pc[0] -> buffer_[3]
+	 * 
+	 * @param i 要写入的整数
+	 * @return bool 写入成功返回true，否则返回false
+	 */
 	bool WriteLE(uint32_t i);
 
-	// Write data to data stream
-	// @param buf: the buffer where stored the data to be written to the stream
-	// @param buf_len: the buf length in byte
-	// @return true if write successfully, else false
+	/**
+	 * @brief 写入数据
+	 * 向数据流写入指定长度的数据
+	 * @param buf 存储要写入数据的缓冲区
+	 * @param buf_len 缓冲区长度（字节）
+	 * @return bool 写入成功返回true，否则返回false
+	 */
 	bool Write(const void* buf, size_t buf_len);
 
-	// Sets the capacity of the stream to at least size,
-	//  the stream's data buffer maybe extend.
-	// @note It will not change any flag of the stream if successfully
-	// @return false if failed to allocate enough memory
-	//   and set the reading and writing flag as kReadBad and kWriteBad
+	/**
+	 * @brief 预留容量
+	 * 
+	 * 将流的容量设置为至少size，流的数据缓冲区可能会扩展。
+	 * 如果成功，不会改变流的任何标志。
+	 * 
+	 * @param size 所需的最小容量
+	 * @return bool 如果无法分配足够内存则返回false，
+	 *         并将读写标志设置为kReadBad和kWriteBad
+	 */
 	bool Reserve(size_t size);
 
+	/**
+	 * @brief 获取数据大小
+	 * @return size_t 当前数据流中的数据大小
+	 */
 	size_t Size() const
 	{
 		return GetWriteIndex();
 	}
 
+	/**
+	 * @brief 获取数据指针
+	 * @return const char* 指向数据流内容的指针
+	 */
 	const char* Data() const
 	{
 		return reinterpret_cast<const char*>(GetCache());
 	}
 
+	/**
+	 * @brief 设置写入索引位置
+	 * @param offset 相对偏移量
+	 * @return NFDataStream& 返回自身引用，支持链式调用
+	 */
 	NFDataStream& SeekWriteIndex(int32_t offset);
 
+	/**
+	 * @brief 设置读取索引位置
+	 * @param offset 相对偏移量
+	 * @return NFDataStream& 返回自身引用，支持链式调用
+	 */
 	NFDataStream& SeekReadIndex(int32_t offset);
 
+	/**
+	 * @brief 获取写入索引
+	 * @return uint32_t 当前写入位置索引
+	 */
 	uint32_t GetWriteIndex() const
 	{
 		return write_index_;
 	}
 
+	/**
+	 * @brief 获取读取索引
+	 * @return uint32_t 当前读取位置索引
+	 */
 	uint32_t GetReadIndex() const
 	{
 		return read_index_;
 	}
 
+	/**
+	 * @brief 重置内存
+	 * 将缓冲区中的数据移动到开头，并更新读写索引
+	 */
 	void ResetMemory();
 
-	// get the buffer base address pointer, don't delete the returned pointer
+	/**
+	 * @brief 获取缓冲区基地址指针
+	 * @return void* 缓冲区基地址指针
+	 */
 	void* GetCache() const;
 
-	// return the char at the index of the data stream
+	/**
+	 * @brief 获取指定索引处的字符
+	 * @param index 字符索引
+	 * @return uint8_t 字符值
+	 */
 	uint8_t CharAt(size_t index) const;
 
-	// Returns the number of bytes of the unread portion of the buffer
+	/**
+	 * @brief 获取未读取部分的字节数
+	 * @return uint32_t 未读取的字节数
+	 */
 	uint32_t GetReadableSize() const;
+	/**
+	 * @brief 获取可写入的字节数
+	 * @return uint32_t 可写入的字节数
+	 */
 	uint32_t GetWriteableSize() const;
 
-	// Gets buffer pointer to the current read position.
+	/**
+	 * @brief 获取当前读取位置的缓冲区指针
+	 * @return void* 当前读取位置的缓冲区指针
+	 */
 	void* GetCurrentReadBuffer() const;
+	/**
+	 * @brief 获取当前写入位置的缓冲区指针
+	 * @return void* 当前写入位置的缓冲区指针
+	 */
 	void* GetCurrentWriteBuffer() const;
 
-	// Reset the data stream
+	/**
+	 * @brief 重置数据流
+	 * 将写入索引和读取索引重置为0，并清除状态
+	 */
 	void Reset();
 
+	/**
+	 * @brief 交换数据流内容
+	 * @param r 要交换的数据流
+	 */
 	void Swap(NFDataStream& r);
 
+	/**
+	 * @brief 调整内存大小
+	 * @param len 新的内存大小
+	 * @return bool 调整成功返回true，否则返回false
+	 */
 	bool Resize(size_t len);
 
-	// Expand size of memory to the current stack.
-	// if it failed we SetStatus(kReadBad | kWriteBad) and return false.
+	/**
+	 * @brief 扩展内存大小
+	 * 如果内存扩展失败，则设置状态为kReadBad | kWriteBad并返回false。
+	 * @param nSizeToAdd 要添加的内存大小
+	 * @return bool 扩展成功返回true，否则返回false
+	 */
 	bool Expand(uint32_t nSizeToAdd);
 
+	/**
+	 * @brief 判断两个数据流内容是否相等
+	 * @param first 第一个数据流
+	 * @param second 第二个数据流
+	 * @return bool 如果内容相等返回true，否则返回false
+	 */
 	static bool IsContentEquals(const NFDataStream& first, const NFDataStream& second);
 
 	// The same interfaces for std::ostream/istream

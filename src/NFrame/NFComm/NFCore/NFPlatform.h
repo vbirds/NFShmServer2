@@ -6,6 +6,15 @@
 //    @Module           :    NFCore
 //
 // ------------------------------------------------------------------------
+
+/**
+ * @file NFPlatform.h
+ * @brief 平台相关的头文件和宏定义
+ * 
+ * 此文件包含了跨平台的宏定义、类型定义、断言函数以及平台特定的函数包装。
+ * 主要用于屏蔽不同平台之间的差异，提供统一的接口。
+ */
+
 #pragma once
 
 #include "NFMacros.h"
@@ -33,11 +42,13 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+/** @brief EPOCH文件时间常量 (Linux) */
 #define EPOCHFILETIME 11644473600000000ULL
 #else
 #include <windows.h>
 #include <time.h>
 #include <process.h>
+/** @brief EPOCH文件时间常量 (Windows) */
 #define EPOCHFILETIME 11644473600000000Ui64
 #endif
 
@@ -47,9 +58,26 @@ using namespace std;
 
 #include <assert.h>
 
+/**
+ * @brief 通用断言宏，当条件不满足时调用NFCommAssertFail
+ * @param condition 需要检查的条件
+ */
 #define NF_COMM_ASSERT(condition)                    if (!(condition)) NFCommAssertFail(__FILE__, __LINE__); else { }
+
+/**
+ * @brief 带消息的断言宏，当条件不满足时调用NFCommAssertFail并显示消息
+ * @param condition 需要检查的条件
+ * @param msg 要显示的错误消息
+ */
 #define NF_COMM_ASSERT_MSG(condition, msg)            if (!(condition)) NFCommAssertFail(__FILE__, __LINE__, msg); else { }
 
+/**
+ * @brief 断言失败处理函数
+ * 当断言失败时，此函数会输出文件名、行号和可选的错误消息
+ * @param file 断言失败的文件名
+ * @param line 断言失败的行号
+ * @param message 可选的错误消息，默认为空字符串
+ */
 inline void NFCommAssertFail(const char *const file, const unsigned int line, const std::string &message = std::string())
 {
     fprintf(stderr, "FAIL in %s (%d)", file, line);
@@ -66,32 +94,57 @@ inline void NFCommAssertFail(const char *const file, const unsigned int line, co
 }
 
 #if NF_PLATFORM == NF_PLATFORM_WIN
+/** @brief Windows平台的字长定义 */
 #define __WORDSIZE 64
+/** @brief Windows平台的安全sprintf宏 */
 #define NFSPRINTF sprintf_s
+/** @brief Windows平台的字符串比较宏 */
 #define NFSTRICMP stricmp
+/** @brief Windows平台获取进程ID的宏 */
 #define NFGetPID() getpid()
+/** @brief Windows平台的线程ID类型定义 */
 typedef unsigned int NF_THREAD_ID;
 
+/**
+ * @brief 获取当前线程ID (Windows平台)
+ * @return 当前线程的ID
+ */
 inline NF_THREAD_ID ThreadId()
 {
     return GetCurrentThreadId();
 }
 
+/**
+ * @brief 线程安全的localtime函数 (Windows平台)
+ * @param timep 指向time_t的指针
+ * @param result 用于存储结果的tm结构体指针
+ * @return 返回result指针
+ */
 inline struct tm* localtime_r(const time_t* timep, struct tm* result)
 {
     localtime_s(result, timep);
     return result;
 }
 
+/** @brief Windows平台的字符串比较宏定义 */
 #define strcasecmp   _stricmp
+/** @brief Windows平台的字符串长度比较宏定义 */
 #define strncasecmp  _strnicmp
 #else
+/** @brief Linux平台的sprintf宏 */
 #define NFSPRINTF snprintf
+/** @brief Linux平台的字符串比较宏 */
 #define NFSTRICMP strcasecmp
 
+/** @brief Linux平台获取进程ID的宏 */
 #define NFGetPID() getpid()
+/** @brief Linux平台的线程ID类型定义 */
 typedef unsigned long int NF_THREAD_ID;
 
+/**
+ * @brief 获取当前线程ID (Linux平台)
+ * @return 当前线程的ID
+ */
 inline NF_THREAD_ID ThreadId()
 {
     return syscall(SYS_gettid);

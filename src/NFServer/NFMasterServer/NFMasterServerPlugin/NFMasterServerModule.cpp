@@ -4,7 +4,62 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFCMasterServerModule
+//    @Desc             :    NFShmXFrame主服务器模块实现
+//                          实现主服务器模块的核心功能，包括服务器管理和协调
+//                          支持服务器注册、状态管理和负载均衡
 //
+//    @Summary          :    主服务器是分布式游戏服务器架构中的核心组件
+//                          负责管理所有其他服务器的注册、状态监控和协调工作
+//                          提供服务器集群管理、负载均衡、系统监控等功能
+//                          支持HTTP管理接口和服务器控制命令
+//
+//    @Architecture     :    1. 服务器注册管理：处理各种类型服务器的注册请求
+//                          2. 状态监控：实时监控所有服务器的运行状态
+//                          3. 负载均衡：协调服务器间的负载分配
+//                          4. 集群管理：管理服务器集群的拓扑结构
+//                          5. 系统控制：提供服务器启动、停止、重启等控制功能
+//                          6. HTTP接口：提供Web管理界面
+//                          7. 全局服务器：连接全局服务器进行跨服管理
+//
+//    @Server Types     :    1. Game Server: 游戏逻辑服务器
+//                          2. Login Server: 登录服务器
+//                          3. World Server: 世界服务器
+//                          4. Proxy Server: 代理服务器
+//                          5. Route Server: 路由服务器
+//                          6. Route Agent Server: 路由代理服务器
+//                          7. Center Server: 中心服务器
+//                          8. Store Server: 存储服务器
+//                          9. SNS Server: 社交网络服务器
+//                          10. Web Server: Web服务器
+//
+//    @Management       :    1. 服务器注册：处理新服务器的注册请求
+//                          2. 状态同步：向所有服务器同步服务器状态
+//                          3. 服务器报告：接收和处理服务器状态报告
+//                          4. 负载监控：监控各服务器的负载情况
+//                          5. 故障检测：检测和处理服务器故障
+//                          6. 自动恢复：支持服务器的自动重启和恢复
+//
+//    @HTTP Interface   :    1. /reload: 重新加载指定服务器
+//                          2. /reloadall: 重新加载所有服务器
+//                          3. /restart: 重启指定服务器
+//                          4. /restartall: 重启所有服务器
+//                          5. /start: 启动指定服务器
+//                          6. /startall: 启动所有服务器
+//                          7. /stop: 停止指定服务器
+//                          8. /stopall: 停止所有服务器
+//                          9. /killall: 强制关闭所有服务器
+//
+//    @Error Handling   :    1. 服务器断开检测和处理
+//                          2. 注册失败的错误处理
+//                          3. 状态同步失败的重试机制
+//                          4. 服务器控制命令的响应处理
+//                          5. HTTP请求的异常处理
+//
+//    @Performance      :    1. 高效的服务器状态管理
+//                          2. 异步消息处理机制
+//                          3. 定时器驱动的状态同步
+//                          4. 内存优化的服务器数据存储
+//                          5. 并发安全的服务器操作
 // -------------------------------------------------------------------------
 
 #include <NFCommPlugin/NFNetPlugin/NFEmailSender.h>
@@ -31,19 +86,56 @@
 #define NF_MASTER_TIMER_CLEAR_SERVER_DATA 1
 #define NF_MASTER_TIMER_CLEAR_SERVER_DATA_TIME 600000
 
+/**
+ * @brief 构造函数
+ *
+ * 初始化主服务器模块，设置插件管理器
+ *
+ * @param p 插件管理器指针
+ */
 NFCMasterServerModule::NFCMasterServerModule(NFIPluginManager* p):NFIMasterServerModule(p)
 {
 }
 
+/**
+ * @brief 析构函数
+ *
+ * 清理主服务器模块资源
+ */
 NFCMasterServerModule::~NFCMasterServerModule()
 {
 }
 
-bool NFCMasterServerModule::Awake()
+/**
+ * @brief 模块唤醒 - 主服务器模块初始化
+ *
+ * 在模块初始化完成后调用，进行必要的初始化工作：
+ * - 注册RPC服务和消息回调
+ * - 添加HTTP请求处理器
+ * - 绑定服务器端口
+ * - 订阅服务器事件
+ * - 设置定时器
+ *
+ * @details 初始化流程：
+ * 1. 注册Master RPC服务，处理服务器注册请求
+ * 2. 注册各种消息回调，处理服务器报告和控制命令
+ * 3. 添加HTTP请求处理器，提供Web管理接口
+ * 4. 绑定服务器端口，监听客户端连接
+ * 5. 订阅服务器死亡事件，处理服务器故障
+ * 6. 设置定时器，定期保存服务器数据和清理过期数据
+ *
+ * @details 核心功能：
+ * - 服务器注册管理：处理各种类型服务器的注册请求
+ * - 状态监控：实时监控所有服务器的运行状态
+ * - HTTP管理接口：提供Web管理界面，支持服务器控制命令
+ * - 全局服务器连接：连接全局服务器进行跨服管理
+ * - 故障检测和恢复：自动检测服务器故障并支持自动恢复
+ *
+ * @return 初始化结果状态码，0表示成功，-1表示失败
+ */
+int NFCMasterServerModule::Awake()
 {
-    /**
-     * @brief Master Rpc Service
-     */
+    // 注册Master RPC服务
     FindModule<NFIMessageModule>()->AddRpcService<NF_MODULE_FRAME, NFrame::NF_SERVER_TO_SERVER_REGISTER>(NF_ST_MASTER_SERVER, this, &NFCMasterServerModule::OnServerRegisterRpcService);
 
 
@@ -86,7 +178,7 @@ bool NFCMasterServerModule::Awake()
 		else
 		{
 			NFLogInfo(NF_LOG_DEFAULT, 0, "master server listen failed!, serverId:{}, ip:{}, port:{}", pConfig->ServerId, pConfig->ServerIp, pConfig->ServerPort);
-			return false;
+			return -1;
 		}
 
         std::string httpUrl = NF_FORMAT("http://{}:{}", pConfig->ServerIp, pConfig->HttpPort);
@@ -94,7 +186,7 @@ bool NFCMasterServerModule::Awake()
         if (ret == 0)
         {
             NFLogInfo(NF_LOG_DEFAULT, 0, "master server listen http failed!, serverId:{}, ip:{}, httpport:{}", pConfig->ServerId, pConfig->ServerIp, pConfig->HttpPort);
-            return false;
+            return -1;
         }
 
         NFLogInfo(NF_LOG_DEFAULT, 0, "master server listen http success, serverId:{}, ip:{}, port:{}", pConfig->ServerId, pConfig->ServerIp, pConfig->HttpPort);
@@ -102,13 +194,27 @@ bool NFCMasterServerModule::Awake()
 	else
 	{
 		NFLogError(NF_LOG_DEFAULT, 0, "I Can't get the Master Server config!");
-		return false;
+		return -1;
 	}
 
     Subscribe(NF_ST_MASTER_SERVER, NFrame::NF_EVENT_SERVER_DEAD_EVENT, NFrame::NF_EVENT_SERVER_TYPE, 0, __FUNCTION__);
-	return true;
+	return 0;
 }
 
+/**
+ * @brief 处理服务器注册RPC服务
+ *
+ * 处理服务器注册RPC请求，包括：
+ * - 解析服务器信息列表
+ * - 创建或更新服务器数据
+ * - 同步服务器信息到其他服务器
+ * - 返回注册响应
+ *
+ * @param unLinkId 连接ID
+ * @param reqeust 请求数据
+ * @param respone 响应数据
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCMasterServerModule::OnServerRegisterRpcService(uint64_t unLinkId, NFrame::ServerInfoReportList& reqeust, NFrame::ServerInfoReportListRespne& respone)
 {
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -163,6 +269,38 @@ int NFCMasterServerModule::OnServerRegisterRpcService(uint64_t unLinkId, NFrame:
     return 0;
 }
 
+/**
+ * @brief 处理服务器注册 - 主服务器注册处理
+ *
+ * 处理来自各种服务器的注册请求，维护服务器列表和状态：
+ * - 解析服务器注册信息
+ * - 验证服务器信息有效性
+ * - 创建或更新服务器数据
+ * - 同步服务器信息到其他服务器
+ * - 发送注册响应
+ *
+ * @param unLinkId 连接ID，标识注册服务器的连接
+ * @param packet 数据包，包含服务器注册信息
+ *
+ * @details 处理流程：
+ * 1. 解析服务器信息报告列表
+ * 2. 验证服务器信息的完整性和有效性
+ * 3. 检查服务器是否已存在，如果不存在则创建新的服务器数据
+ * 4. 更新服务器的连接ID和服务器信息
+ * 5. 根据服务器状态进行不同的同步处理：
+ *    - 初始化状态：同步其他服务器信息到新服务器
+ *    - 正常运行状态：同步新服务器信息到其他服务器
+ * 6. 发送注册成功响应给注册的服务器
+ * 7. 记录详细的注册日志
+ *
+ * @note 重要约束：
+ * - 每个服务器只能注册一次
+ * - 服务器重新连接时会更新连接信息
+ * - 注册成功后会自动同步到所有其他服务器
+ * - 支持代理服务器的特殊处理
+ *
+ * @return 处理结果状态码，0表示成功，-1表示失败
+ */
 int NFCMasterServerModule::OnServerRegisterProcess(uint64_t unLinkId, NFDataPackage& packet)
 {
 	NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -232,6 +370,36 @@ int NFCMasterServerModule::OnServerRegisterProcess(uint64_t unLinkId, NFDataPack
 	return 0;
 }
 
+/**
+ * @brief 处理服务器报告 - 服务器状态报告处理
+ *
+ * 处理来自各种服务器的状态报告，更新服务器状态信息：
+ * - 解析服务器状态报告
+ * - 更新服务器运行状态
+ * - 监控服务器健康度
+ * - 处理服务器状态变化
+ * - 同步状态信息到其他服务器
+ *
+ * @param unLinkId 连接ID，标识报告服务器的连接
+ * @param packet 数据包，包含服务器状态报告信息
+ *
+ * @details 处理流程：
+ * 1. 解析服务器状态报告列表
+ * 2. 更新服务器的运行状态和系统信息
+ * 3. 监控服务器的CPU、内存等资源使用情况
+ * 4. 检测服务器状态变化，如启动、停止、故障等
+ * 5. 将状态变化同步到其他相关服务器
+ * 6. 记录服务器状态变化日志
+ * 7. 触发相应的状态处理逻辑
+ *
+ * @note 重要说明：
+ * - 服务器状态报告包含CPU、内存、连接数等系统信息
+ * - 状态变化会触发相应的处理逻辑
+ * - 故障服务器会被标记并通知其他服务器
+ * - 支持服务器状态的实时监控
+ *
+ * @return 处理结果状态码，0表示成功，-1表示失败
+ */
 int NFCMasterServerModule::OnServerReportProcess(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFrame::ServerInfoReportList xMsg;
@@ -259,6 +427,15 @@ int NFCMasterServerModule::OnServerReportProcess(uint64_t unLinkId, NFDataPackag
     return 0;
 }
 
+/**
+ * @brief 处理服务器信息转储
+ *
+ * 处理服务器信息转储请求，输出服务器状态信息
+ *
+ * @param unLinkId 连接ID
+ * @param packet 数据包
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCMasterServerModule::OnServerDumpInfoProcess(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -284,6 +461,15 @@ int NFCMasterServerModule::OnServerDumpInfoProcess(uint64_t unLinkId, NFDataPack
     return 0;
 }
 
+/**
+ * @brief 处理杀死所有服务器
+ *
+ * 处理杀死所有服务器的请求，关闭所有服务器连接
+ *
+ * @param unLinkId 连接ID
+ * @param packet 数据包
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCMasterServerModule::OnServerKillAllServerProcess(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFrame::Proto_KillAllServerNtf xMsg;
@@ -301,6 +487,15 @@ int NFCMasterServerModule::OnServerKillAllServerProcess(uint64_t unLinkId, NFDat
     return 0;
 }
 
+/**
+ * @brief 处理代理服务器Socket事件
+ *
+ * 处理代理服务器相关的Socket连接事件，包括连接成功和断开连接
+ *
+ * @param nEvent 事件类型
+ * @param unLinkId 连接ID
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCMasterServerModule::OnProxySocketEvent(eMsgType nEvent, uint64_t unLinkId)
 {
 	NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -318,6 +513,15 @@ int NFCMasterServerModule::OnProxySocketEvent(eMsgType nEvent, uint64_t unLinkId
 	return 0;
 }
 
+/**
+ * @brief 处理其他消息
+ *
+ * 处理来自代理服务器的未注册协议消息
+ *
+ * @param unLinkId 连接ID
+ * @param packet 数据包
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCMasterServerModule::OnHandleOtherMessage(uint64_t unLinkId, NFDataPackage& packet)
 {
 	NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -327,16 +531,16 @@ int NFCMasterServerModule::OnHandleOtherMessage(uint64_t unLinkId, NFDataPackage
 	return 0;
 }
 
-bool NFCMasterServerModule::Execute()
+int NFCMasterServerModule::Tick()
 {
     ServerReport();
-	return true;
+	return 0;
 }
 
-bool NFCMasterServerModule::OnDynamicPlugin()
+int NFCMasterServerModule::OnDynamicPlugin()
 {
 	FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_MASTER_SERVER);
-	return true;
+	return 0;
 }
 
 int NFCMasterServerModule::OnExecute(uint32_t serverType, uint32_t nEventID, uint32_t bySrcType, uint64_t nSrcID, const google::protobuf::Message* pMessage)
@@ -344,6 +548,14 @@ int NFCMasterServerModule::OnExecute(uint32_t serverType, uint32_t nEventID, uin
     return 0;
 }
 
+/**
+ * @brief 定时器回调
+ *
+ * 处理定时器事件，包括保存服务器数据和清理服务器数据
+ *
+ * @param nTimerID 定时器ID
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCMasterServerModule::OnTimer(uint32_t nTimerID)
 {
     if (nTimerID == 10000)
@@ -359,7 +571,14 @@ int NFCMasterServerModule::OnTimer(uint32_t nTimerID)
     return 0;
 }
 
-
+/**
+ * @brief 处理客户端断开连接
+ *
+ * 处理客户端断开连接事件，清理相关资源
+ *
+ * @param unLinkId 连接ID
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCMasterServerModule::OnClientDisconnect(uint64_t unLinkId)
 {
 	NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -375,6 +594,37 @@ int NFCMasterServerModule::OnClientDisconnect(uint64_t unLinkId)
 	return 0;
 }
 
+/**
+ * @brief 同步其他服务器信息到指定服务器
+ *
+ * 将所有其他已注册的服务器信息同步到指定的目标服务器：
+ * - 获取所有已注册的服务器列表
+ * - 过滤出要同步的源服务器
+ * - 发送服务器信息到目标服务器
+ * - 处理同步结果
+ *
+ * @param pServerData 目标服务器数据指针
+ *
+ * @details 处理流程：
+ * 1. 获取所有已注册的服务器列表
+ * 2. 过滤出要同步的源服务器（排除目标服务器和系统服务器）
+ * 3. 根据世界ID和区服ID进行过滤：
+ *    - 同世界同区服的服务器直接同步
+ *    - 跨区服的特殊服务器（路由服务器、代理服务器等）根据跨服标志同步
+ * 4. 构建服务器信息报告列表
+ * 5. 向目标服务器发送所有其他服务器的信息
+ * 6. 处理发送结果
+ * 7. 记录同步日志
+ *
+ * @note 重要说明：
+ * - 同步的源服务器包括游戏服务器、登录服务器等
+ * - 系统服务器（如主服务器、路由服务器等）不参与同步
+ * - 目标服务器会收到所有其他服务器的完整信息
+ * - 同步操作是异步的，不会阻塞主服务器
+ * - 支持跨服服务器的特殊同步逻辑
+ *
+ * @return 处理结果状态码，0表示成功，-1表示失败
+ */
 int NFCMasterServerModule::SynOtherServerToServer(NF_SHARE_PTR<NFServerData> pServerData)
 {
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -429,6 +679,37 @@ int NFCMasterServerModule::SynOtherServerToServer(NF_SHARE_PTR<NFServerData> pSe
     return 0;
 }
 
+/**
+ * @brief 同步服务器信息到其他服务器
+ *
+ * 将新注册的服务器信息同步到所有其他已注册的服务器：
+ * - 获取所有已注册的服务器列表
+ * - 过滤出需要同步的目标服务器
+ * - 发送服务器信息到目标服务器
+ * - 处理同步结果
+ *
+ * @param pServerData 要同步的服务器数据指针
+ *
+ * @details 处理流程：
+ * 1. 获取所有已注册的服务器列表
+ * 2. 过滤出需要同步的目标服务器（排除自身和系统服务器）
+ * 3. 根据世界ID和区服ID进行过滤：
+ *    - 同世界同区服的服务器直接同步
+ *    - 跨区服的特殊服务器（路由服务器、代理服务器等）根据跨服标志同步
+ * 4. 构建服务器信息报告列表
+ * 5. 向每个目标服务器发送服务器信息
+ * 6. 处理发送结果，记录成功和失败的数量
+ * 7. 记录同步日志
+ *
+ * @note 重要说明：
+ * - 同步的目标服务器包括游戏服务器、登录服务器等
+ * - 系统服务器（如主服务器、路由服务器等）不参与同步
+ * - 同步失败不会影响主服务器的正常运行
+ * - 同步操作是异步的，不会阻塞主服务器
+ * - 支持跨服服务器的特殊同步逻辑
+ *
+ * @return 处理结果状态码，0表示成功，-1表示失败
+ */
 int NFCMasterServerModule::SynServerToOthers(NF_SHARE_PTR<NFServerData> pServerData)
 {
 	NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -767,12 +1048,12 @@ int NFCMasterServerModule::HandleReloadAllSeverRsp(uint64_t unLinkId, NFDataPack
     return 0;
 }
 
-bool NFCMasterServerModule::Init() {
+int NFCMasterServerModule::Init() {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(NF_ST_MASTER_SERVER);
-    CHECK_EXPR(pConfig, false, "");
+    CHECK_NULL(0, pConfig);
 
     FindModule<NFIMessageModule>()->SendWxWork(NF_ST_MASTER_SERVER, "Server:" + pConfig->ServerName + " Start Info:\n" + pConfig->ServerIp);
-    return true;
+    return 0;
 }
 
 int NFCMasterServerModule::ConnectGlobalServer() {

@@ -19,19 +19,19 @@ NFCEventModule::~NFCEventModule()
 {
 }
 
-bool NFCEventModule::BeforeShut()
+int NFCEventModule::BeforeShut()
 {
-	return true;
+	return 0;
 }
 
-bool NFCEventModule::Shut()
+int NFCEventModule::Shut()
 {
-	return true;
+	return 0;
 }
 
-bool NFCEventModule::Execute()
+int NFCEventModule::Tick()
 {
-	return true;
+	return 0;
 }
 
 //发送执行事件

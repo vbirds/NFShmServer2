@@ -4,6 +4,11 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFCore
+//    @Desc             :    共享内存封装类实现文件，提供跨平台共享内存管理功能。
+//                          该文件实现了跨平台共享内存管理功能，包括共享内存的创建和连接、
+//                          内存段管理、内存使用统计、安全销毁机制、版本校验功能。
+//                          主要功能包括跨平台共享内存操作、内存分配和释放、
+//                          内存状态监控、安全机制保护
 //
 // -------------------------------------------------------------------------
 
@@ -11,23 +16,45 @@
 #include "NFComm/NFPluginModule/NFLogMgr.h"
 #include "NFComm/NFCore/NFServerTime.h"
 
-#define MAYEX_SHM_CAN_BE_DESTROY_SAFE_MAGIC 123456789
-#define MAYEX_SHM_INIT_SUCCESS_MAGIC 987654321
-#define MAGIC_SERVER_VER 100001
+#define MAYEX_SHM_CAN_BE_DESTROY_SAFE_MAGIC 123456789  ///< 安全销毁魔法数
+#define MAYEX_SHM_INIT_SUCCESS_MAGIC 987654321          ///< 初始化成功魔法数
+#define MAGIC_SERVER_VER 100001                         ///< 服务器版本魔法数
 
-char *NFCSharedMem::pbCurrentShm = NULL;
-bool NFCSharedMem::s_bCheckInitSuccessFlag = false;
+char *NFCSharedMem::pbCurrentShm = NULL;                ///< 当前共享内存块指针
+bool NFCSharedMem::s_bCheckInitSuccessFlag = false;     ///< 共享内存初始标志
 
+/**
+ * @brief 获得状态
+ * 
+ * 获取当前共享内存的初始化模式
+ * 
+ * @return 初始化模式
+ */
 EN_OBJ_MODE NFCSharedMem::GetInitMode()
 {
 	return m_enRunMode;
 }
 
+/**
+ * @brief 获得状态
+ * 
+ * 设置共享内存的初始化模式
+ * 
+ * @param mode 初始化模式
+ */
 void  NFCSharedMem::SetInitMode(EN_OBJ_MODE mode)
 {
 	m_enRunMode = mode;
 }
 
+/**
+ * @brief new一块内存
+ * 
+ * 重载new操作符，从当前共享内存块分配内存
+ * 
+ * @param siSize 内存大小
+ * @return 内存指针
+ */
 void *NFCSharedMem::operator new(size_t siSize) throw()
 {
 	char* pTemp = NULL;
@@ -41,11 +68,28 @@ void *NFCSharedMem::operator new(size_t siSize) throw()
 	return (void *)pTemp;
 }
 
+/**
+ * @brief 释放一块内存
+ * 
+ * 重载delete操作符，释放内存
+ * 
+ * @param pMem 内存指针
+ */
 void NFCSharedMem::operator delete(void *pMem)
 {
     std::cout << "delete ..." << std::endl;
 }
 
+/**
+ * @brief 构造函数
+ * 
+ * 根据平台创建共享内存对象
+ * 
+ * @param nKey 共享内存键值
+ * @param siSize 共享内存大小
+ * @param enInitFlag 初始化标志
+ * @param shemID 共享内存ID
+ */
 #if NF_PLATFORM == NF_PLATFORM_WIN
 NFCSharedMem::NFCSharedMem(key_t nKey, size_t siSize, EN_OBJ_MODE enInitFlag, HANDLE shemID)
 #else

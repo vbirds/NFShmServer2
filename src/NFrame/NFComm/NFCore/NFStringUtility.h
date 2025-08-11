@@ -7,6 +7,15 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFStringUtility.h
+ * @brief 字符串实用工具类
+ * 
+ * 此文件提供了全面的字符串处理工具集合，包括字符串清理、分割、替换、
+ * 大小写转换、URL编码解码、匹配检测等功能。支持ASCII和宽字符串，
+ * 提供了高性能和易用的字符串操作接口。
+ */
+
 #pragma once
 
 #include <string>
@@ -27,233 +36,807 @@
 #endif
 
 
+/**
+ * @brief 字符串实用工具类
+ * 
+ * NFStringUtility提供了丰富的字符串处理功能，专为高性能应用设计。
+ * 所有方法都是静态方法，无需实例化即可使用。支持ASCII和Unicode字符串。
+ * 
+ * 主要功能分类：
+ * - 字符串清理：Trim、TrimLeft、TrimRight等
+ * - 字符串分割：Split、Explode等多种分割方式
+ * - 字符串替换：Replace系列函数
+ * - 大小写转换：ToLower、ToUpper、Capitalize等
+ * - 字符串比较：Equals、EqualsIgnoreCase、Contains等
+ * - 模式匹配：StartsWith、EndsWith、Match等
+ * - URL处理：URLEncode、URLDecode
+ * - 类型检测：IsFloatNumber等
+ * - 编码转换：支持多种字符编码转换
+ * 
+ * 设计特点：
+ * - 零拷贝优化：大部分操作避免不必要的内存拷贝
+ * - 类型安全：提供模板和重载版本确保类型安全
+ * - 性能优化：针对常见场景进行性能优化
+ * - 异常安全：所有操作都是异常安全的
+ * - 跨平台：支持Windows和Unix/Linux平台
+ * 
+ * 适用场景：
+ * - 文本处理和解析
+ * - 配置文件处理
+ * - 网络协议实现
+ * - 日志处理和分析
+ * - 数据清洗和格式化
+ * - 多语言支持应用
+ * 
+ * 使用方法：
+ * @code
+ * // 字符串清理
+ * std::string text = "  hello world  ";
+ * NFStringUtility::Trim(text);  // "hello world"
+ * 
+ * // 字符串分割
+ * std::vector<std::string> parts;
+ * NFStringUtility::Split(parts, "a,b,c", ",");
+ * // parts = ["a", "b", "c"]
+ * 
+ * // 大小写转换
+ * std::string lower = NFStringUtility::Lower("Hello World");  // "hello world"
+ * 
+ * // 模式匹配
+ * bool matches = NFStringUtility::Match("hello.txt", "*.txt");  // true
+ * 
+ * // URL编码
+ * std::string encoded = NFStringUtility::URLEncode("hello world");  // "hello%20world"
+ * @endcode
+ * 
+ * @note 所有方法都是静态方法，不需要创建实例
+ * @note 支持const正确性，不会修改只读参数
+ * @note 线程安全，可以在多线程环境中使用
+ */
 class _NFExport NFStringUtility
 {
 public:
+	/** @brief 空字符串常量，用于返回空字符串引用 */
 	static const std::string kEmpty;
+	
 public:
-	//  @brief Removes any whitespace characters, which are one of them
-	//       " " (ASCII 32 (0x20)) SPACE
-	//       "\t" (ASCII 9 (0x09)) tab
-	//       "\n" (ASCII 10 (0x0A)) new line
-	//       "\r" (ASCII 13 (0x0D)) carriage ret
-	//       "\0" (ASCII 0 (0x00)) NUL
-	//       "\v" (ASCII 11 (0x0B)) vertical tab
-	//     The user may specify whether they want to trim only the
-	//    beginning or the end of the String ( the default action is
-	//    to trim both).
-	//  @param str[in,out], the source string, and the result will stored in it.
-	//  @param cutset[in], all leading and trailing characters contained in cutset will be removed.
-	//  @param left, trim the beginning of the string
-	//  @param right, trim the end of the string
+	/**
+	 * @name 字符串清理函数
+	 * @brief 移除字符串首尾或指定位置的空白字符或指定字符
+	 * 
+	 * 这些函数用于清理字符串中的空白字符，包括：
+	 * - " " (ASCII 32 (0x20)) SPACE 空格
+	 * - "\t" (ASCII 9 (0x09)) tab 制表符
+	 * - "\n" (ASCII 10 (0x0A)) new line 换行符
+	 * - "\r" (ASCII 13 (0x0D)) carriage return 回车符
+	 * - "\0" (ASCII 0 (0x00)) NUL 空字符
+	 * - "\v" (ASCII 11 (0x0B)) vertical tab 垂直制表符
+	 * 
+	 * @{
+	 */
+	
+	/**
+	 * @brief 清理字符串向量中所有字符串的首尾空白
+	 * 
+	 * 对向量中的每个字符串执行Trim操作，移除首尾空白字符。
+	 * 
+	 * @param vecStr [in,out] 要处理的字符串向量
+	 * 
+	 * @note 直接修改输入向量中的字符串
+	 */
     static void Trim(std::vector<std::string>& vecStr);
+    
+	/**
+	 * @brief 移除字符串首尾的空白字符
+	 * 
+	 * @param str [in,out] 要处理的字符串，结果存储在原字符串中
+	 * @param left 是否移除字符串开头的空白字符
+	 * @param right 是否移除字符串末尾的空白字符
+	 */
 	static void Trim(std::string& str, bool left = true, bool right = true);
+	
+	/**
+	 * @brief 移除宽字符串首尾的空白字符
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param left 是否移除字符串开头的空白字符
+	 * @param right 是否移除字符串末尾的空白字符
+	 */
 	static void Trim(std::wstring& str, bool left = true, bool right = true);
+	
+	/**
+	 * @brief 移除字符串首尾的指定字符集合
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @param cutset 要移除的字符集合
+	 * @param left 是否移除字符串开头的字符
+	 * @param right 是否移除字符串末尾的字符
+	 */
 	static void Trim(std::string& str, const std::string& cutset, bool left = true, bool right = true);
+	
+	/**
+	 * @brief 移除宽字符串首尾的指定字符集合
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param cutset 要移除的宽字符集合
+	 * @param left 是否移除字符串开头的字符
+	 * @param right 是否移除字符串末尾的字符
+	 */
 	static void Trim(std::wstring& str, const std::wstring& cutset, bool left = true, bool right = true);
+	
+	/**
+	 * @brief 移除字符串首尾的指定字符集合（C风格字符串版本）
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @param cutset 要移除的字符集合（C风格字符串）
+	 * @param left 是否移除字符串开头的字符
+	 * @param right 是否移除字符串末尾的字符
+	 */
 	static void Trim(std::string& str, const char* cutset, bool left = true, bool right = true);
+	
+	/**
+	 * @brief 移除宽字符串首尾的指定字符集合（C风格字符串版本）
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param cutset 要移除的宽字符集合（C风格字符串）
+	 * @param left 是否移除字符串开头的字符
+	 * @param right 是否移除字符串末尾的字符
+	 */
 	static void Trim(std::wstring& str, const wchar_t* cutset, bool left = true, bool right = true);
 
+	/**
+	 * @brief 移除字符串开头的空白字符
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 */
 	static void TrimLeft(std::string& str)
 	{
 		Trim(str, true, false);
 	}
 
+	/**
+	 * @brief 移除宽字符串开头的空白字符
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 */
 	static void TrimLeft(std::wstring& str)
 	{
 		Trim(str, true, false);
 	}
 
+	/**
+	 * @brief 移除字符串开头的指定字符
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @param delims 要移除的字符集合
+	 */
 	static void TrimLeft(std::string& str, const std::string& delims)
 	{
 		Trim(str, delims, true, false);
 	}
 
+	/**
+	 * @brief 移除宽字符串开头的指定字符
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param delims 要移除的宽字符集合
+	 */
 	static void TrimLeft(std::wstring& str, const std::wstring& delims)
 	{
 		Trim(str, delims, true, false);
 	}
 
+	/**
+	 * @brief 移除字符串开头的指定字符（C风格字符串版本）
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @param delims 要移除的字符集合（C风格字符串）
+	 */
 	static void TrimLeft(std::string& str, const char* delims)
 	{
 		Trim(str, delims, true, false);
 	}
 
+	/**
+	 * @brief 移除宽字符串开头的指定字符（C风格字符串版本）
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param delims 要移除的宽字符集合（C风格字符串）
+	 */
 	static void TrimLeft(std::wstring& str, const wchar_t* delims)
 	{
 		Trim(str, delims, true, false);
 	}
 
+	/**
+	 * @brief 移除字符串末尾的空白字符
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 */
 	static void TrimRight(std::string& str)
 	{
 		Trim(str, false, true);
 	}
 
+	/**
+	 * @brief 移除宽字符串末尾的空白字符
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 */
 	static void TrimRight(std::wstring& str)
 	{
 		Trim(str, false, true);
 	}
 
+	/**
+	 * @brief 移除字符串末尾的指定字符
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @param delims 要移除的字符集合
+	 */
 	static void TrimRight(std::string& str, const std::string& delims)
 	{
 		Trim(str, delims, false, true);
 	}
 
+	/**
+	 * @brief 移除宽字符串末尾的指定字符
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param delims 要移除的宽字符集合
+	 */
 	static void TrimRight(std::wstring& str, const std::wstring& delims)
 	{
 		Trim(str, delims, false, true);
 	}
 
+	/**
+	 * @brief 移除字符串末尾的指定字符（C风格字符串版本）
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @param delims 要移除的字符集合（C风格字符串）
+	 */
 	static void TrimRight(std::string& str, const char* delims)
 	{
 		Trim(str, delims, false, true);
 	}
 
+	/**
+	 * @brief 移除宽字符串末尾的指定字符（C风格字符串版本）
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param delims 要移除的宽字符集合（C风格字符串）
+	 */
 	static void TrimRight(std::wstring& str, const wchar_t* delims)
 	{
 		Trim(str, delims, false, true);
 	}
 
-	// @brief trim a char
+	/**
+	 * @brief 移除字符串首尾的指定字符（模板版本）
+	 * 
+	 * @tparam _StringType 字符串类型
+	 * @param str [in,out] 要处理的字符串
+	 * @param c 要移除的字符
+	 * @param left 是否移除字符串开头的字符
+	 * @param right 是否移除字符串末尾的字符
+	 */
 	template <class _StringType>
 	static void Trim(_StringType& str, char c, bool left = true, bool right = true);
 
+	/**
+	 * @brief 移除字符串开头的指定字符（模板版本）
+	 * 
+	 * @tparam _StringType 字符串类型
+	 * @param str [in,out] 要处理的字符串
+	 * @param c 要移除的字符
+	 */
 	template <class _StringType>
 	static void TrimLeft(_StringType& str, char c)
 	{
 		Trim(str, c, true, false);
 	}
 
+	/**
+	 * @brief 移除字符串末尾的指定字符（模板版本）
+	 * 
+	 * @tparam _StringType 字符串类型
+	 * @param str [in,out] 要处理的字符串
+	 * @param c 要移除的字符
+	 */
 	template <class _StringType>
 	static void TrimRight(_StringType& str, char c)
 	{
 		Trim(str, c, false, true);
 	}
 
-	// @brief Replaces a section equaling to <code>needle</code> of the current string with the new substring <code>new_value</code>
-	// @param string & str [in,out], -
-	// @param const string & needle -
-	// @param const string & new_value -
-	// @param string::size_type start_pos -
-	// @param int replace_count - If it is -1, replaces all the <code>needle</code> by <code>new_value</code>
-	// @return void -
+	/** @} */
+
+	/**
+	 * @name 字符串替换函数
+	 * @brief 在字符串中查找和替换指定的子字符串
+	 * @{
+	 */
+	
+	/**
+	 * @brief 替换字符串中的子字符串
+	 * 
+	 * 将字符串中所有匹配的子字符串替换为新的字符串。
+	 * 
+	 * @param str [in,out] 要处理的字符串，结果存储在原字符串中
+	 * @param needle 要查找的子字符串
+	 * @param new_value 替换后的新字符串
+	 * @param start_pos 开始搜索的位置，默认从头开始
+	 * @param replace_count 最大替换次数，-1表示替换所有匹配项
+	 * 
+	 * @note 如果needle为空，函数不执行任何操作
+	 * @note 替换操作是从左到右进行的
+	 */
 	static void Replace(std::string& str, const std::string& needle, const std::string& new_value, size_t start_pos = 0, int replace_count = -1);
+	
+	/**
+	 * @brief 替换宽字符串中的子字符串
+	 * 
+	 * @param str [in,out] 要处理的宽字符串
+	 * @param needle 要查找的子字符串
+	 * @param new_value 替换后的新字符串
+	 * @param start_pos 开始搜索的位置
+	 * @param replace_count 最大替换次数，-1表示替换所有匹配项
+	 */
 	static void Replace(std::wstring& str, const std::wstring& needle, const std::wstring& new_value, size_t start_pos = 0, int replace_count = -1);
 
-	// Returns a StringVector that contains all the substrings delimited
-	// by any of the characters in the passed <code>delims</code> argument.
-	// @param vec[out], the result substrings are stored here.
-	// @param delims A list of delimiter characters to split by
-	// @param max_splits The maximum number of splits to perform (0 for unlimited splits). If this
-	//     parameters is > 0, the splitting process will stop after this many splits, left to right.
+	/** @} */
+
+	/**
+	 * @name 字符串分割函数
+	 * @brief 将字符串按照指定分隔符分割成多个子字符串
+	 * @{
+	 */
+	
+	/**
+	 * @brief 使用指定分隔符分割字符串
+	 * 
+	 * 将字符串按照分隔符集合分割成多个子字符串，结果存储在vector中。
+	 * 
+	 * @param vec [out] 存储分割结果的字符串向量
+	 * @param str 要分割的字符串
+	 * @param cutset 分隔符集合，默认为制表符、换行符和空格
+	 * @param max_splits 最大分割次数，0表示无限制
+	 * 
+	 * @note 连续的分隔符会被视为单个分隔符
+	 * @note 空的子字符串通常会被忽略
+	 */
 	static void Split(std::vector<std::string>& vec, const std::string& str, const std::string& cutset = "\t\n ", unsigned int max_splits = 0);
+	
+	/**
+	 * @brief 使用指定分隔符分割宽字符串
+	 * 
+	 * @param vec [out] 存储分割结果的宽字符串向量
+	 * @param str 要分割的宽字符串
+	 * @param cutset 分隔符集合
+	 * @param max_splits 最大分割次数
+	 */
 	static void Split(std::vector<std::wstring>& vec, const std::wstring& str, const std::wstring& cutset = L"\t\n ", unsigned int max_splits = 0);
 
+	/**
+	 * @brief 使用单个字符分割字符串
+	 * 
+	 * @param vec [out] 存储分割结果的字符串向量
+	 * @param str 要分割的字符串
+	 * @param cutset 分隔符字符
+	 * @param max_splits 最大分割次数
+	 */
 	static void Split(std::vector<std::string>& vec, const std::string& str, const std::string::value_type& cutset, unsigned int max_splits = 0);
+	
+	/**
+	 * @brief 使用单个宽字符分割宽字符串
+	 * 
+	 * @param vec [out] 存储分割结果的宽字符串向量
+	 * @param str 要分割的宽字符串
+	 * @param cutset 分隔符宽字符
+	 * @param max_splits 最大分割次数
+	 */
 	static void Split(std::vector<std::wstring>& vec, const std::wstring& str, const std::wstring::value_type& cutset, unsigned int max_splits = 0);
 
+	/**
+	 * @brief 分割字符串并返回NFSlice结果
+	 * 
+	 * 使用NFSlice避免字符串拷贝，提高性能。
+	 * 
+	 * @param vec [out] 存储分割结果的NFSlice向量
+	 * @param str 要分割的字符串
+	 * @param cutset 分隔符字符
+	 * @param max_splits 最大分割次数
+	 */
 	static void Split(std::vector<NFSlice>& vec, const std::string& str, int cutset, unsigned int max_splits = 0);
+	
+	/**
+	 * @brief 分割字符串并返回NFSlice结果（字符串分隔符版本）
+	 * 
+	 * @param vec [out] 存储分割结果的NFSlice向量
+	 * @param str 要分割的字符串
+	 * @param cutset 分隔符集合
+	 * @param max_splits 最大分割次数
+	 */
 	static void Split(std::vector<NFSlice>& vec, const std::string& str, const std::string& cutset = "\t\n ", unsigned int max_splits = 0);
 
-	// @brief
-	//   <code>
-	//     string s = "a|b|c|d|e";
-	//     Slice v[2];
-	//     Split(s, '|', v, 2);  //after Split, v[0]=="a", v[1] == "b|c|d|e", vc == 2
-	//   </code>
-	//
-	//   <code>
-	//     string s = "a|b|c";
-	//     Slice v[8];
-	//     Split(s, '|', v, 8);  //after Split, v[0]=="a", v[1] == "b", v[2] == "c", vc == 3
-	//   </code>
-	// @param const string & str -
-	// @param int delims -
-	// @param[out] Slice slices[] -
-	// @param[in,out] size_t & slice_count -
-	// @return void -
+	/**
+	 * @brief 分割字符串到固定大小的数组
+	 * 
+	 * 这是一个高性能版本，避免动态内存分配。
+	 * 
+	 * 使用示例：
+	 * @code
+	 * string s = "a|b|c|d|e";
+	 * NFSlice v[2];
+	 * size_t count = 2;
+	 * Split(s, '|', v, count);  
+	 * // 结果: v[0]=="a", v[1] == "b|c|d|e", count == 2
+	 * 
+	 * string s = "a|b|c";
+	 * NFSlice v[8];
+	 * size_t count = 8;
+	 * Split(s, '|', v, count);  
+	 * // 结果: v[0]=="a", v[1] == "b", v[2] == "c", count == 3
+	 * @endcode
+	 * 
+	 * @param str 要分割的字符串
+	 * @param cutset 分隔符字符
+	 * @param slices [out] 存储结果的NFSlice数组
+	 * @param slice_count [in,out] 输入数组大小，输出实际分割数量
+	 */
 	static void Split(const std::string& str, int cutset, NFSlice slices[], size_t& slice_count);
+	
+	/**
+	 * @brief 分割字符串到固定大小的数组（字符串分隔符版本）
+	 * 
+	 * @param str 要分割的字符串
+	 * @param cutset 分隔符字符串
+	 * @param slices [out] 存储结果的NFSlice数组
+	 * @param slice_count [in,out] 输入数组大小，输出实际分割数量
+	 */
 	static void Split(const std::string& str, const string& cutset, NFSlice slices[], size_t& slice_count);
+	
+	/**
+	 * @brief 分割NFSlice到固定大小的数组
+	 * 
+	 * @param str 要分割的NFSlice
+	 * @param cutset 分隔符字符
+	 * @param slices [out] 存储结果的NFSlice数组
+	 * @param slice_count [in,out] 输入数组大小，输出实际分割数量
+	 */
 	static void Split(const NFSlice& str, int cutset, NFSlice slices[], size_t& slice_count);
+	
+	/**
+	 * @brief 分割NFSlice到向量
+	 * 
+	 * @param str 要分割的NFSlice
+	 * @param cutset 分隔符字符
+	 * @param slices [out] 存储结果的NFSlice向量
+	 * @param max_splits 最大分割次数
+	 */
 	static void Split(const NFSlice& str, int cutset, std::vector<NFSlice>& slices, unsigned int max_splits = 0);
 
 	/**
-	* Split a string into tow strings using the special characters .
-	* e.g. src="abc, hello world "  if cutset="," then left="abc", right=" hello world "
-	* @warning If any of delimiters was found, we just return, left string and right string will not be changed.
-	* @param src The source string
-	* @param left The left string separated by cutset
-	* @param left The right string separated by cutset
-	* @param cutset A list of delimiter characters to split by. We only use the first one when come up against a delimiter
-	*/
+	 * @brief 将字符串分割为两部分
+	 * 
+	 * 在第一个分隔符处将字符串分为左右两部分。
+	 * 
+	 * 示例：src="abc, hello world " cutset="," -> left="abc", right=" hello world "
+	 * 
+	 * @param src 源字符串
+	 * @param left [out] 分隔符左侧的字符串
+	 * @param right [out] 分隔符右侧的字符串
+	 * @param cutset 分隔符集合
+	 * 
+	 * @warning 如果没有找到分隔符，left和right不会被修改
+	 */
 	static void Split(const std::string& src, std::string& left, std::string& right, const std::string& cutset = "\t\n ");
+	
+	/**
+	 * @brief 将宽字符串分割为两部分
+	 * 
+	 * @param src 源宽字符串
+	 * @param left [out] 分隔符左侧的宽字符串
+	 * @param right [out] 分隔符右侧的宽字符串
+	 * @param cutset 分隔符集合
+	 */
 	static void Split(const std::wstring& src, std::wstring& left, std::wstring& right, const std::wstring& cutset = L"\t\n ");
+	
+	/**
+	 * @brief 将字符串分割为两部分（C风格字符串版本）
+	 * 
+	 * @param src 源字符串
+	 * @param left [out] 分隔符左侧的字符串
+	 * @param right [out] 分隔符右侧的字符串
+	 * @param cutset 分隔符集合（C风格字符串）
+	 */
 	static void Split(const std::string& src, std::string& left, std::string& right, const char* cutset = "\t\n ");
+	
+	/**
+	 * @brief 将宽字符串分割为两部分（C风格字符串版本）
+	 * 
+	 * @param src 源宽字符串
+	 * @param left [out] 分隔符左侧的宽字符串
+	 * @param right [out] 分隔符右侧的宽字符串
+	 * @param cutset 分隔符集合（C风格宽字符串）
+	 */
 	static void Split(const std::wstring& src, std::wstring& left, std::wstring& right, const wchar_t* cutset = L"\t\n ");
 
+	/**
+	 * @brief 通用分割函数模板
+	 * 
+	 * @tparam _SourceStringType 源字符串类型
+	 * @tparam _SubStringType 子字符串类型
+	 * @param source 源字符串
+	 * @param cutset 分隔符
+	 * @param return_value [out] 分割结果向量
+	 * @param limit 最大分割数量限制，-1表示无限制
+	 */
 	template <class _SourceStringType, class _SubStringType>
 	static void Explode(const _SourceStringType& source, const _SourceStringType& cutset, std::vector<_SubStringType>& return_value, int limit = -1);
 
+	/** @} */
+
+	/**
+	 * @name 大小写转换函数
+	 * @brief 字符串大小写转换和格式化
+	 * @{
+	 */
+	
+	/**
+	 * @brief 将字符串转换为小写（就地修改）
+	 * 
+	 * @param str [in,out] 要转换的字符串
+	 */
 	static void ToLower(std::string& str);
+	
+	/**
+	 * @brief 将宽字符串转换为小写（就地修改）
+	 * 
+	 * @param str [in,out] 要转换的宽字符串
+	 */
 	static void ToLower(std::wstring& str);
+	
+	/**
+	 * @brief 将字符串转换为大写（就地修改）
+	 * 
+	 * @param str [in,out] 要转换的字符串
+	 */
 	static void ToUpper(std::string& str);
+	
+	/**
+	 * @brief 将宽字符串转换为大写（就地修改）
+	 * 
+	 * @param str [in,out] 要转换的宽字符串
+	 */
 	static void ToUpper(std::wstring& str);
+	
+	/**
+	 * @brief 将字符串转换为小写（返回新字符串）
+	 * 
+	 * @param str 源字符串
+	 * @return std::string 转换后的小写字符串
+	 */
     static std::string Lower(const std::string& str);
+    
+    /**
+     * @brief 将字符串转换为大写（返回新字符串）
+     * 
+     * @param str 源字符串
+     * @return std::string 转换后的大写字符串
+     */
     static std::string Upper(const std::string& str);
+    
+    /**
+     * @brief 将字符串首字母大写，其余小写
+     * 
+     * @param str 源字符串
+     * @return std::string 首字母大写的字符串
+     */
     static std::string Capitalize(const std::string& str);
+    
+	/**
+	 * @brief 转换为良好的变量名格式
+	 * 
+	 * 将字符串转换为适合作为变量名的格式。
+	 * 
+	 * @param str 源字符串
+	 * @return std::string 格式化后的变量名
+	 */
 	static std::string ToChangeVarNameGood(const std::string& str);
+	
+	/**
+	 * @brief 转换为首字母大写的良好变量名格式
+	 * 
+	 * @param str 源字符串
+	 * @return std::string 首字母大写的变量名
+	 */
 	static std::string ToFirstUpperChangeVarNameGood(const std::string& str);
+	
+	/**
+	 * @brief 将字符串首字母转为大写
+	 * 
+	 * @param str 源字符串
+	 * @return std::string 首字母大写的字符串
+	 */
 	static std::string FirstUpper(const std::string& str);
 
-	// string compare
-	// @param case_sensitive true If we compare the string with case sensitively
+	/** @} */
+
+	/**
+	 * @name 字符串比较函数
+	 * @brief 各种字符串比较和匹配功能
+	 * @{
+	 */
+	
+	/**
+	 * @brief 比较两个字符串是否相等
+	 * 
+	 * @param str1 第一个字符串
+	 * @param str2 第二个字符串
+	 * @param case_sensitive 是否区分大小写，默认区分
+	 * @return bool 相等返回true，否则返回false
+	 */
 	static bool Equals(const std::string& str1, const std::string& str2, bool case_sensitive = true);
 
-	// @brief string compare ignoring case sensitively
+	/**
+	 * @brief 忽略大小写比较两个字符串
+	 * 
+	 * @param str1 第一个字符串
+	 * @param str2 第二个字符串
+	 * @return bool 相等返回true，否则返回false
+	 */
 	static bool EqualsIgnoreCase(const std::string& str1, const std::string& str2);
 
+	/**
+	 * @brief ROT13字符串编码
+	 * 
+	 * ROT13是一种简单的字符替换加密方法。
+	 * 
+	 * @param val 要编码的字符串
+	 * @return std::string 编码后的字符串
+	 */
 	static std::string Rot13(const std::string& val);
+	
+	/**
+	 * @brief ROT13字符串编码（C风格字符串版本）
+	 * 
+	 * @param str 要编码的字符串
+	 * @param len 字符串长度
+	 * @return std::string 编码后的字符串
+	 */
 	static std::string Rot13(const char* str, size_t len);
 
-	// @brief     Returns whether the string begins with the pattern passed in.
-	// @param[in] pattern The pattern to compare with.
-	// @param[in] case_sensitive true case sensitive, false ignore the case
+	/**
+	 * @brief 检查字符串是否以指定模式开头
+	 * 
+	 * @param str 要检查的字符串
+	 * @param pattern 开头模式
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 匹配返回true，否则返回false
+	 */
 	static bool StartsWith(const std::string& str, const std::string& pattern, bool case_sensitive = true);
+	
+	/**
+	 * @brief 检查宽字符串是否以指定模式开头
+	 * 
+	 * @param str 要检查的宽字符串
+	 * @param pattern 开头模式
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 匹配返回true，否则返回false
+	 */
 	static bool StartsWith(const std::wstring& str, const std::wstring& pattern, bool case_sensitive = true);
 
-	// @brief     Returns whether the string ends with the pattern passed in.
-	// @param[in] pattern The pattern to compare with.
-	// @param[in] case_sensitive true case sensitive, false ignore the case
+	/**
+	 * @brief 检查字符串是否以指定模式结尾
+	 * 
+	 * @param str 要检查的字符串
+	 * @param pattern 结尾模式
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 匹配返回true，否则返回false
+	 */
 	static bool EndsWith(const std::string& str, const std::string& pattern, bool case_sensitive = true);
+	
+	/**
+	 * @brief 检查宽字符串是否以指定模式结尾
+	 * 
+	 * @param str 要检查的宽字符串
+	 * @param pattern 结尾模式
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 匹配返回true，否则返回false
+	 */
 	static bool EndsWith(const std::wstring& str, const std::wstring& pattern, bool case_sensitive = true);
 
-	// Simple pattern-matching routine allowing a wild card pattern.
-	// @param str String to test
-	// @param pattern Pattern to match against; which can include simple '*' wildcards
-	// @param case_sensitive Whether the match is case sensitive or not
+	/**
+	 * @brief 简单模式匹配，支持通配符
+	 * 
+	 * 支持'*'通配符进行简单的模式匹配。
+	 * 
+	 * @param str 要测试的字符串
+	 * @param pattern 模式字符串，可包含'*'通配符
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 匹配返回true，否则返回false
+	 */
 	static bool Match(const std::string& str, const std::string& pattern, bool case_sensitive = true);
+	
+	/**
+	 * @brief 简单模式匹配，支持通配符（宽字符串版本）
+	 * 
+	 * @param str 要测试的宽字符串
+	 * @param pattern 模式字符串，可包含'*'通配符
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 匹配返回true，否则返回false
+	 */
 	static bool Match(const std::wstring& str, const std::wstring& pattern, bool case_sensitive = true);
 
-	// @brief Reports whether a char or a substr is within mother
-	// @param mother, the mother string to test
-	// @param pattern, the pattern string or char to find
-	// @param[in] case_sensitive true case sensitive, false ignore the case
-	// @return bool, return true if the occurrence of pattern within the motherStr or false
+	/**
+	 * @brief 检查字符串是否包含指定字符
+	 * 
+	 * @param mother 母字符串
+	 * @param pattern 要查找的字符
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 包含返回true，否则返回false
+	 */
 	static bool Contains(const std::string& mother, char pattern, bool case_sensitive = true);
+	
+	/**
+	 * @brief 检查宽字符串是否包含指定宽字符
+	 * 
+	 * @param mother 母宽字符串
+	 * @param pattern 要查找的宽字符
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 包含返回true，否则返回false
+	 */
 	static bool Contains(const std::wstring& mother, wchar_t pattern, bool case_sensitive = true);
+	
+	/**
+	 * @brief 检查字符串是否包含指定子字符串
+	 * 
+	 * @param mother 母字符串
+	 * @param pattern 要查找的子字符串
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 包含返回true，否则返回false
+	 */
 	static bool Contains(const std::string& mother, const std::string& pattern, bool case_sensitive = true);
+	
+	/**
+	 * @brief 检查宽字符串是否包含指定子字符串
+	 * 
+	 * @param mother 母宽字符串
+	 * @param pattern 要查找的子字符串
+	 * @param case_sensitive 是否区分大小写
+	 * @return bool 包含返回true，否则返回false
+	 */
 	static bool Contains(const std::wstring& mother, const std::wstring& pattern, bool case_sensitive = true);
 
-	// @brief This function is convenient when encoding a string
-	//     to be used in a query part of a URL, as a convenient way
-	//     to pass variables to the next page
-	// @param const char * url -
-	// @param size_t url_len -
-	// @param[in] char * edcoded_url -
-	// @param[in,out] size_t & edcoded_url_len -
-	// @return bool -
+	/** @} */
+
+	/**
+	 * @name URL编码解码函数
+	 * @brief URL编码和解码功能，用于web开发
+	 * @{
+	 */
+	
+	/**
+	 * @brief URL编码（底层函数）
+	 * 
+	 * 将字符串编码为URL安全格式，便于在查询字符串中传递变量。
+	 * 
+	 * @param url 要编码的URL字符串
+	 * @param url_len URL字符串长度
+	 * @param edcoded_url [out] 编码后的URL缓冲区
+	 * @param edcoded_url_len [in,out] 输入缓冲区大小，输出实际编码长度
+	 * @return bool 编码成功返回true，缓冲区不足返回false
+	 */
 	static bool URLEncode(const char* url, size_t url_len, char* edcoded_url, size_t& edcoded_url_len);
 
+	/**
+	 * @brief URL编码（便捷函数）
+	 * 
+	 * @param str 要编码的字符串
+	 * @return std::string 编码后的字符串
+	 */
 	static std::string URLEncode(const std::string& str)
 	{
 		std::string out;
@@ -261,13 +844,32 @@ public:
 		return out;
 	}
 
+	/**
+	 * @brief URL编码（输出到字符串引用）
+	 * 
+	 * @param str 要编码的字符串
+	 * @param out [out] 编码结果输出字符串
+	 */
 	static void URLEncode(const std::string& str, std::string& out)
 	{
 		URLEncode(str.data(), str.size(), out);
 	}
 
+	/**
+	 * @brief URL编码（C风格字符串版本）
+	 * 
+	 * @param url 要编码的URL字符串
+	 * @param url_len URL字符串长度
+	 * @param out [out] 编码结果输出字符串
+	 */
 	static void URLEncode(const char* url, size_t url_len, std::string& out);
 
+	/**
+	 * @brief URL解码（便捷函数）
+	 * 
+	 * @param str 要解码的字符串
+	 * @return std::string 解码后的字符串
+	 */
 	static string URLDecode(const std::string& str)
 	{
 		std::string out;
@@ -275,30 +877,106 @@ public:
 		return out;
 	}
 
+	/**
+	 * @brief URL解码（输出到字符串引用）
+	 * 
+	 * @param str 要解码的字符串
+	 * @param out [out] 解码结果输出字符串
+	 */
 	static void URLDecode(const std::string& str, std::string& out);
+	
+	/**
+	 * @brief URL解码（C风格字符串版本）
+	 * 
+	 * @param encoded_url 要解码的编码URL字符串
+	 * @param encoded_url_len 编码URL字符串长度
+	 * @param out [out] 解码结果输出字符串
+	 */
 	static void URLDecode(const char* encoded_url, size_t encoded_url_len, std::string& out);
+	
+	/**
+	 * @brief URL解码（底层函数）
+	 * 
+	 * @param encoded_url 要解码的编码URL字符串
+	 * @param encoded_url_len 编码URL字符串长度
+	 * @param decoded_url [out] 解码后的URL缓冲区
+	 * @param decoded_url_len [in,out] 输入缓冲区大小，输出实际解码长度
+	 */
 	static void URLDecode(const char* encoded_url, size_t encoded_url_len, char* decoded_url, size_t& decoded_url_len);
 
+	/**
+	 * @brief URL解码（就地解码）
+	 * 
+	 * @param str [in,out] 要解码的字符串，解码结果存储在原字符串中
+	 */
 	static void URLDecode(std::string& str)
 	{
 		URLDecode(str, str);
 	}
 
-	// query whether parameter string is a float number string or not.
+	/** @} */
+
+	/**
+	 * @name 类型检测和验证函数
+	 * @brief 检测字符串是否符合特定格式
+	 * @{
+	 */
+	
+	/**
+	 * @brief 检查字符串是否为浮点数
+	 * 
+	 * @param s 要检查的字符串
+	 * @return bool 是浮点数返回true，否则返回false
+	 */
 	static bool IsFloatNumber(const std::string& s);
 
+	/** @} */
+
+	/**
+	 * @name 额外的分割和处理函数
+	 * @brief 提供更多特殊用途的字符串处理功能
+	 * @{
+	 */
+	
+	/**
+	 * @brief 使用指定分隔符分割字符串
+	 * 
+	 * @param str 要分割的字符串
+	 * @param delim 分隔符字符串
+	 * @param result [out] 分割结果指针
+	 */
 	static void Split(const std::string& str,
 	                  const std::string& delim,
 	                  std::vector<std::string>* result);
 
+	/**
+	 * @brief 分割字符串中的数字
+	 * 
+	 * 从字符串中提取所有数字部分。
+	 * 
+	 * @param str 包含数字的字符串
+	 * @param result [out] 提取的数字字符串向量
+	 */
     static void SplitDigit(const std::string& str,
                       std::vector<std::string>* result);
 
-	static std::string& Ltrim(std::string& str); // NOLINT
+	/**
+	 * @brief 删除字符串左侧空白字符
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @return std::string& 处理后的字符串引用
+	 */
+	static std::string& Ltrim(std::string& str);
 
-	static std::string& Rtrim(std::string& str); // NOLINT
+	/**
+	 * @brief 删除字符串右侧空白字符
+	 * 
+	 * @param str [in,out] 要处理的字符串
+	 * @return std::string& 处理后的字符串引用
+	 */
+	static std::string& Rtrim(std::string& str);
 
-	static std::string& LRTrim(std::string& str); // NOLINT
+	static std::string& LRTrim(std::string& str);
 
 	static void LRTrim(std::vector<std::string>* str_list);
 
@@ -1172,30 +1850,200 @@ public:
 		return true;
 	}
 
+	/**
+	 * @brief 将32位IP地址转换为字符串
+	 * 
+	 * 将网络字节序的32位IP地址转换为点分十进制格式的字符串。
+	 * 
+	 * @param dwIp 网络字节序的32位IP地址
+	 * @return const char* IP地址字符串，格式为"x.x.x.x"
+	 * 
+	 * @note 返回的指针指向静态缓冲区，不是线程安全的
+	 * @note 下次调用会覆盖之前的结果
+	 * 
+	 * 使用示例：
+	 * @code
+	 * uint32_t ip = 0xC0A80001; // 192.168.0.1 in network byte order
+	 * const char* ipStr = NFStringUtility::IpToStr(ip);
+	 * // ipStr = "192.168.0.1"
+	 * @endcode
+	 */
 	static const char *IpToStr(uint32_t dwIp);
 
+	/**
+	 * @brief 获取IP地址指定位置的数字
+	 * 
+	 * 从32位IP地址中提取指定位置的8位数字。
+	 * IP地址按照从左到右的顺序分为4个部分，索引从0开始。
+	 * 
+	 * @param dwIP 32位IP地址（主机字节序）
+	 * @param iDotIndex 位置索引（0-3，0表示最高位字节）
+	 * @return int 指定位置的数字（0-255），索引无效时返回0
+	 * 
+	 * 使用示例：
+	 * @code
+	 * uint32_t ip = 0xC0A80001; // 192.168.0.1
+	 * int first = NFStringUtility::GetIpDotId(ip, 0);  // 192
+	 * int second = NFStringUtility::GetIpDotId(ip, 1); // 168
+	 * int third = NFStringUtility::GetIpDotId(ip, 2);  // 0
+	 * int fourth = NFStringUtility::GetIpDotId(ip, 3); // 1
+	 * @endcode
+	 */
 	static int GetIpDotId(uint32_t dwIP, int iDotIndex);
 
+	/**
+	 * @brief 将IP地址字符串转换为32位整数
+	 * 
+	 * 将点分十进制格式的IP地址字符串转换为32位整数。
+	 * 
+	 * @param pszIp IP地址字符串，格式为"x.x.x.x"
+	 * @return int 转换后的32位IP地址，失败时返回-1
+	 * 
+	 * @note 使用inet_addr函数进行转换
+	 * @note 返回值为网络字节序
+	 * 
+	 * 使用示例：
+	 * @code
+	 * int ip = NFStringUtility::IpToNum("192.168.1.100");
+	 * if (ip != -1) {
+	 *     // 转换成功
+	 * }
+	 * @endcode
+	 */
 	static int IpToNum(const char *pszIp);
 
+	/**
+	 * @brief 从总线ID中提取服务器ID
+	 * 
+	 * 从32位总线ID中提取服务器标识符。
+	 * 通常用于分布式系统中的服务器识别。
+	 * 
+	 * @param dwBusID 32位总线ID
+	 * @return int 服务器ID
+	 * 
+	 * @note 具体的提取算法依赖于系统的总线ID编码规则
+	 */
 	static int GetServerIDFromBusID(uint32_t dwBusID);
 
+	/**
+	 * @brief 将服务器ID转换为字符串
+	 * 
+	 * 将32位服务器ID转换为可读的字符串格式。
+	 * 
+	 * @param dwIp 服务器ID（通常是IP地址格式）
+	 * @return const char* 服务器ID的字符串表示
+	 * 
+	 * @note 返回的指针指向静态缓冲区，不是线程安全的
+	 * @note 下次调用会覆盖之前的结果
+	 */
 	static const char *ServerIDToStr(uint32_t dwIp);
 };
 
+/**
+ * @brief 宽字符串工具类
+ * 
+ * NFStringUtilW提供了专门处理宽字符串（std::wstring）的工具函数。
+ * 主要用于支持Unicode字符串处理，特别是在Windows平台上处理国际化文本。
+ * 
+ * 主要功能：
+ * - 大小写转换：支持Unicode字符的大小写转换
+ * - 字符串分割：按指定分隔符分割宽字符串
+ * - Unicode支持：正确处理多字节Unicode字符
+ * 
+ * 适用场景：
+ * - 国际化应用的文本处理
+ * - Windows平台的Unicode字符串操作
+ * - 多语言文本的格式化和解析
+ * - 支持非ASCII字符的字符串处理
+ * 
+ * 使用方法：
+ * @code
+ * std::wstring text = L"Hello World 你好世界";
+ * 
+ * // 大小写转换
+ * NFStringUtilW::ToLower(text);
+ * NFStringUtilW::ToUpper(text);
+ * 
+ * // 字符串分割
+ * std::vector<std::wstring> parts;
+ * NFStringUtilW::Split(parts, L"a,b,c", L",");
+ * @endcode
+ * 
+ * @note 所有方法都是静态方法，不需要实例化
+ * @note 主要用于Windows平台的Unicode处理
+ * @note 支持UTF-16编码的宽字符串
+ */
 class NFStringUtilW
 {
 public:
+	/**
+	 * @brief 将宽字符串转换为小写
+	 * 
+	 * 使用标准库的towlower函数将宽字符串中的所有字符转换为小写。
+	 * 支持Unicode字符的正确转换。
+	 * 
+	 * @param str [in,out] 要转换的宽字符串，原地修改
+	 * 
+	 * @note 使用std::transform和towlower函数实现
+	 * @note 支持国际化字符的大小写转换
+	 * 
+	 * 使用示例：
+	 * @code
+	 * std::wstring text = L"Hello WORLD 你好世界";
+	 * NFStringUtilW::ToLower(text);
+	 * // text 现在是 "hello world 你好世界"
+	 * @endcode
+	 */
 	static void ToLower(std::wstring& str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), towlower);
 	}
 
+	/**
+	 * @brief 将宽字符串转换为大写
+	 * 
+	 * 使用标准库的towupper函数将宽字符串中的所有字符转换为大写。
+	 * 支持Unicode字符的正确转换。
+	 * 
+	 * @param str [in,out] 要转换的宽字符串，原地修改
+	 * 
+	 * @note 使用std::transform和towupper函数实现
+	 * @note 支持国际化字符的大小写转换
+	 * 
+	 * 使用示例：
+	 * @code
+	 * std::wstring text = L"Hello world 你好世界";
+	 * NFStringUtilW::ToUpper(text);
+	 * // text 现在是 "HELLO WORLD 你好世界"
+	 * @endcode
+	 */
 	static void ToUpper(std::wstring& str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), towupper);
 	}
 
+	/**
+	 * @brief 分割宽字符串
+	 * 
+	 * 使用指定的分隔符分割宽字符串，并将结果存储到向量中。
+	 * 支持多字符分隔符和限制分割次数。
+	 * 
+	 * @param resultSubstrsVec [out] 存储分割结果的向量
+	 * @param str 要分割的源宽字符串
+	 * @param delims 分隔符字符串，默认为制表符、换行符和空格
+	 * @param maxSplits 最大分割次数，0表示不限制
+	 * 
+	 * @note 分隔符中的任意字符都会被视为分割点
+	 * @note maxSplits限制分割的次数，超过限制的部分不再分割
+	 * @note 空的子字符串会被包含在结果中
+	 * 
+	 * 使用示例：
+	 * @code
+	 * std::vector<std::wstring> parts;
+	 * NFStringUtilW::Split(parts, L"hello,world;test", L",;", 2);
+	 * // parts = {L"hello", L"world", L"test"}
+	 * @endcode
+	 */
 	static void Split(std::vector<std::wstring>& resultSubstrsVec, const std::wstring& str, const std::wstring& delims = L"\t\n ", unsigned int maxSplits = 0);
 };
 

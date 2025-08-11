@@ -1,13 +1,13 @@
 /*
             This file is part of: 
-                NoahFrame
+                NFShmXFrame
             https://github.com/ketoo/NoahGameFrame
 
-   Copyright 2009 - 2019 NoahFrame(NoahGameFrame)
+   Copyright 2009 - 2019 NFShmXFrame(NoahGameFrame)
 
    File creator: lvsheng.huang
    
-   NoahFrame is open-source software and you can redistribute it and/or modify
+   NFShmXFrame is open-source software and you can redistribute it and/or modify
    it under the terms of the License; besides, anyone who use this file/software must include this copyright announcement.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,19 @@
    limitations under the License.
 */
 
+// -------------------------------------------------------------------------
+//    @FileName         :    NFRedisClientList.cpp
+//    @Author           :    lvsheng.huang
+//    @Date             :   2022-09-18
+//    @Module           :    NFRedisClientList
+//    @Description      :    Redis列表操作实现文件，提供Redis列表数据类型的各种操作
+//
+// -------------------------------------------------------------------------
+
 #include "NFRedisDriver.h"
+
+// 实现Redis列表相关操作
+// 包括：LINDEX, LINSERT, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, RPOP, RPUSH等命令
 
 bool NFRedisDriver::LINDEX(const std::string &key, const int index, std::string& value)
 {

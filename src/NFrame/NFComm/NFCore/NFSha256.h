@@ -7,10 +7,25 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFSha256.h
+ * @brief SHA-256算法模板实现
+ * 
+ * 此文件提供了SHA-256算法的现代C++模板实现。支持任意类型的输入迭代器，
+ * 可以高效处理各种数据源（内存块、文件流、容器等）。这是一个头文件
+ * 模板库，提供了类型安全和高性能的SHA-256哈希计算功能。
+ */
+
 #pragma once
 
 // NFSha256:20140213
 
+/**
+ * @brief 输入迭代器缓冲区大小配置
+ * 
+ * 当使用输入迭代器处理大数据时的内部缓冲区大小。
+ * 默认为1MB，可以通过预定义此宏来调整。
+ */
 #ifndef NFSha256_BUFFER_SIZE_FOR_INPUT_ITERATOR
 #define NFSha256_BUFFER_SIZE_FOR_INPUT_ITERATOR \
     1048576  //=1024*1024: default is 1MB memory
@@ -22,17 +37,95 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+
+/**
+ * @brief SHA-256算法实现命名空间
+ * 
+ * NFSha256命名空间包含了SHA-256算法的完整实现，包括类型定义、
+ * 常量、内部函数和主要的计算接口。采用现代C++设计，支持
+ * 模板化和泛型编程。
+ * 
+ * 主要特性：
+ * - 模板化设计：支持任意输入迭代器类型
+ * - 类型安全：使用强类型避免常见错误
+ * - 高性能：优化的算法实现和内存管理
+ * - 标准兼容：符合FIPS PUB 180-4标准
+ * - 零依赖：除标准库外无外部依赖
+ * 
+ * 算法特点：
+ * - 输出长度：256位（32字节）
+ * - 块大小：512位（64字节）
+ * - 轮次数：64轮
+ * - 安全性：目前仍然安全，推荐使用
+ * 
+ * 适用场景：
+ * - 密码学应用
+ * - 数字签名
+ * - 数据完整性校验
+ * - 区块链和加密货币
+ * - 现代安全协议
+ * 
+ * 使用方法：
+ * @code
+ * #include "NFSha256.h"
+ * 
+ * // 字符串哈希
+ * std::string data = "Hello World";
+ * std::string hash = NFSha256::hash256_hex_string(data);
+ * std::cout << "SHA-256: " << hash << std::endl;
+ * 
+ * // 向量数据哈希
+ * std::vector<uint8_t> vec_data = {0x48, 0x65, 0x6c, 0x6c, 0x6f};
+ * auto digest = NFSha256::hash256(vec_data.begin(), vec_data.end());
+ * 
+ * // 文件哈希
+ * std::ifstream file("test.txt", std::ios::binary);
+ * std::string file_hash = NFSha256::hash256_hex_string(
+ *     std::istreambuf_iterator<char>(file),
+ *     std::istreambuf_iterator<char>()
+ * );
+ * @endcode
+ * 
+ * @note 此实现是线程安全的（无全局状态）
+ * @note 支持增量计算和流式处理
+ */
 namespace NFSha256 {
+	/** @brief 32位字类型定义 */
 	typedef unsigned long word_t;
+	/** @brief 8位字节类型定义 */
 	typedef unsigned char byte_t;
 
+	/** @brief SHA-256摘要长度（字节数） */
 	static const size_t k_digest_size = 32;
 
+	/**
+	 * @brief SHA-256算法内部实现命名空间
+	 * 
+	 * detail命名空间包含了SHA-256算法的内部实现细节，
+	 * 包括位操作函数、常量表和核心计算函数。
+	 */
 	namespace detail {
+		/**
+		 * @brief 8位掩码操作
+		 * 
+		 * @param x 输入值
+		 * @return byte_t masked后的8位值
+		 */
 		inline byte_t mask_8bit(byte_t x) { return x & 0xff; }
 
+		/**
+		 * @brief 32位掩码操作
+		 * 
+		 * @param x 输入值  
+		 * @return word_t masked后的32位值
+		 */
 		inline word_t mask_32bit(word_t x) { return x & 0xffffffff; }
 
+		/**
+		 * @brief SHA-256算法的64个轮常数
+		 * 
+		 * 这些常数是2^32乘以前64个质数的立方根的小数部分。
+		 */
 		const word_t add_constant[64] = {
 			0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
 			0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -46,34 +139,107 @@ namespace NFSha256 {
 			0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
 			0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2 };
 
+		/**
+		 * @brief SHA-256初始哈希值
+		 * 
+		 * 这些值是前8个质数的平方根的小数部分的前32位。
+		 */
 		const word_t initial_message_digest[8] = { 0x6a09e667, 0xbb67ae85, 0x3c6ef372,
 												  0xa54ff53a, 0x510e527f, 0x9b05688c,
 												  0x1f83d9ab, 0x5be0cd19 };
 
+		/**
+		 * @brief SHA-256的Ch函数
+		 * 
+		 * @param x 32位字
+		 * @param y 32位字  
+		 * @param z 32位字
+		 * @return word_t Ch(x,y,z) = (x & y) ^ ((~x) & z)
+		 */
 		inline word_t ch(word_t x, word_t y, word_t z) { return (x & y) ^ ((~x) & z); }
 
+		/**
+		 * @brief SHA-256的Maj函数
+		 * 
+		 * @param x 32位字
+		 * @param y 32位字
+		 * @param z 32位字  
+		 * @return word_t Maj(x,y,z) = (x & y) ^ (x & z) ^ (y & z)
+		 */
 		inline word_t maj(word_t x, word_t y, word_t z) {
 			return (x & y) ^ (x & z) ^ (y & z);
 		}
 
+		/**
+		 * @brief 循环右移操作
+		 * 
+		 * @param x 要旋转的32位字
+		 * @param n 右移位数（0-31）
+		 * @return word_t 旋转后的结果
+		 */
 		inline word_t rotr(word_t x, std::size_t n) {
 			assert(n < 32);
 			return mask_32bit((x >> n) | (x << (32 - n)));
 		}
 
+		/**
+		 * @brief SHA-256的大Sigma0函数
+		 * 
+		 * @param x 32位字
+		 * @return word_t ROTR(x,2) ⊕ ROTR(x,13) ⊕ ROTR(x,22)
+		 */
 		inline word_t bsig0(word_t x) { return rotr(x, 2) ^ rotr(x, 13) ^ rotr(x, 22); }
 
+		/**
+		 * @brief SHA-256的大Sigma1函数
+		 * 
+		 * @param x 32位字
+		 * @return word_t ROTR(x,6) ⊕ ROTR(x,11) ⊕ ROTR(x,25)
+		 */
 		inline word_t bsig1(word_t x) { return rotr(x, 6) ^ rotr(x, 11) ^ rotr(x, 25); }
 
+		/**
+		 * @brief 逻辑右移操作
+		 * 
+		 * @param x 要移位的32位字
+		 * @param n 右移位数（0-31）
+		 * @return word_t 移位后的结果
+		 */
 		inline word_t shr(word_t x, std::size_t n) {
 			assert(n < 32);
 			return x >> n;
 		}
 
+		/**
+		 * @brief SHA-256的小sigma0函数
+		 * 
+		 * @param x 32位字
+		 * @return word_t ROTR(x,7) ⊕ ROTR(x,18) ⊕ SHR(x,3)
+		 */
 		inline word_t ssig0(word_t x) { return rotr(x, 7) ^ rotr(x, 18) ^ shr(x, 3); }
 
+		/**
+		 * @brief SHA-256的小sigma1函数
+		 * 
+		 * @param x 32位字
+		 * @return word_t ROTR(x,17) ⊕ ROTR(x,19) ⊕ SHR(x,10)
+		 */
 		inline word_t ssig1(word_t x) { return rotr(x, 17) ^ rotr(x, 19) ^ shr(x, 10); }
 
+		/**
+		 * @brief 处理单个512位消息块
+		 * 
+		 * 这是SHA-256算法的核心函数，处理单个64字节的消息块。
+		 * 
+		 * @tparam RaIter1 消息摘要的随机访问迭代器类型
+		 * @tparam RaIter2 消息块的随机访问迭代器类型
+		 * @param message_digest 指向8个32位字的消息摘要数组
+		 * @param first 消息块起始迭代器
+		 * @param last 消息块结束迭代器
+		 * 
+		 * @note 消息块必须恰好是64字节
+		 * @note message_digest会被就地更新
+		 */
 		template <typename RaIter1, typename RaIter2>
 		void hash256_block(RaIter1 message_digest, RaIter2 first, RaIter2 last) {
 			assert(first + 64 == last);

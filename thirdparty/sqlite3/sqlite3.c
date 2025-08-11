@@ -51214,7 +51214,7 @@ SQLITE_API int sqlite3_pager_writej_count = 0;    /* Number of pages written to 
 ** Journal files begin with the following magic string.  The data
 ** was obtained from /dev/random.  It is used only as a sanity check.
 **
-** Since version 2.8.0, the journal format contains additional sanity
+** Since VERSION 3.5.0, the journal format contains additional sanity
 ** checking information.  If the power fails while the journal is being
 ** written, semi-random garbage data might appear in the journal
 ** file after power is restored.  If an attempt is then made

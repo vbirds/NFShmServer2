@@ -25,28 +25,28 @@ NFCWorldServerModule::~NFCWorldServerModule()
 {
 }
 
-bool NFCWorldServerModule::Awake()
+int NFCWorldServerModule::Awake()
 {
     /////////////////test other server msg///////////////////////////////////////
     BindServer();
-    return true;
+    return 0;
 }
 
-bool NFCWorldServerModule::Init()
+int NFCWorldServerModule::Init()
 {
     ConnectMasterServer();
-    return true;
+    return 0;
 }
 
-bool NFCWorldServerModule::Execute()
+int NFCWorldServerModule::Tick()
 {
-    return true;
+    return 0;
 }
 
-bool NFCWorldServerModule::OnDynamicPlugin()
+int NFCWorldServerModule::OnDynamicPlugin()
 {
     FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_WORLD_SERVER);
-    return true;
+    return 0;
 }
 
 int NFCWorldServerModule::OnHandleServerMessage(uint64_t unLinkId, NFDataPackage &packet)

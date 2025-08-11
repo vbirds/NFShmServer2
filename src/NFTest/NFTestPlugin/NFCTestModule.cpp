@@ -20,11 +20,10 @@ NFCTestModule::~NFCTestModule()
 }
 
 
-
-bool NFCTestModule::Init()
+int NFCTestModule::Init()
 {
 	SetTimer(1, 1000, 1);
-	return true;
+	return 0;
 }
 
 
@@ -33,17 +32,17 @@ int NFCTestModule::OnTimer(uint32_t nTimerID)
     return 0;
 }
 
-bool NFCTestModule::Execute()
+int NFCTestModule::Tick()
 {
-	return true;
+	return 0;
 }
 
-bool NFCTestModule::BeforeShut()
+int NFCTestModule::BeforeShut()
 {
-	return true;
+	return 0;
 }
 
-bool NFCTestModule::Shut()
+int NFCTestModule::Shut()
 {
-	return true;
+	return 0;
 }

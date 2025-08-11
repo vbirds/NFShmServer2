@@ -26,10 +26,10 @@ NFCGameServerModule::~NFCGameServerModule()
 {
 }
 
-bool NFCGameServerModule::Awake()
+int NFCGameServerModule::Awake()
 {
     BindServer();
-	return true;
+	return 0;
 }
 
 int NFCGameServerModule::OnHandleServerMessage(uint64_t unLinkId, NFDataPackage& packet)
@@ -49,20 +49,20 @@ int NFCGameServerModule::OnHandleServerMessage(uint64_t unLinkId, NFDataPackage&
     return 0;
 }
 
-bool NFCGameServerModule::Init()
+int NFCGameServerModule::Init()
 {
     ConnectMasterServer();
-    return true;
+    return 0;
 }
 
-bool NFCGameServerModule::Execute()
+int NFCGameServerModule::Tick()
 {
-	return true;
+	return 0;
 }
 
-bool NFCGameServerModule::OnDynamicPlugin()
+int NFCGameServerModule::OnDynamicPlugin()
 {
     FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_GAME_SERVER);
-	return true;
+	return 0;
 }
 

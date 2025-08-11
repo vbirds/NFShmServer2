@@ -4,6 +4,13 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFPluginModule
+//    @Desc             :    共享内存对象段实现文件，提供对象段的内存管理和索引功能。
+//                          该文件实现了对象段的核心功能，包括对象段的内存分配和管理、
+//                          对象索引的创建和维护、哈希表的管理和查找、对象的创建和销毁、
+//                          内存池的管理。主要功能包括对象段初始化、内存分配和释放、
+//                          索引管理、哈希表操作、对象生命周期管理。
+//                          设计特点包括基于共享内存支持跨进程、高效的内存管理、
+//                          灵活的索引机制、可选的哈希表支持、自动内存回收
 //
 // -------------------------------------------------------------------------
 
@@ -14,15 +21,40 @@
 #include "NFComm/NFObjCommon/NFObject.h"
 #include "NFCShmMngModule.h"
 
+/**
+ * @brief 重载new操作符
+ * 
+ * 在指定缓冲区上创建对象段
+ * 
+ * @param nSize 对象大小
+ * @param pBuffer 缓冲区指针
+ * @return 对象指针
+ */
 void* NFShmObjSeg::operator new(size_t nSize, void* pBuffer) throw()
 {
     return pBuffer;
 }
 
+/**
+ * @brief 重载delete操作符
+ * 
+ * 释放对象段内存
+ * 
+ * @param pMem 内存指针
+ * @param ptr 缓冲区指针
+ */
 void NFShmObjSeg::operator delete(void* pMem, void* ptr)
 {
 }
 
+/**
+ * @brief 创建对象段
+ * 
+ * 在共享内存中创建对象段
+ * 
+ * @param pShmModule 共享内存管理模块指针
+ * @return 创建的对象段指针
+ */
 NFShmObjSeg* NFShmObjSeg::CreateObjSeg(NFCShmMngModule* pShmModule)
 {
     void* pVoid = pShmModule->CreateSegment(sizeof(NFShmObjSeg));
@@ -30,6 +62,11 @@ NFShmObjSeg* NFShmObjSeg::CreateObjSeg(NFCShmMngModule* pShmModule)
     return pTmp;
 }
 
+/**
+ * @brief 构造函数
+ * 
+ * 初始化对象段的基本成员变量
+ */
 NFShmObjSeg::NFShmObjSeg()
 {
     m_nObjSize = 0;
@@ -40,8 +77,21 @@ NFShmObjSeg::NFShmObjSeg()
     m_pCreateFn = nullptr;
 }
 
+/**
+ * @brief 设置并初始化对象段
+ * 
+ * 设置对象段参数并分配必要的内存
+ * 
+ * @param pShmModule 共享内存管理模块指针
+ * @param nObjSize 对象大小
+ * @param iItemCount 对象数量
+ * @param pfCreateObj 创建对象函数指针
+ * @param iUseHash 是否使用哈希表
+ * @return 0 成功，其他值表示失败
+ */
 int NFShmObjSeg::SetAndInitObj(NFCShmMngModule* pShmModule, size_t nObjSize, int iItemCount, NFObject*(*pfCreateObj)(void*), bool iUseHash)
 {
+    // 设置基本参数
     m_pShmModule = pShmModule;
     m_nObjSize = nObjSize;
     m_iItemCount = iItemCount;
@@ -50,11 +100,12 @@ int NFShmObjSeg::SetAndInitObj(NFCShmMngModule* pShmModule, size_t nObjSize, int
     m_pCreateFn = pfCreateObj;
 
     /**
-     * @brief idx mem
+     * @brief 分配索引内存
      */
     size_t idxSize = 0;
     char* pIdxBuffer = nullptr;
 #ifdef SHM_OBJ_SEQ_USE_VECTOR_INDEX
+    // 使用vector索引模式
     size_t idxQueeuSize = 0;
     char* pIdxQueueBuff = nullptr;
     idxSize = NFShmDyVector<NFShmIdx>::CountSize(m_iItemCount);
@@ -77,6 +128,7 @@ int NFShmObjSeg::SetAndInitObj(NFCShmMngModule* pShmModule, size_t nObjSize, int
     }
     m_nMemSize += idxQueeuSize;
 #else
+    // 使用list索引模式
     idxSize = NFShmDyList<NFShmIdx>::CountSize(m_iItemCount);
     pIdxBuffer = static_cast<char*>(m_pShmModule->CreateSegment(idxSize));
     if (!pIdxBuffer)
@@ -90,7 +142,7 @@ int NFShmObjSeg::SetAndInitObj(NFCShmMngModule* pShmModule, size_t nObjSize, int
 #endif
 
     /**
-     * @brief use hash mem
+     * @brief 分配哈希表内存
      */
     size_t hashSize = 0;
     char* pHashBuffer = nullptr;

@@ -135,6 +135,16 @@ class Proto_ServerDumpInfoNtfDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<Proto_ServerDumpInfoNtf>
       _instance;
 } _Proto_ServerDumpInfoNtf_default_instance_;
+class Proto_ServerSyncDataReqDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Proto_ServerSyncDataReq>
+      _instance;
+} _Proto_ServerSyncDataReq_default_instance_;
+class Proto_ServerSyncDataRspDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Proto_ServerSyncDataRsp>
+      _instance;
+} _Proto_ServerSyncDataRsp_default_instance_;
 }  // namespace NFrame
 namespace protobuf_FrameMsg_2eproto {
 static void InitDefaultsProto_DispInfo() {
@@ -439,6 +449,34 @@ static void InitDefaultsProto_ServerDumpInfoNtf() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_Proto_ServerDumpInfoNtf =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsProto_ServerDumpInfoNtf}, {}};
 
+static void InitDefaultsProto_ServerSyncDataReq() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::NFrame::_Proto_ServerSyncDataReq_default_instance_;
+    new (ptr) ::NFrame::Proto_ServerSyncDataReq();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::NFrame::Proto_ServerSyncDataReq::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_Proto_ServerSyncDataReq =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsProto_ServerSyncDataReq}, {}};
+
+static void InitDefaultsProto_ServerSyncDataRsp() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::NFrame::_Proto_ServerSyncDataRsp_default_instance_;
+    new (ptr) ::NFrame::Proto_ServerSyncDataRsp();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::NFrame::Proto_ServerSyncDataRsp::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_Proto_ServerSyncDataRsp =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsProto_ServerSyncDataRsp}, {}};
+
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_Proto_DispInfo.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Proto_TransInfo.base);
@@ -461,9 +499,11 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_NFEventNoneData.base);
   ::google::protobuf::internal::InitSCC(&scc_info_NFEventScriptData.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Proto_ServerDumpInfoNtf.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Proto_ServerSyncDataReq.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Proto_ServerSyncDataRsp.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[21];
+::google::protobuf::Metadata file_level_metadata[23];
 const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[5];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
@@ -665,6 +705,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerDumpInfoNtf, dump_info_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerDumpInfoNtf, bus_id_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerSyncDataReq, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerSyncDataReq, msg_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerSyncDataReq, msg_data_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerSyncDataRsp, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerSyncDataRsp, msg_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerSyncDataRsp, msg_data_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::NFrame::Proto_ServerSyncDataRsp, result_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::NFrame::Proto_DispInfo)},
@@ -688,6 +743,8 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 174, -1, sizeof(::NFrame::NFEventNoneData)},
   { 184, -1, sizeof(::NFrame::NFEventScriptData)},
   { 191, -1, sizeof(::NFrame::Proto_ServerDumpInfoNtf)},
+  { 198, -1, sizeof(::NFrame::Proto_ServerSyncDataReq)},
+  { 205, -1, sizeof(::NFrame::Proto_ServerSyncDataRsp)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -712,6 +769,8 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::NFrame::_NFEventNoneData_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::NFrame::_NFEventScriptData_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::NFrame::_Proto_ServerDumpInfoNtf_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::NFrame::_Proto_ServerSyncDataReq_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::NFrame::_Proto_ServerSyncDataRsp_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -729,7 +788,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 21);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 23);
 }
 
 void AddDescriptorsImpl() {
@@ -802,108 +861,112 @@ void AddDescriptorsImpl() {
       "ta\022\022\n\nevent_type\030\001 \001(\t\022\022\n\nevent_data\030\002 \001"
       "(\t:\006\222\?\003\230\002\001\"D\n\027Proto_ServerDumpInfoNtf\022\021\n"
       "\tdump_info\030\001 \001(\t\022\016\n\006bus_id\030\002 \001(\r:\006\222\?\003\230\002\001"
-      "*\256\026\n\016FrameServerMsg\022\025\n\021NF_FRAME_MSG_NONE"
-      "\020\000\022\"\n\036NF_SERVER_TO_SERVER_HEART_BEAT\020\001\022&"
-      "\n\"NF_SERVER_TO_SERVER_HEART_BEAT_RSP\020\002\022\'"
-      "\n#NF_SERVER_TO_SERVER_BUS_CONNECT_REQ\020\003\022"
-      "\'\n#NF_SERVER_TO_SERVER_BUS_CONNECT_RSP\020\004"
-      "\022\036\n\032NF_GTM_KILL_ALL_SERVER_NTF\0202\022\036\n\032NF_S"
-      "TS_KILL_ALL_SERVER_NTF\0203\022\035\n\031NF_STS_SEND_"
-      "DUMP_INFO_NTF\0204\022$\n NF_MasterTMonitor_REL"
-      "OAD_CMD_REQ\020P\022%\n!NF_MasterTMonitor_RESTA"
-      "RT_CMD_REQ\020Q\022#\n\037NF_MasterTMonitor_START_"
-      "CMD_REQ\020R\022\"\n\036NF_MasterTMonitor_STOP_CMD_"
-      "REQ\020S\022&\n\"NF_MasterTMonitor_STOP_ALL_CMD_"
-      "REQ\020T\022(\n$NF_MasterTMonitor_RELOAD_ALL_CM"
-      "D_REQ\020U\022)\n%NF_MasterTMonitor_RESTART_ALL"
-      "_CMD_REQ\020V\022\'\n#NF_MasterTMonitor_START_AL"
-      "L_CMD_REQ\020W\022$\n NF_MonitorTMaster_RELOAD_"
-      "CMD_RSP\020Z\022%\n!NF_MonitorTMaster_RESTART_C"
-      "MD_RSP\020[\022#\n\037NF_MonitorTMaster_START_CMD_"
-      "RSP\020\\\022\"\n\036NF_MonitorTMaster_STOP_CMD_RSP\020"
-      "]\022&\n\"NF_MonitorTMaster_STOP_ALL_CMD_RSP\020"
-      "^\022(\n$NF_MonitorTMaster_RELOAD_ALL_CMD_RS"
-      "P\020_\022)\n%NF_MonitorTMaster_RESTART_ALL_CMD"
-      "_RSP\020`\022\'\n#NF_MonitorTMaster_START_ALL_CM"
-      "D_RSP\020a\022 \n\034NF_SERVER_TO_SERVER_REGISTER\020"
-      "d\022$\n NF_SERVER_TO_SERVER_REGISTER_RSP\020e\022"
-      "*\n&NF_MASTER_SERVER_SEND_OTHERS_TO_SERVE"
-      "R\020f\022%\n!NF_SERVER_TO_MASTER_SERVER_REPORT"
-      "\020g\022\'\n#NF_ROUTER_CMD_INTERNAL_C2R_REGISTE"
-      "R\020h\022\'\n#NF_ROUTER_CMD_INTERNAL_R2C_REGIST"
-      "ER\020i\022(\n$NF_ROUTER_CMD_INTERNAL_C2R_HEART"
-      "BEAT\020j\022(\n$NF_ROUTER_CMD_INTERNAL_R2C_HEA"
-      "RTBEAT\020k\022\036\n\032NF_ROUTER_CMD_DISPATCH_MOD\020l"
-      "\022%\n!NF_ROUTER_CMD_DISPATCH_ROUNDROBIN\020m\022"
-      "$\n NF_ROUTER_CMD_DISPATCH_BROADCAST\020n\022/\n"
-      "+NF_ROUTER_CMD_DISPATCH_BROADCAST_AND_MA"
-      "STER\020o\022+\n\'NF_ROUTER_CMD_DISPATCH_BORADCA"
-      "ST_MASTER\020p\022*\n&NF_ROUTER_CMD_DISPATCH_BO"
-      "RADCAST_SLAVE\020q\022!\n\035NF_ROUTER_CMD_DISPATC"
-      "H_DIRECT\020r\022-\n)NF_ROUTER_CMD_INTERNAL_R2C"
-      "_DISPATCHFAILED\020s\0220\n,NF_ROUTER_CMD_INTER"
-      "NAL_C2R_REG_RAASSOCAPPSVS\020t\022\037\n\033NF_SERVER"
-      "_TO_SERVER_RPC_CMD\020w\022!\n\035NF_SERVER_TO_SER"
-      "VER_TRANS_CMD\020x\022$\n NF_SERVER_TO_STORE_SE"
-      "RVER_DB_CMD\020y\022$\n NF_STORE_SERVER_TO_SERV"
-      "ER_DB_CMD\020z\022%\n!NF_WORLD_ROUTER_CMD_TO_SU"
-      "IT_LOGIC\020{\022#\n\037NF_SNS_ROUTER_CMD_TO_SUIT_"
-      "LOGIC\020|\022\"\n\036NF_STS_BROAD_PLAYER_MSG_NOTIF"
-      "Y\020}\022%\n!NF_SEVER_TO_WEB_SERVER_RSP_NOTIFY"
-      "\020~\022\'\n#NF_SERVER_BROAD_EVENT_TO_SERVER_CM"
-      "D\020\177\022/\n*NF_SERVER_REDIRECT_MSG_TO_PROXY_S"
-      "ERVER_CMD\020\200\001\022/\n*NF_SERVER_TO_SERVER_REGI"
-      "STER_ROOM_INFO_RPC\020\201\001\022\033\n\026NF_STORESVR_C2S"
-      "_SELECT\020\310\001\022\033\n\026NF_STORESVR_S2C_SELECT\020\311\001\022"
-      "\036\n\031NF_STORESVR_C2S_SELECTOBJ\020\312\001\022\036\n\031NF_ST"
-      "ORESVR_S2C_SELECTOBJ\020\313\001\022\033\n\026NF_STORESVR_C"
-      "2S_INSERT\020\314\001\022\033\n\026NF_STORESVR_S2C_INSERT\020\315"
-      "\001\022\036\n\031NF_STORESVR_C2S_INSERTOBJ\020\316\001\022\036\n\031NF_"
-      "STORESVR_S2C_INSERTOBJ\020\317\001\022\033\n\026NF_STORESVR"
-      "_C2S_DELETE\020\320\001\022\033\n\026NF_STORESVR_S2C_DELETE"
-      "\020\321\001\022\036\n\031NF_STORESVR_C2S_DELETEOBJ\020\322\001\022\036\n\031N"
-      "F_STORESVR_S2C_DELETEOBJ\020\323\001\022\033\n\026NF_STORES"
-      "VR_C2S_MODIFY\020\324\001\022\033\n\026NF_STORESVR_S2C_MODI"
-      "FY\020\325\001\022\036\n\031NF_STORESVR_C2S_MODIFYOBJ\020\326\001\022\036\n"
-      "\031NF_STORESVR_S2C_MODIFYOBJ\020\327\001\022\033\n\026NF_STOR"
-      "ESVR_C2S_UPDATE\020\330\001\022\033\n\026NF_STORESVR_S2C_UP"
-      "DATE\020\331\001\022\036\n\031NF_STORESVR_C2S_UPDATEOBJ\020\332\001\022"
-      "\036\n\031NF_STORESVR_S2C_UPDATEOBJ\020\333\001\022\036\n\031NF_ST"
-      "ORESVR_C2S_DESCSTORE\020\334\001\022\036\n\031NF_STORESVR_S"
-      "2C_DESCSTORE\020\335\001\022\034\n\027NF_STORESVR_C2S_EXECU"
-      "TE\020\336\001\022\034\n\027NF_STORESVR_S2C_EXECUTE\020\337\001\022!\n\034N"
-      "F_STORESVR_C2S_EXECUTE_MORE\020\340\001\022!\n\034NF_STO"
-      "RESVR_S2C_EXECUTE_MORE\020\341\001*\223\001\n\016PacketDisp"
-      "Type\022\024\n\020E_DISP_TYPE_NONE\020\000\022\036\n\032E_DISP_TYP"
-      "E_BY_TRANSACTION\020\001\022\031\n\025E_DISP_TYPE_BY_ROL"
-      "EID\020\002\022\030\n\024E_DISP_TYPE_BY_MSGID\020\003\022\026\n\022E_DIS"
-      "P_TYPE_BY_RPC\020\004*I\n\014EServerState\022\014\n\010EST_I"
-      "NIT\020\000\022\016\n\nEST_NARMAL\020\001\022\014\n\010EST_BUSY\020\002\022\r\n\tE"
-      "ST_CRASH\020\003*r\n\016NFEventSrcType\022\026\n\022NF_EVENT"
-      "_NONE_TYPE\020\000\022\030\n\024NF_EVENT_SERVER_TYPE\020\001\022\024"
-      "\n\020NF_EVENT_GM_TYPE\020\002\022\030\n\024NF_EVENT_PLAYER_"
-      "TYPE\020\004*\301\005\n\rNFEventIdType\022\021\n\rNF_EVENT_NON"
-      "E\020\000\022\036\n\032NF_EVENT_SERVER_TYPE_BEGIN\020\001\022%\n!N"
-      "F_EVENT_SERVER_TASK_GROUP_FINISH\020\002\022%\n!NF"
-      "_EVENT_SERVER_APP_FINISH_INITED\020\005\022\036\n\032NF_"
-      "EVENT_SERVER_DEAD_EVENT\020\006\022#\n\037NF_EVENT_GA"
-      "ME_SERVER_DUMP_EVENT\020\010\022$\n NF_EVENT_LOGIC"
-      "_SERVER_DUMP_EVENT\020\t\022$\n NF_EVENT_WORLD_S"
-      "ERVER_DUMP_EVENT\020\n\022$\n NF_EVENT_CENTER_SE"
-      "RVER_DUMP_VENT\020\013\022$\n NF_EVENT_PROXY_SERVE"
-      "R_DUMP_EVENT\020\014\022*\n&NF_EVENT_PROXY_AGENT_S"
-      "ERVER_DUMP_EVENT\020\r\022#\n\037NF_EVENT_STORE_SER"
-      "VER_DMP_EVENT\020\016\022$\n NF_EVENT_LOGIN_SERVER"
-      "_DUMP_EVENT\020\017\022*\n&NF_EVENT_ROUTE_AGENT_SE"
-      "RVER_DUMP_EVENT\020\020\022$\n NF_EVENT_ROUTE_SERV"
-      "ER_DUMP_EVENT\020\021\022%\n!NF_EVENT_MASTER_SERVE"
-      "R_DUMP_EVENT\020\022\022 \n\034NF_EVENT_SERVER_REPORT"
-      "_EVENT\020\036\022\"\n\036NF_EVENT_SERVER_SET_TIME_EVE"
-      "NT\020\037\022\034\n\030NF_EVENT_SERVER_TYPE_END\020cb\006prot"
-      "o3"
+      "\"C\n\027Proto_ServerSyncDataReq\022\016\n\006msg_id\030\001 "
+      "\001(\r\022\020\n\010msg_data\030\002 \001(\014:\006\222\?\003\230\002\001\"S\n\027Proto_S"
+      "erverSyncDataRsp\022\016\n\006msg_id\030\001 \001(\r\022\020\n\010msg_"
+      "data\030\002 \001(\014\022\016\n\006result\030\003 \001(\005:\006\222\?\003\230\002\001*\326\026\n\016F"
+      "rameServerMsg\022\025\n\021NF_FRAME_MSG_NONE\020\000\022\"\n\036"
+      "NF_SERVER_TO_SERVER_HEART_BEAT\020\001\022&\n\"NF_S"
+      "ERVER_TO_SERVER_HEART_BEAT_RSP\020\002\022\'\n#NF_S"
+      "ERVER_TO_SERVER_BUS_CONNECT_REQ\020\003\022\'\n#NF_"
+      "SERVER_TO_SERVER_BUS_CONNECT_RSP\020\004\022\036\n\032NF"
+      "_GTM_KILL_ALL_SERVER_NTF\0202\022\036\n\032NF_STS_KIL"
+      "L_ALL_SERVER_NTF\0203\022\035\n\031NF_STS_SEND_DUMP_I"
+      "NFO_NTF\0204\022$\n NF_MasterTMonitor_RELOAD_CM"
+      "D_REQ\020P\022%\n!NF_MasterTMonitor_RESTART_CMD"
+      "_REQ\020Q\022#\n\037NF_MasterTMonitor_START_CMD_RE"
+      "Q\020R\022\"\n\036NF_MasterTMonitor_STOP_CMD_REQ\020S\022"
+      "&\n\"NF_MasterTMonitor_STOP_ALL_CMD_REQ\020T\022"
+      "(\n$NF_MasterTMonitor_RELOAD_ALL_CMD_REQ\020"
+      "U\022)\n%NF_MasterTMonitor_RESTART_ALL_CMD_R"
+      "EQ\020V\022\'\n#NF_MasterTMonitor_START_ALL_CMD_"
+      "REQ\020W\022$\n NF_MonitorTMaster_RELOAD_CMD_RS"
+      "P\020Z\022%\n!NF_MonitorTMaster_RESTART_CMD_RSP"
+      "\020[\022#\n\037NF_MonitorTMaster_START_CMD_RSP\020\\\022"
+      "\"\n\036NF_MonitorTMaster_STOP_CMD_RSP\020]\022&\n\"N"
+      "F_MonitorTMaster_STOP_ALL_CMD_RSP\020^\022(\n$N"
+      "F_MonitorTMaster_RELOAD_ALL_CMD_RSP\020_\022)\n"
+      "%NF_MonitorTMaster_RESTART_ALL_CMD_RSP\020`"
+      "\022\'\n#NF_MonitorTMaster_START_ALL_CMD_RSP\020"
+      "a\022 \n\034NF_SERVER_TO_SERVER_REGISTER\020d\022$\n N"
+      "F_SERVER_TO_SERVER_REGISTER_RSP\020e\022*\n&NF_"
+      "MASTER_SERVER_SEND_OTHERS_TO_SERVER\020f\022%\n"
+      "!NF_SERVER_TO_MASTER_SERVER_REPORT\020g\022\'\n#"
+      "NF_ROUTER_CMD_INTERNAL_C2R_REGISTER\020h\022\'\n"
+      "#NF_ROUTER_CMD_INTERNAL_R2C_REGISTER\020i\022("
+      "\n$NF_ROUTER_CMD_INTERNAL_C2R_HEARTBEAT\020j"
+      "\022(\n$NF_ROUTER_CMD_INTERNAL_R2C_HEARTBEAT"
+      "\020k\022\036\n\032NF_ROUTER_CMD_DISPATCH_MOD\020l\022%\n!NF"
+      "_ROUTER_CMD_DISPATCH_ROUNDROBIN\020m\022$\n NF_"
+      "ROUTER_CMD_DISPATCH_BROADCAST\020n\022/\n+NF_RO"
+      "UTER_CMD_DISPATCH_BROADCAST_AND_MASTER\020o"
+      "\022+\n\'NF_ROUTER_CMD_DISPATCH_BORADCAST_MAS"
+      "TER\020p\022*\n&NF_ROUTER_CMD_DISPATCH_BORADCAS"
+      "T_SLAVE\020q\022!\n\035NF_ROUTER_CMD_DISPATCH_DIRE"
+      "CT\020r\022-\n)NF_ROUTER_CMD_INTERNAL_R2C_DISPA"
+      "TCHFAILED\020s\0220\n,NF_ROUTER_CMD_INTERNAL_C2"
+      "R_REG_RAASSOCAPPSVS\020t\022\037\n\033NF_SERVER_TO_SE"
+      "RVER_RPC_CMD\020w\022!\n\035NF_SERVER_TO_SERVER_TR"
+      "ANS_CMD\020x\022$\n NF_SERVER_TO_STORE_SERVER_D"
+      "B_CMD\020y\022$\n NF_STORE_SERVER_TO_SERVER_DB_"
+      "CMD\020z\022%\n!NF_WORLD_ROUTER_CMD_TO_SUIT_LOG"
+      "IC\020{\022#\n\037NF_SNS_ROUTER_CMD_TO_SUIT_LOGIC\020"
+      "|\022\"\n\036NF_STS_BROAD_PLAYER_MSG_NOTIFY\020}\022%\n"
+      "!NF_SEVER_TO_WEB_SERVER_RSP_NOTIFY\020~\022\'\n#"
+      "NF_SERVER_BROAD_EVENT_TO_SERVER_CMD\020\177\022/\n"
+      "*NF_SERVER_REDIRECT_MSG_TO_PROXY_SERVER_"
+      "CMD\020\200\001\022/\n*NF_SERVER_TO_SERVER_REGISTER_R"
+      "OOM_INFO_RPC\020\201\001\022&\n!NF_SERVER_TO_SERVER_S"
+      "YNC_DATA_RPC\020\202\001\022\033\n\026NF_STORESVR_C2S_SELEC"
+      "T\020\310\001\022\033\n\026NF_STORESVR_S2C_SELECT\020\311\001\022\036\n\031NF_"
+      "STORESVR_C2S_SELECTOBJ\020\312\001\022\036\n\031NF_STORESVR"
+      "_S2C_SELECTOBJ\020\313\001\022\033\n\026NF_STORESVR_C2S_INS"
+      "ERT\020\314\001\022\033\n\026NF_STORESVR_S2C_INSERT\020\315\001\022\036\n\031N"
+      "F_STORESVR_C2S_INSERTOBJ\020\316\001\022\036\n\031NF_STORES"
+      "VR_S2C_INSERTOBJ\020\317\001\022\033\n\026NF_STORESVR_C2S_D"
+      "ELETE\020\320\001\022\033\n\026NF_STORESVR_S2C_DELETE\020\321\001\022\036\n"
+      "\031NF_STORESVR_C2S_DELETEOBJ\020\322\001\022\036\n\031NF_STOR"
+      "ESVR_S2C_DELETEOBJ\020\323\001\022\033\n\026NF_STORESVR_C2S"
+      "_MODIFY\020\324\001\022\033\n\026NF_STORESVR_S2C_MODIFY\020\325\001\022"
+      "\036\n\031NF_STORESVR_C2S_MODIFYOBJ\020\326\001\022\036\n\031NF_ST"
+      "ORESVR_S2C_MODIFYOBJ\020\327\001\022\033\n\026NF_STORESVR_C"
+      "2S_UPDATE\020\330\001\022\033\n\026NF_STORESVR_S2C_UPDATE\020\331"
+      "\001\022\036\n\031NF_STORESVR_C2S_UPDATEOBJ\020\332\001\022\036\n\031NF_"
+      "STORESVR_S2C_UPDATEOBJ\020\333\001\022\036\n\031NF_STORESVR"
+      "_C2S_DESCSTORE\020\334\001\022\036\n\031NF_STORESVR_S2C_DES"
+      "CSTORE\020\335\001\022\034\n\027NF_STORESVR_C2S_EXECUTE\020\336\001\022"
+      "\034\n\027NF_STORESVR_S2C_EXECUTE\020\337\001\022!\n\034NF_STOR"
+      "ESVR_C2S_EXECUTE_MORE\020\340\001\022!\n\034NF_STORESVR_"
+      "S2C_EXECUTE_MORE\020\341\001*\223\001\n\016PacketDispType\022\024"
+      "\n\020E_DISP_TYPE_NONE\020\000\022\036\n\032E_DISP_TYPE_BY_T"
+      "RANSACTION\020\001\022\031\n\025E_DISP_TYPE_BY_ROLEID\020\002\022"
+      "\030\n\024E_DISP_TYPE_BY_MSGID\020\003\022\026\n\022E_DISP_TYPE"
+      "_BY_RPC\020\004*I\n\014EServerState\022\014\n\010EST_INIT\020\000\022"
+      "\016\n\nEST_NARMAL\020\001\022\014\n\010EST_BUSY\020\002\022\r\n\tEST_CRA"
+      "SH\020\003*r\n\016NFEventSrcType\022\026\n\022NF_EVENT_NONE_"
+      "TYPE\020\000\022\030\n\024NF_EVENT_SERVER_TYPE\020\001\022\024\n\020NF_E"
+      "VENT_GM_TYPE\020\002\022\030\n\024NF_EVENT_PLAYER_TYPE\020\004"
+      "*\301\005\n\rNFEventIdType\022\021\n\rNF_EVENT_NONE\020\000\022\036\n"
+      "\032NF_EVENT_SERVER_TYPE_BEGIN\020\001\022%\n!NF_EVEN"
+      "T_SERVER_TASK_GROUP_FINISH\020\002\022%\n!NF_EVENT"
+      "_SERVER_APP_FINISH_INITED\020\005\022\036\n\032NF_EVENT_"
+      "SERVER_DEAD_EVENT\020\006\022#\n\037NF_EVENT_GAME_SER"
+      "VER_DUMP_EVENT\020\010\022$\n NF_EVENT_LOGIC_SERVE"
+      "R_DUMP_EVENT\020\t\022$\n NF_EVENT_WORLD_SERVER_"
+      "DUMP_EVENT\020\n\022$\n NF_EVENT_CENTER_SERVER_D"
+      "UMP_VENT\020\013\022$\n NF_EVENT_PROXY_SERVER_DUMP"
+      "_EVENT\020\014\022*\n&NF_EVENT_PROXY_AGENT_SERVER_"
+      "DUMP_EVENT\020\r\022#\n\037NF_EVENT_STORE_SERVER_DM"
+      "P_EVENT\020\016\022$\n NF_EVENT_LOGIN_SERVER_DUMP_"
+      "EVENT\020\017\022*\n&NF_EVENT_ROUTE_AGENT_SERVER_D"
+      "UMP_EVENT\020\020\022$\n NF_EVENT_ROUTE_SERVER_DUM"
+      "P_EVENT\020\021\022%\n!NF_EVENT_MASTER_SERVER_DUMP"
+      "_EVENT\020\022\022 \n\034NF_EVENT_SERVER_REPORT_EVENT"
+      "\020\036\022\"\n\036NF_EVENT_SERVER_SET_TIME_EVENT\020\037\022\034"
+      "\n\030NF_EVENT_SERVER_TYPE_END\020cb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 6602);
+      descriptor, 6796);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "FrameMsg.proto", &protobuf_RegisterTypes);
   ::protobuf_nanopb_2eproto::AddDescriptors();
@@ -979,6 +1042,7 @@ bool FrameServerMsg_IsValid(int value) {
     case 127:
     case 128:
     case 129:
+    case 130:
     case 200:
     case 201:
     case 202:
@@ -9162,6 +9226,586 @@ void Proto_ServerDumpInfoNtf::InternalSwap(Proto_ServerDumpInfoNtf* other) {
 }
 
 
+// ===================================================================
+
+void Proto_ServerSyncDataReq::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Proto_ServerSyncDataReq::kMsgIdFieldNumber;
+const int Proto_ServerSyncDataReq::kMsgDataFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Proto_ServerSyncDataReq::Proto_ServerSyncDataReq()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_FrameMsg_2eproto::scc_info_Proto_ServerSyncDataReq.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:NFrame.Proto_ServerSyncDataReq)
+}
+Proto_ServerSyncDataReq::Proto_ServerSyncDataReq(const Proto_ServerSyncDataReq& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  msg_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.msg_data().size() > 0) {
+    msg_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_data_);
+  }
+  msg_id_ = from.msg_id_;
+  // @@protoc_insertion_point(copy_constructor:NFrame.Proto_ServerSyncDataReq)
+}
+
+void Proto_ServerSyncDataReq::SharedCtor() {
+  msg_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  msg_id_ = 0u;
+}
+
+Proto_ServerSyncDataReq::~Proto_ServerSyncDataReq() {
+  // @@protoc_insertion_point(destructor:NFrame.Proto_ServerSyncDataReq)
+  SharedDtor();
+}
+
+void Proto_ServerSyncDataReq::SharedDtor() {
+  msg_data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void Proto_ServerSyncDataReq::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Proto_ServerSyncDataReq::descriptor() {
+  ::protobuf_FrameMsg_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_FrameMsg_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Proto_ServerSyncDataReq& Proto_ServerSyncDataReq::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_FrameMsg_2eproto::scc_info_Proto_ServerSyncDataReq.base);
+  return *internal_default_instance();
+}
+
+
+void Proto_ServerSyncDataReq::Clear() {
+// @@protoc_insertion_point(message_clear_start:NFrame.Proto_ServerSyncDataReq)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  msg_data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  msg_id_ = 0u;
+  _internal_metadata_.Clear();
+}
+
+bool Proto_ServerSyncDataReq::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:NFrame.Proto_ServerSyncDataReq)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // uint32 msg_id = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &msg_id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bytes msg_data = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_msg_data()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:NFrame.Proto_ServerSyncDataReq)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:NFrame.Proto_ServerSyncDataReq)
+  return false;
+#undef DO_
+}
+
+void Proto_ServerSyncDataReq::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:NFrame.Proto_ServerSyncDataReq)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 msg_id = 1;
+  if (this->msg_id() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->msg_id(), output);
+  }
+
+  // bytes msg_data = 2;
+  if (this->msg_data().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      2, this->msg_data(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:NFrame.Proto_ServerSyncDataReq)
+}
+
+::google::protobuf::uint8* Proto_ServerSyncDataReq::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:NFrame.Proto_ServerSyncDataReq)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 msg_id = 1;
+  if (this->msg_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->msg_id(), target);
+  }
+
+  // bytes msg_data = 2;
+  if (this->msg_data().size() > 0) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->msg_data(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:NFrame.Proto_ServerSyncDataReq)
+  return target;
+}
+
+size_t Proto_ServerSyncDataReq::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:NFrame.Proto_ServerSyncDataReq)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // bytes msg_data = 2;
+  if (this->msg_data().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->msg_data());
+  }
+
+  // uint32 msg_id = 1;
+  if (this->msg_id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->msg_id());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Proto_ServerSyncDataReq::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:NFrame.Proto_ServerSyncDataReq)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Proto_ServerSyncDataReq* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Proto_ServerSyncDataReq>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:NFrame.Proto_ServerSyncDataReq)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:NFrame.Proto_ServerSyncDataReq)
+    MergeFrom(*source);
+  }
+}
+
+void Proto_ServerSyncDataReq::MergeFrom(const Proto_ServerSyncDataReq& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:NFrame.Proto_ServerSyncDataReq)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.msg_data().size() > 0) {
+
+    msg_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_data_);
+  }
+  if (from.msg_id() != 0) {
+    set_msg_id(from.msg_id());
+  }
+}
+
+void Proto_ServerSyncDataReq::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:NFrame.Proto_ServerSyncDataReq)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Proto_ServerSyncDataReq::CopyFrom(const Proto_ServerSyncDataReq& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:NFrame.Proto_ServerSyncDataReq)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Proto_ServerSyncDataReq::IsInitialized() const {
+  return true;
+}
+
+void Proto_ServerSyncDataReq::Swap(Proto_ServerSyncDataReq* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Proto_ServerSyncDataReq::InternalSwap(Proto_ServerSyncDataReq* other) {
+  using std::swap;
+  msg_data_.Swap(&other->msg_data_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(msg_id_, other->msg_id_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Proto_ServerSyncDataReq::GetMetadata() const {
+  protobuf_FrameMsg_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_FrameMsg_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Proto_ServerSyncDataRsp::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Proto_ServerSyncDataRsp::kMsgIdFieldNumber;
+const int Proto_ServerSyncDataRsp::kMsgDataFieldNumber;
+const int Proto_ServerSyncDataRsp::kResultFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Proto_ServerSyncDataRsp::Proto_ServerSyncDataRsp()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_FrameMsg_2eproto::scc_info_Proto_ServerSyncDataRsp.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:NFrame.Proto_ServerSyncDataRsp)
+}
+Proto_ServerSyncDataRsp::Proto_ServerSyncDataRsp(const Proto_ServerSyncDataRsp& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  msg_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.msg_data().size() > 0) {
+    msg_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_data_);
+  }
+  ::memcpy(&msg_id_, &from.msg_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&result_) -
+    reinterpret_cast<char*>(&msg_id_)) + sizeof(result_));
+  // @@protoc_insertion_point(copy_constructor:NFrame.Proto_ServerSyncDataRsp)
+}
+
+void Proto_ServerSyncDataRsp::SharedCtor() {
+  msg_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&msg_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&result_) -
+      reinterpret_cast<char*>(&msg_id_)) + sizeof(result_));
+}
+
+Proto_ServerSyncDataRsp::~Proto_ServerSyncDataRsp() {
+  // @@protoc_insertion_point(destructor:NFrame.Proto_ServerSyncDataRsp)
+  SharedDtor();
+}
+
+void Proto_ServerSyncDataRsp::SharedDtor() {
+  msg_data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void Proto_ServerSyncDataRsp::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Proto_ServerSyncDataRsp::descriptor() {
+  ::protobuf_FrameMsg_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_FrameMsg_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Proto_ServerSyncDataRsp& Proto_ServerSyncDataRsp::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_FrameMsg_2eproto::scc_info_Proto_ServerSyncDataRsp.base);
+  return *internal_default_instance();
+}
+
+
+void Proto_ServerSyncDataRsp::Clear() {
+// @@protoc_insertion_point(message_clear_start:NFrame.Proto_ServerSyncDataRsp)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  msg_data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&msg_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&result_) -
+      reinterpret_cast<char*>(&msg_id_)) + sizeof(result_));
+  _internal_metadata_.Clear();
+}
+
+bool Proto_ServerSyncDataRsp::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:NFrame.Proto_ServerSyncDataRsp)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // uint32 msg_id = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &msg_id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bytes msg_data = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_msg_data()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 result = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &result_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:NFrame.Proto_ServerSyncDataRsp)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:NFrame.Proto_ServerSyncDataRsp)
+  return false;
+#undef DO_
+}
+
+void Proto_ServerSyncDataRsp::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:NFrame.Proto_ServerSyncDataRsp)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 msg_id = 1;
+  if (this->msg_id() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->msg_id(), output);
+  }
+
+  // bytes msg_data = 2;
+  if (this->msg_data().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      2, this->msg_data(), output);
+  }
+
+  // int32 result = 3;
+  if (this->result() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->result(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:NFrame.Proto_ServerSyncDataRsp)
+}
+
+::google::protobuf::uint8* Proto_ServerSyncDataRsp::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:NFrame.Proto_ServerSyncDataRsp)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 msg_id = 1;
+  if (this->msg_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->msg_id(), target);
+  }
+
+  // bytes msg_data = 2;
+  if (this->msg_data().size() > 0) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->msg_data(), target);
+  }
+
+  // int32 result = 3;
+  if (this->result() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->result(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:NFrame.Proto_ServerSyncDataRsp)
+  return target;
+}
+
+size_t Proto_ServerSyncDataRsp::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:NFrame.Proto_ServerSyncDataRsp)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // bytes msg_data = 2;
+  if (this->msg_data().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->msg_data());
+  }
+
+  // uint32 msg_id = 1;
+  if (this->msg_id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->msg_id());
+  }
+
+  // int32 result = 3;
+  if (this->result() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->result());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Proto_ServerSyncDataRsp::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:NFrame.Proto_ServerSyncDataRsp)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Proto_ServerSyncDataRsp* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Proto_ServerSyncDataRsp>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:NFrame.Proto_ServerSyncDataRsp)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:NFrame.Proto_ServerSyncDataRsp)
+    MergeFrom(*source);
+  }
+}
+
+void Proto_ServerSyncDataRsp::MergeFrom(const Proto_ServerSyncDataRsp& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:NFrame.Proto_ServerSyncDataRsp)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.msg_data().size() > 0) {
+
+    msg_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_data_);
+  }
+  if (from.msg_id() != 0) {
+    set_msg_id(from.msg_id());
+  }
+  if (from.result() != 0) {
+    set_result(from.result());
+  }
+}
+
+void Proto_ServerSyncDataRsp::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:NFrame.Proto_ServerSyncDataRsp)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Proto_ServerSyncDataRsp::CopyFrom(const Proto_ServerSyncDataRsp& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:NFrame.Proto_ServerSyncDataRsp)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Proto_ServerSyncDataRsp::IsInitialized() const {
+  return true;
+}
+
+void Proto_ServerSyncDataRsp::Swap(Proto_ServerSyncDataRsp* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Proto_ServerSyncDataRsp::InternalSwap(Proto_ServerSyncDataRsp* other) {
+  using std::swap;
+  msg_data_.Swap(&other->msg_data_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(msg_id_, other->msg_id_);
+  swap(result_, other->result_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Proto_ServerSyncDataRsp::GetMetadata() const {
+  protobuf_FrameMsg_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_FrameMsg_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace NFrame
 namespace google {
@@ -9228,6 +9872,12 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::NFrame::NFEventScriptData* Arena
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::NFrame::Proto_ServerDumpInfoNtf* Arena::CreateMaybeMessage< ::NFrame::Proto_ServerDumpInfoNtf >(Arena* arena) {
   return Arena::CreateInternal< ::NFrame::Proto_ServerDumpInfoNtf >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::NFrame::Proto_ServerSyncDataReq* Arena::CreateMaybeMessage< ::NFrame::Proto_ServerSyncDataReq >(Arena* arena) {
+  return Arena::CreateInternal< ::NFrame::Proto_ServerSyncDataReq >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::NFrame::Proto_ServerSyncDataRsp* Arena::CreateMaybeMessage< ::NFrame::Proto_ServerSyncDataRsp >(Arena* arena) {
+  return Arena::CreateInternal< ::NFrame::Proto_ServerSyncDataRsp >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

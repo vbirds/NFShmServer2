@@ -4,6 +4,18 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFDBObjMgr.cpp
+//    @Desc             :    数据库对象管理器实现文件，提供数据库对象的管理功能实现。
+//                          该文件实现了数据库对象管理器类的方法，包括对象管理接口、
+//                          数据加载接口、数据保存接口、事务处理接口。
+//                          主要功能包括提供数据库对象的管理实现、支持数据加载和保存、
+//                          支持事务处理和状态管理、提供对象生命周期管理。
+//                          数据库对象管理器实现是NFShmXFrame框架的数据库管理核心组件实现，负责：
+//                          - 数据库对象的管理和调度实现
+//                          - 数据加载和保存的协调实现
+//                          - 事务处理和状态管理实现
+//                          - 对象生命周期管理实现
+//                          - 数据库操作的批量处理实现
+//                          - 错误处理和重试机制实现
 //
 // -------------------------------------------------------------------------
 
@@ -16,6 +28,11 @@
 #include "NFComm/NFCore/NFTime.h"
 #include "NFComm/NFPluginModule/NFError.h"
 
+/**
+ * @brief 构造函数
+ * 
+ * 根据共享内存管理器的创建模式，选择调用CreateInit或ResumeInit
+ */
 NFDBObjMgr::NFDBObjMgr()
 {
     if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode())
@@ -28,75 +45,112 @@ NFDBObjMgr::NFDBObjMgr()
     }
 }
 
+/**
+ * @brief 析构函数
+ * 
+ * 清理定时器资源
+ */
 NFDBObjMgr::~NFDBObjMgr()
 {
     if (m_iTimer != INVALID_ID)
     {
-        DeleteTimer(m_iTimer);
-        m_iTimer = INVALID_ID;
+        DeleteTimer(m_iTimer); ///< 删除定时器
+        m_iTimer = INVALID_ID; ///< 清除定时器ID
     }
 }
 
+/**
+ * @brief 创建初始化
+ * 
+ * 初始化所有成员变量为默认值，设置定时器
+ * 
+ * @return 0表示成功
+ */
 int NFDBObjMgr::CreateInit()
 {
-    m_iLastSavingObjIndex = 0;
-    m_iLastTickTime = 0;
-    m_iTransMngObjID = 0;
-    m_iTimer = INVALID_ID;
-    m_iTimer = SetTimer(1000, 0, 0, 0, 10, 0);
+    m_iLastSavingObjIndex = 0; ///< 最后保存对象索引为0
+    m_iLastTickTime = 0; ///< 最后心跳时间为0
+    m_iTransMngObjID = 0; ///< 事务管理器对象ID为0
+    m_iTimer = INVALID_ID; ///< 定时器ID为无效
+    m_iTimer = SetTimer(1000, 0, 0, 0, 10, 0); ///< 设置定时器，每秒执行一次
     return 0;
 }
 
+/**
+ * @brief 恢复初始化
+ * 
+ * 从共享内存恢复对象状态
+ * 
+ * @return 0表示成功
+ */
 int NFDBObjMgr::ResumeInit()
 {
     return 0;
 }
 
+/**
+ * @brief 定时器回调
+ * 
+ * 处理定时器事件，执行Tick操作
+ * 
+ * @param timeId 定时器ID
+ * @param callcount 调用次数
+ * @return 0表示成功
+ */
 int NFDBObjMgr::OnTimer(int timeId, int callcount)
 {
     if (m_iTimer == timeId)
     {
-        Tick();
+        Tick(); ///< 执行Tick操作
     }
     return 0;
 }
 
+/**
+ * @brief 定时处理
+ * 
+ * 定期处理数据库对象的加载和保存操作
+ * 
+ * @return 0表示成功
+ */
 int NFDBObjMgr::Tick()
 {
+    // 处理失败的对象列表，尝试重新加载
     for (auto iter = m_failedObjList.begin(); iter != m_failedObjList.end();)
     {
-        NFBaseDBObj* pObj = GetObj(*iter);
+        NFBaseDBObj* pObj = GetObj(*iter); ///< 获取对象
         if (pObj)
         {
-            int iRet = LoadFromDB(pObj);
+            int iRet = LoadFromDB(pObj); ///< 从数据库加载对象
             if (iRet == 0)
             {
-                iter = m_failedObjList.erase(iter);
+                iter = m_failedObjList.erase(iter); ///< 加载成功，从失败列表中移除
             }
             else
             {
-                iter++;
+                iter++; ///< 加载失败，继续下一个
             }
         }
         else
         {
-            iter = m_failedObjList.erase(iter);
+            iter = m_failedObjList.erase(iter); ///< 对象不存在，从失败列表中移除
         }
     }
 
+    // 重置保存索引
     if (m_iLastSavingObjIndex >= (int)m_runningObjList.size())
     {
-        m_iLastSavingObjIndex = 0;
+        m_iLastSavingObjIndex = 0; ///< 重置保存索引
     }
 
-    int iSavedObjNum = 0;
-    int idx = 0;
-    uint64_t now = NF_ADJUST_TIMENOW();
+    int iSavedObjNum = 0; ///< 已保存对象数量
+    int idx = 0; ///< 当前索引
+    uint64_t now = NF_ADJUST_TIMENOW(); ///< 当前时间
     for (auto iter = m_runningObjList.begin(); iter != m_runningObjList.end() && iSavedObjNum < MAX_SAVED_OBJ_PRE_SEC;)
     {
         if (idx < m_iLastSavingObjIndex)
         {
-            ++idx;
+            ++idx; ///< 跳过已处理的对象
             ++iter;
             continue;
         }
@@ -157,7 +211,6 @@ int NFDBObjMgr::CheckWhenAllDataLoaded()
 
 int NFDBObjMgr::LoadFromDB(NFBaseDBObj* pObj)
 {
-    NFLogTrace(NF_LOG_DEFAULT, 0, "--begin--");
     CHECK_NULL(0, pObj);
 
     m_loadDBList.insert(pObj->GetGlobalId());
@@ -196,13 +249,20 @@ int NFDBObjMgr::LoadFromDB(NFBaseDBObj* pObj)
         NFLogError(NF_LOG_DEFAULT, 0, "Make LoadData Failed:{} iRet:{}", pObj->GetClassName(), iRet);
         return iRet;
     }
-    NFLogTrace(NF_LOG_DEFAULT, 0, "--end--");
     return 0;
 }
 
 int NFDBObjMgr::OnDataLoaded(int iObjID, int32_t err_code, const google::protobuf::Message* pData)
 {
-    NFLogDebug(NF_LOG_DEFAULT, 0, "objId:{} Date Loaded:{} err_code:{}", iObjID, pData->GetTypeName(), GetErrorStr(err_code));
+    if (pData)
+    {
+        NFLogInfo(NF_LOG_DEFAULT, 0, "objId:{} Date Loaded:{} err_code:{}", iObjID, pData->GetTypeName(), GetErrorStr(err_code));
+    }
+    else
+    {
+        NFLogInfo(NF_LOG_DEFAULT, 0, "objId:{} pData:nullptr err_code:{}", iObjID, GetErrorStr(err_code));
+    }
+
     NFBaseDBObj* pObj = GetObj(iObjID);
     CHECK_NULL(0, pObj);
 
@@ -210,8 +270,16 @@ int NFDBObjMgr::OnDataLoaded(int iObjID, int32_t err_code, const google::protobu
     int iRet = 0;
     if (err_code == 0)
     {
-        pObj->SetRetryTimes(0);
-        iRet = pObj->InitWithDBData(pData);
+        if (pData)
+        {
+            pObj->SetRetryTimes(0);
+            iRet = pObj->InitWithDBData(pData);
+        }
+        else
+        {
+            iRet = -1;
+            NFLogError(NF_LOG_DEFAULT, 0, "objId:{} pData:nullptr err_code:{}", iObjID, GetErrorStr(err_code));
+        }
     }
     else if ((int)err_code == NFrame::ERR_CODE_STORESVR_ERRCODE_SELECT_EMPTY)
     {
@@ -238,8 +306,8 @@ int NFDBObjMgr::OnDataLoaded(int iObjID, int32_t err_code, const google::protobu
             case EN_DW_RETRY:
             {
                 pObj->SetRetryTimes(pObj->GetRetryTimes() + 1);
-                iRet = LoadFromDB(pObj);
-                CHECK_ERR(0, iRet, "LoadFromDB failed");
+                iRet = pObj->DelaySyncReqRetry();
+                CHECK_ERR(0, iRet, "DelaySyncReqRetry failed");
                 break;
             }
             case EN_DW_SHUTDOWN:
@@ -259,8 +327,8 @@ int NFDBObjMgr::OnDataLoaded(int iObjID, int32_t err_code, const google::protobu
                     return -1;
                 }
                 pObj->SetRetryTimes(pObj->GetRetryTimes() + 1);
-                iRet = LoadFromDB(pObj);
-                CHECK_ERR(0, iRet, "LoadFromDB failed");
+                iRet = pObj->DelaySyncReqRetry();
+                CHECK_ERR(0, iRet, "DelaySyncReqRetry failed");
                 break;
             }
             default:
@@ -318,7 +386,7 @@ int NFDBObjMgr::OnDataSaved(NFDBObjTrans* pTrans, bool success)
 
 NFBaseDBObj* NFDBObjMgr::GetObj(int iObjID)
 {
-    return dynamic_cast<NFBaseDBObj *>(FindModule<NFIMemMngModule>()->GetObjByGlobalId(EOT_BASE_DB_OBJ, iObjID, true));
+    return dynamic_cast<NFBaseDBObj*>(FindModule<NFIMemMngModule>()->GetObjByGlobalId(EOT_BASE_DB_OBJ, iObjID, true));
 }
 
 int NFDBObjMgr::SaveToDB(NFBaseDBObj* pObj)
@@ -364,7 +432,7 @@ int NFDBObjMgr::SaveToDB(NFBaseDBObj* pObj)
     return 0;
 }
 
-bool NFDBObjMgr::CheckStopServer()
+int NFDBObjMgr::CheckStopServer()
 {
     for (auto iter = m_runningObjList.begin(); iter != m_runningObjList.end();)
     {
@@ -374,9 +442,9 @@ bool NFDBObjMgr::CheckStopServer()
             // 不在存储中 + 有修改
             if (pObj->IsDataInited() && pObj->IsUrgentNeedSave())
             {
-                return false;
+                return -1;
             }
-            iter++;
+            ++iter;
         }
         else
         {
@@ -384,10 +452,10 @@ bool NFDBObjMgr::CheckStopServer()
             iter = m_runningObjList.erase(iter);
         }
     }
-    return true;
+    return 0;
 }
 
-bool NFDBObjMgr::StopServer()
+int NFDBObjMgr::StopServer()
 {
     int iSavedObjNum = 0;
     for (auto iter = m_runningObjList.begin(); iter != m_runningObjList.end() && iSavedObjNum < MAX_SAVED_OBJ_PRE_SEC;)
@@ -402,7 +470,7 @@ bool NFDBObjMgr::StopServer()
                 ++iSavedObjNum;
                 NFLogTrace(NF_LOG_DEFAULT, 0, "save obj ret:{} className{} key:{}", iRet, pObj->GetClassName(), pObj->GetModeKey());
             }
-            iter++;
+            ++iter;
         }
         else
         {
@@ -410,7 +478,7 @@ bool NFDBObjMgr::StopServer()
             iter = m_runningObjList.erase(iter);
         }
     }
-    return true;
+    return 0;
 }
 
 

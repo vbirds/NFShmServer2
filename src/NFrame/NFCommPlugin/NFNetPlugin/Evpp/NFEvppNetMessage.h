@@ -1,29 +1,15 @@
 ﻿// -------------------------------------------------------------------------
-//    @FileName         :    NFEvppServer.h
+//    @FileName         :    NFEvppNetMessage.h
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFNetPlugin
-//
-//
-//                    .::::.
-//                  .::::::::.
-//                 :::::::::::  FUCK YOU
-//             ..:::::::::::'
-//           '::::::::::::'
-//             .::::::::::
-//        '::::::::::::::..
-//             ..::::::::::::.
-//           ``::::::::::::::::
-//            ::::``:::::::::'        .:::.
-//           ::::'   ':::::'       .::::::::.
-//         .::::'      ::::     .:::::::'::::.
-//        .:::'       :::::  .:::::::::' ':::::.
-//       .::'        :::::.:::::::::'      ':::::.
-//      .::'         ::::::::::::::'         ``::::.
-//  ...:::           ::::::::::::'              ``::.
-// ```` ':.          ':::::::::'                  ::::..
-//                    '.:::::'                    ':'````..
+//    @Desc             :    基于Evpp库的网络消息处理类，提供TCP连接管理和消息处理功能。
+//                          该文件定义了基于evpp库的网络消息处理类，包括Evpp网络消息处理类定义、
+//                          TCP连接管理、网络对象生命周期管理、消息接收和发送处理、连接事件回调处理、
+//                          HTTP服务器和客户端集成、数据包解析和路由。
+//                          主要特性包括基于evpp库的高性能事件驱动、支持异步非阻塞I/O、
+//                          自动连接管理和资源清理、线程安全的消息处理、集成HTTP服务器和客户端功能
 //
 // -------------------------------------------------------------------------
 #pragma once
@@ -41,15 +27,31 @@
 #include "NFComm/NFPluginModule/NFCodeQueue.h"
 #include "NFComm/NFPluginModule/NFNetDefine.h"
 
+/** @brief 主线程接收上下文 */
 #define EVPP_LOOP_CONTEXT_0_MAIN_THREAD_RECV 0
+/** @brief 主线程发送上下文 */
 #define EVPP_LOOP_CONTEXT_1_MAIN_THREAD_SEND 1
+/** @brief 压缩缓冲区上下文 */
 #define EVPP_LOOP_CONTEXT_2_COMPRESS_BUFFER 2
+/** @brief 连接指针映射上下文 */
 #define EVPP_LOOP_CONTEXT_3_CONNPTR_MAP 3
+/** @brief 代码队列缓冲区上下文 */
 #define EVPP_LOOP_CONTEXT_4_CODE_QUEUE_BUFFER 4
 
-
+/**
+ * @struct MsgFromNetInfo
+ * @brief 网络消息信息结构体
+ * 
+ * 用于存储从网络接收到的消息信息，包含消息类型、连接对象、缓冲区等
+ * 支持拷贝构造和赋值操作，提供资源管理功能
+ */
 struct MsgFromNetInfo final
 {
+    /**
+     * @brief 默认构造函数
+     * 
+     * 初始化所有成员为默认值
+     */
     MsgFromNetInfo()
     {
         m_type = eMsgType_Num;
@@ -59,6 +61,10 @@ struct MsgFromNetInfo final
         m_pRecvBuffer = nullptr;
     }
 
+    /**
+     * @brief 拷贝构造函数
+     * @param info 要拷贝的消息信息对象
+     */
     MsgFromNetInfo(const MsgFromNetInfo& info)
     {
         if (this != &info)
@@ -71,6 +77,11 @@ struct MsgFromNetInfo final
         }
     }
 
+    /**
+     * @brief 赋值操作符
+     * @param info 要赋值的消息信息对象
+     * @return 当前对象引用
+     */
     MsgFromNetInfo& operator=(const MsgFromNetInfo& info)
     {
         if (this != &info)
@@ -84,11 +95,19 @@ struct MsgFromNetInfo final
         return *this;
     }
 
+    /**
+     * @brief 析构函数
+     */
     ~MsgFromNetInfo()
     {
         Clear();
     }
 
+    /**
+     * @brief 清空消息信息
+     * 
+     * 重置所有成员为默认值
+     */
     void Clear()
     {
         m_type = eMsgType_Num;
@@ -98,15 +117,44 @@ struct MsgFromNetInfo final
         m_pRecvBuffer = nullptr;
     }
 
-    eMsgType m_type;
-    evpp::TCPConnPtr m_tcpConPtr;
-    uint64_t m_serverLinkId;
-    uint64_t m_objectLinkId;
-    NF_SHARE_PTR<NFBuffer> m_pRecvBuffer;
+    eMsgType m_type;                    ///< 消息类型
+    evpp::TCPConnPtr m_tcpConPtr;       ///< TCP连接指针
+    uint64_t m_serverLinkId;            ///< 服务器连接ID
+    uint64_t m_objectLinkId;            ///< 对象连接ID
+    NF_SHARE_PTR<NFBuffer> m_pRecvBuffer; ///< 接收缓冲区
 };
 
 class NFCNetServerModule;
 
+/**
+ * @class NFEvppNetMessage
+ * @brief 基于Evpp库的网络消息处理类
+ * 
+ * 该类继承自NFINetMessage，基于libevent的evpp库实现高性能网络消息处理功能
+ * 主要用于处理TCP连接的消息收发、连接管理和HTTP服务
+ * 
+ * 主要功能：
+ * - TCP连接管理和消息处理
+ * - HTTP服务器和客户端功能
+ * - 网络对象生命周期管理
+ * - 消息队列处理和路由
+ * - 心跳检测和连接监控
+ * 
+ * 特性：
+ * - 基于libevent的高性能事件驱动
+ * - 支持异步非阻塞I/O
+ * - 多线程安全的连接管理
+ * - 自动心跳检测和重连
+ * - 完整的HTTP协议支持
+ * 
+ * 使用方式：
+ * - 创建消息处理实例
+ * - 绑定TCP或HTTP服务器
+ * - 连接TCP服务器
+ * - 处理网络事件和消息
+ * - 管理连接对象生命周期
+ * - 发送和接收数据包
+ */
 class NFEvppNetMessage final : public NFINetMessage
 {
     friend NFCNetServerModule;
@@ -114,83 +162,137 @@ class NFEvppNetMessage final : public NFINetMessage
 public:
     /**
      * @brief 构造函数
+     * @param p 插件管理器指针
+     * @param serverType 服务器类型
      */
     NFEvppNetMessage(NFIPluginManager* p, NF_SERVER_TYPE serverType);
 
     /**
-    * @brief 析构函数
-    */
+     * @brief 析构函数
+     */
     ~NFEvppNetMessage() override;
 
     /**
-     * @brief 添加网络对象
-     *
-     * @return bool
+     * @brief 添加网络对象（自动分配连接ID）
+     * 
+     * 自动获取空闲连接ID并创建TCP网络连接对象
+     * 
+     * @param conn TCP连接指针
+     * @param parseType 数据包解析类型
+     * @param bSecurity 安全连接标志
+     * @return 网络对象指针，失败返回nullptr
      */
     NetEvppObject* AddNetObject(const evpp::TCPConnPtr& conn, uint32_t parseType, bool bSecurity);
 
     /**
-     * @brief 添加网络对象
-     *
-     * @return bool
+     * @brief 添加网络对象（指定连接ID）
+     * 
+     * 使用指定的连接ID创建TCP网络连接对象，包括：
+     * - 参数验证
+     * - 从对象池分配对象
+     * - 设置连接信息
+     * - 添加到管理容器
+     * 
+     * @param unLinkId 连接ID
+     * @param conn TCP连接指针
+     * @param parseType 数据包解析类型
+     * @param bSecurity 安全连接标志
+     * @return 网络对象指针，失败返回nullptr
      */
     NetEvppObject* AddNetObject(uint64_t unLinkId, const evpp::TCPConnPtr& conn, uint32_t parseType, bool bSecurity);
 
     /**
-    * @brief	初始化
-    *
-    * @return 是否成功
-    */
+     * @brief 绑定TCP服务器
+     * 
+     * 建立TCP服务器绑定，监听客户端连接，包括：
+     * - 创建Evpp服务器实例
+     * - 设置连接和消息回调
+     * - 初始化服务器
+     * - 添加到连接列表
+     * 
+     * @param flag 绑定标志
+     * @return 绑定ID，0表示绑定失败
+     */
     uint64_t BindServer(const NFMessageFlag& flag) override;
 
     /**
-    * @brief	初始化
-    *
-    * @return 是否成功
-    */
+     * @brief 连接TCP服务器
+     * 
+     * 建立与TCP服务器的连接，包括：
+     * - 创建Evpp客户端实例
+     * - 设置连接和消息回调
+     * - 初始化客户端
+     * - 添加到连接列表
+     * 
+     * @param flag 连接标志
+     * @return 连接ID，0表示连接失败
+     */
     uint64_t ConnectServer(const NFMessageFlag& flag) override;
 
     /**
-    * @brief	初始化
-    *
-    * @return 是否成功
-    */
+     * @brief 绑定HTTP服务器
+     * 
+     * 建立HTTP服务器绑定，提供HTTP服务，包括：
+     * - 创建HTTP服务器实例
+     * - 设置监听端口和线程数
+     * - 初始化HTTP服务器
+     * - 添加到服务器列表
+     * 
+     * @param listenPort 监听端口
+     * @param netThreadNum 网络线程数量
+     * @return 绑定ID，0表示绑定失败
+     */
     uint64_t BindHttpServer(uint32_t listenPort, uint32_t netThreadNum);
 
     /**
-    * @brief 连接回调
-    *
-    * @return
-    */
+     * @brief 连接事件回调
+     * 
+     * 处理TCP连接建立、断开等事件，包括：
+     * - 连接建立处理
+     * - 连接断开处理
+     * - 网络对象管理
+     * - 事件通知
+     * 
+     * @param conn TCP连接指针
+     * @param serverLinkId 服务器连接ID
+     */
     void ConnectionCallback(const evpp::TCPConnPtr& conn, uint64_t serverLinkId);
 
     /**
-    * @brief 消息回调
-    *
-    * @return 消息回调
-    */
+     * @brief 消息接收回调
+     * 
+     * 处理接收到的TCP消息数据
+     * 
+     * @param conn TCP连接指针
+     * @param msg 消息缓冲区
+     * @param serverLinkId 服务器连接ID
+     * @param packetParse 数据包解析类型
+     * @param bSecurity 安全连接标志
+     */
     void MessageCallback(const evpp::TCPConnPtr& conn, evpp::Buffer* msg, uint64_t serverLinkId, uint32_t packetParse, bool bSecurity);
 
     /**
-    * @brief	关闭客户端
-    *
-    * @return  是否成功
-    */
-    bool Shut() override;
+     * @brief 关闭网络模块
+     * 
+     * 关闭所有连接和清理资源
+     * 
+     * @return 关闭结果，0表示成功
+     */
+    int Shut() override;
 
     /**
      * @brief 释放数据
      *
      * @return bool
      */
-    bool Finalize() override;
+    int Finalize() override;
 
     /**
     * @brief	服务器每帧执行
     *
     * @return	是否成功
     */
-    bool Execute() override;
+    int Tick() override;
 
     /**
      * @brief 获得连接IP

@@ -249,19 +249,19 @@ public:
 
 	virtual ~NFCLuaScriptModule();
 public:
-	virtual bool Awake() override;
+	virtual int Awake() override;
 
-	virtual bool Init() override;
+	virtual int Init() override;
 
-	virtual bool Execute() override;
+	virtual int Tick() override;
 
-	virtual bool Shut() override;
+	virtual int Shut() override;
 
-	virtual bool Finalize() override;
+	virtual int Finalize() override;
 
 	virtual int OnTimer(uint32_t nTimerID) override;
 
-	virtual bool OnReloadConfig() override;
+	virtual int OnReloadConfig() override;
 public:
 	virtual void SessionReport(uint64_t playerId, const std::string& report) override;
 

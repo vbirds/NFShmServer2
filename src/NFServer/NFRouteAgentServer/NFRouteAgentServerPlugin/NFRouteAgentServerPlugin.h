@@ -1,10 +1,12 @@
 // -------------------------------------------------------------------------
-//    @FileName         :    NFGameServerPlugin.h
+//    @FileName         :    NFRouteAgentServerPlugin.h
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
-//    @Module           :    NFGameServerPlugin
-//
+//    @Module           :    NFRouteAgentServerPlugin
+//    @Desc             :    NFShmXFrame路由代理服务器插件接口定义
+//                          提供路由代理服务器功能的插件接口，负责路由代理和负载均衡
+//                          支持服务器间通信路由、负载分发和连接管理
 // -------------------------------------------------------------------------
 
 #pragma once
@@ -14,19 +16,62 @@
 #include <string>
 
 //////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief 路由代理服务器插件类
+ *
+ * NFRouteAgentServerPlugin是NFShmXFrame框架的路由代理服务器插件，
+ * 负责管理路由代理和负载均衡功能。
+ *
+ * 该插件提供以下主要功能：
+ * - 服务器间通信路由
+ * - 负载均衡和分发
+ * - 连接管理和监控
+ * - 路由策略配置
+ *
+ * @author Gao.Yi
+ * @date 2022-09-18
+ */
 class NFRouteAgentServerPlugin : public NFIPlugin
 {
 public:
+	/**
+	 * @brief 构造函数
+	 *
+	 * 初始化路由代理服务器插件，设置插件管理器
+	 *
+	 * @param p 插件管理器指针
+	 */
 	explicit NFRouteAgentServerPlugin(NFIPluginManager* p):NFIPlugin(p)
 	{
 	}
 
+	/**
+	 * @brief 获取插件版本号
+	 *
+	 * @return 插件版本号
+	 */
 	virtual int GetPluginVersion() override;
 
+	/**
+	 * @brief 获取插件名称
+	 *
+	 * @return 插件名称字符串
+	 */
 	virtual std::string GetPluginName() override;
 
+	/**
+	 * @brief 安装插件
+	 *
+	 * 注册路由代理服务器模块到插件管理器
+	 */
 	virtual void Install() override;
 
+	/**
+	 * @brief 卸载插件
+	 *
+	 * 从插件管理器中注销路由代理服务器模块
+	 */
 	virtual void Uninstall() override;
 };
 

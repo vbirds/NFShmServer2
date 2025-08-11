@@ -3,6 +3,12 @@
 //    @Author           :    Yi.Gao
 //    @Date             :   2022-09-18
 //    @Module           :    NFPluginModule
+//    @Desc             :    内存全局ID实现文件，负责管理内存中的全局唯一ID，包括全局ID的分配和回收、
+//                          ID与对象的映射管理、轮次管理和文件持久化、统计信息收集、版本兼容性检查。
+//                          该文件实现了NFShmXFrame框架的内存全局ID管理器类，提供全局ID分配和释放、
+//                          对象ID映射表管理、轮次统计和文件更新、性能监控和统计、内存池管理等功能。
+//                          主要功能包括队列管理高效分配、轮次机制防止ID溢出、文件持久化支持恢复、
+//                          统计信息收集
 //
 // -------------------------------------------------------------------------
 
@@ -77,6 +83,27 @@ int NFMemGlobalId::ResumeInit()
     return 0;
 }
 
+/**
+ * @brief 分配全局ID
+ * 
+ * 该函数用于分配一个新的全局ID。
+ * 分配过程包括：
+ * 1. 验证对象指针的有效性
+ * 2. 检查当前轮次是否需要更新文件
+ * 3. 如果队列为空，则记录错误并返回
+ * 4. 从队列中取出下一个可用的ID
+ * 5. 验证ID的有效性
+ * 6. 计算ID在表中的索引位置
+ * 7. 验证索引位置的有效性
+ * 8. 更新ID表中的相关数据
+ * 9. 增加使用计数
+ * 10. 返回分配的ID
+ * 
+ * @param iType 对象类型
+ * @param iIndex 对象索引
+ * @param pObj 对象指针
+ * @return 分配的全局ID，失败返回-1
+ */
 int NFMemGlobalId::GetGlobalId(int iType, int iIndex, const NFObject* pObj)
 {
     CHECK_NULL(0, pObj);
@@ -109,19 +136,36 @@ int NFMemGlobalId::GetGlobalId(int iType, int iIndex, const NFObject* pObj)
     return pIdIndex->m_iId;
 }
 
+/**
+ * @brief 释放全局ID
+ * 
+ * 该函数用于释放已分配的全局ID，将其重新放回队列中供后续使用。
+ * 释放过程包括：
+ * 1. 验证ID的有效性
+ * 2. 计算ID在表中的索引位置
+ * 3. 验证索引位置的有效性
+ * 4. 将索引重新放回队列
+ * 5. 清空ID表中的相关数据
+ * 
+ * @param iId 要释放的全局ID
+ * @return 释放结果，0表示成功，-1表示失败
+ */
 int NFMemGlobalId::ReleaseId(int iId)
 {
+    // 检查ID的有效性
     if (iId < 0)
     {
         return -1;
     }
 
+    // 计算ID在表中的索引位置
     int iIdIndex = iId & MAX_GLOBALID_NUM_MASK;
     if (iIdIndex < 0)
     {
         return -1;
     }
 
+    // 获取ID索引对象并验证ID匹配
     NFMemIdIndex* pIdIndex = &m_stIdTable[iIdIndex];
     if (pIdIndex->m_iId != iId)
     {
@@ -129,8 +173,10 @@ int NFMemGlobalId::ReleaseId(int iId)
         return -1;
     }
 
+    // 将索引重新放回队列
     m_stQueue.push(iIdIndex);
 
+    // 清空ID表中的相关数据
     pIdIndex->m_iId = -1;
     pIdIndex->m_iIndex = -1;
     pIdIndex->m_iType = -1;
@@ -139,6 +185,20 @@ int NFMemGlobalId::ReleaseId(int iId)
     return 0;
 }
 
+/**
+ * @brief 根据全局ID获取对象
+ * 
+ * 该函数根据全局ID查找并返回对应的对象指针。
+ * 查找过程包括：
+ * 1. 验证ID的有效性
+ * 2. 计算ID在表中的索引位置
+ * 3. 验证索引位置的有效性
+ * 4. 验证ID匹配
+ * 5. 返回对象指针
+ * 
+ * @param iId 全局ID
+ * @return 对象指针，失败返回nullptr
+ */
 NFObject* NFMemGlobalId::GetObj(int iId)
 {
     if (iId < 0) return nullptr;

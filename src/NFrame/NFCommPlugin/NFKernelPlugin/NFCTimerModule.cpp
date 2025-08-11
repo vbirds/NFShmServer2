@@ -20,26 +20,26 @@ NFCTimerModule::~NFCTimerModule()
 {
 }
 
-bool NFCTimerModule::Init()
+int NFCTimerModule::Init()
 {
-	return true;
+	return 0;
 }
 
-bool NFCTimerModule::Execute()
+int NFCTimerModule::Tick()
 {
 	mTimerAxis.Update();
-	return true;
+	return 0;
 }
 
-bool NFCTimerModule::BeforeShut()
+int NFCTimerModule::BeforeShut()
 {
-	return true;
+	return 0;
 }
 
-bool NFCTimerModule::Shut()
+int NFCTimerModule::Shut()
 {
 	mTimerAxis.UnInit();
-	return true;
+	return 0;
 }
 
 //设置定时器

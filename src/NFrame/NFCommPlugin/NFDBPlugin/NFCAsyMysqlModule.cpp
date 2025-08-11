@@ -1,8 +1,9 @@
 // -------------------------------------------------------------------------
-//    @FileName         :    NFCAsyMysqlModule.h
+//    @FileName         :    NFCAsyMysqlModule.cpp
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
 //    @Module           :    NFCAsyMysqlModule
+//    @Description      :    异步MySQL模块实现文件，提供异步MySQL数据库操作的核心实现
 //
 // -------------------------------------------------------------------------
 
@@ -1271,12 +1272,12 @@ int NFCAsyMysqlModule::ExecuteMore(const std::string& strServerId, const NFrame:
  *
  * @return bool 返回true表示执行成功，返回false表示未初始化组件
  */
-bool NFCAsyMysqlModule::Execute()
+int NFCAsyMysqlModule::Tick()
 {
     // 如果组件未初始化，直接返回true
-    if (!m_bInitComponent) return true;
+    if (!m_bInitComponent) return 0;
     // 如果距离上次检查时间不足10秒，直接返回true
-    if (NFGetTime() - m_ullLastCheckTime < 10000) return true;
+    if (NFGetTime() - m_ullLastCheckTime < 10000) return 0;
 
     // 更新上次检查时间
     m_ullLastCheckTime = NFGetTime();
@@ -1291,6 +1292,6 @@ bool NFCAsyMysqlModule::Execute()
         }
     }
 
-    return true;
+    return 0;
 }
 

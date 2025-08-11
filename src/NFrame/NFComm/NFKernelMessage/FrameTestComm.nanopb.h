@@ -286,6 +286,23 @@ public:
 /* @@protoc_insertion_point(struct:WelfareNodeDBDataUnion) */
 };
 
+/* Default values for struct fields */
+/* Initializer values for message structs */
+#define wxWorkRobotTextTest_init_default         {"", "", {}, {}, {}, {}, {}, {}, {}, {}, "", "", {}, {}, {}, {}, {}, 0}
+#define WelfareNodeDBDataPddBuy_init_default     {"", "", {}, {}, {}, {}, {}, {}, {}, {}, {0, {0}}, {0, {0}}, {}, {}, {}, {}, {}, 0, 0}
+#define WelfareNodeDBDataPddOpen_init_default    {0, 0, 0, 0, 0}
+#define WelfareNodeDBDataGetTaskManual_init_default {0}
+#define WelfareNodeDBDataUnion_init_default      {0, {""}, WelfareNodeDBDataPddBuy_init_default, 0, {0}}
+#define BevLogTestItem_init_default              {0, 0}
+#define BevLogTest_init_default                  {0, "", 0, 0, BevLogTestItem_init_default, {}, {}}
+#define wxWorkRobotTextTest_init_zero            {"", "", {}, {}, {}, {}, {}, {}, {}, {}, "", "", {}, {}, {}, {}, {}, 0}
+#define WelfareNodeDBDataPddBuy_init_zero        {"", "", {}, {}, {}, {}, {}, {}, {}, {}, {0, {0}}, {0, {0}}, {}, {}, {}, {}, {}, 0, 0}
+#define WelfareNodeDBDataPddOpen_init_zero       {0, 0, 0, 0, 0}
+#define WelfareNodeDBDataGetTaskManual_init_zero {0}
+#define WelfareNodeDBDataUnion_init_zero         {0, {""}, WelfareNodeDBDataPddBuy_init_zero, 0, {0}}
+#define BevLogTestItem_init_zero                 {0, 0}
+#define BevLogTest_init_zero                     {0, "", 0, 0, BevLogTestItem_init_zero, {}, {}}
+
 /* Field tags (for use in manual encoding/decoding) */
 #define BevLogTestItem_item_id_tag               1
 #define BevLogTestItem_item_num_tag              2
@@ -354,6 +371,13 @@ public:
 #define WelfareNodeDBDataUnion_m_stPddBuy1_tag   111
 
 /* Struct field encoding specification for nanopb */
+extern const pb_field_t wxWorkRobotTextTest_fields[19];
+extern const pb_field_t WelfareNodeDBDataPddBuy_fields[20];
+extern const pb_field_t WelfareNodeDBDataPddOpen_fields[6];
+extern const pb_field_t WelfareNodeDBDataGetTaskManual_fields[2];
+extern const pb_field_t WelfareNodeDBDataUnion_fields[14];
+extern const pb_field_t BevLogTestItem_fields[3];
+extern const pb_field_t BevLogTest_fields[8];
 
 /* Maximum encoded size of messages (where known) */
 #define wxWorkRobotTextTest_size                 1757

@@ -4,6 +4,13 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFShmEventMgr
+//    @Desc             :    共享内存事件管理器实现文件，提供基于共享内存的事件订阅和发布功能。
+//                          该文件实现了事件管理器的核心功能，包括事件的订阅和取消订阅、
+//                          事件的触发和分发、事件键值的管理、订阅信息的维护、
+//                          跨服务器事件支持。主要功能包括事件订阅管理、事件发布和分发、
+//                          订阅信息存储、事件键值索引、跨服务器事件处理。
+//                          设计特点包括基于共享内存支持跨进程、双向索引快速查找、
+//                          支持复杂事件键值、自动内存管理、高性能事件分发
 //
 // -------------------------------------------------------------------------
 
@@ -11,6 +18,11 @@
 #include "NFComm/NFPluginModule/NFIMemMngModule.h"
 #include "NFComm/NFPluginModule/NFLogMgr.h"
 
+/**
+ * @brief 构造函数
+ * 
+ * 初始化事件管理器，根据共享内存模式选择初始化方式
+ */
 NFShmEventMgr::NFShmEventMgr()
 {
     if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode())

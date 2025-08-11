@@ -479,9 +479,9 @@ bool NFFileUtility::CreateLink(const std::string& oldpath, const std::string& ne
 #if NF_PLATFORM == NF_PLATFORM_WIN
 #ifdef UNICODE
 	//windows创建有问题...........
-	//CreateSymbolicLink((LPCWSTR)newpath.c_str(), (LPCWSTR)oldpath.c_str(), 0x0);
+	CreateSymbolicLink((LPCWSTR)newpath.c_str(), (LPCWSTR)oldpath.c_str(), 0x0);
 #else
-	//CreateSymbolicLink((LPCSTR)newpath.c_str(), (LPCSTR)oldpath.c_str(), 0x0);
+	CreateSymbolicLink((LPCSTR)newpath.c_str(), (LPCSTR)oldpath.c_str(), 0x0);
 #endif
 #else
 	symlink(oldpath.c_str(), newpath.c_str());

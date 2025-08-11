@@ -1,6 +1,13 @@
-﻿#pragma once
+﻿// -------------------------------------------------------------------------
+//    @FileName         :    my_date_and_hour_file_sink.h
+//    @Author           :    Unknown
+//    @Date             :   Unknown
+//    @Module           :    MyDateAndHourFileSink
+//    @Description      :    自定义日期和小时文件Sink头文件，基于spdlog实现按日期和小时滚动的日志文件
+//
+// -------------------------------------------------------------------------
 
-
+#pragma once
 
 #include "common/spdlog/details/file_helper.h"
 #include "common/spdlog/details/null_mutex.h"
@@ -19,6 +26,12 @@
 
 #include "NFComm/NFPluginModule/NFCheck.h"
 
+/**
+ * @namespace spdlog::sinks
+ * @brief spdlog sink命名空间扩展
+ * 
+ * 扩展spdlog的sink功能，提供自定义的日志文件滚动策略。
+ */
 namespace spdlog
 {
 	namespace sinks
@@ -40,24 +53,53 @@ namespace spdlog
 #define MKDIR(a) mkdir((a),0755)
 #endif
 
-		/*
-		* Default generator of daily log file names.
-		*/
+		/**
+		 * @struct my_date_and_hour_file_name_calculator
+		 * @brief 日期和小时文件名计算器
+		 *
+		 * 自定义的日志文件名生成器，支持按日期和小时生成日志文件名：
+		 * 
+		 * 文件名生成规则：
+		 * - 日期格式：YYYY-MM-DD格式的日期
+		 * - 小时格式：HH格式的小时（00-23）
+		 * - 路径分离：支持目录路径和文件名的分离
+		 * - 扩展名处理：正确处理文件扩展名
+		 * 
+		 * 路径解析功能：
+		 * - 自动分离目录、文件名和扩展名
+		 * - 支持隐藏文件的处理
+		 * - 处理复杂的路径结构
+		 * - 跨平台路径分隔符支持
+		 * 
+		 * 应用场景：
+		 * - 按小时滚动的日志文件
+		 * - 便于日志文件的管理和归档
+		 * - 支持高频日志的精细化管理
+		 * - 便于日志分析和问题排查
+		 * 
+		 * @note 基于spdlog框架的自定义文件名生成器
+		 * @note 支持多种文件名格式和路径结构
+		 */
 		struct my_date_and_hour_file_name_calculator
 		{
-			//
-			// return file pre-dir and name and its extension:
-			//
-			// "mylog.txt" => ("", "mylog", ".txt")
-			// "mylog" => ("", "mylog", "")
-			// "mylog." => ("", "mylog.", "")
-			// "/dir1/dir2/mylog.txt" => ("/dir1/dir2/", "mylog", ".txt")
-			//
-			// the starting dot in filenames is ignored (hidden files):
-			//
-			// ".mylog" => ("", ".mylog". "")
-			// "my_folder/.mylog" => ("my_folder/", ".mylog", "")
-			// "my_folder/.mylog.txt" => ("my_folder/", ".mylog", ".txt")
+			/**
+			 * @brief 按目录和扩展名分割文件路径
+			 * @param fname 完整的文件路径
+			 * @return 返回包含目录、文件名和扩展名的元组
+			 * 
+			 * 文件路径解析规则：
+			 * - "mylog.txt" => ("", "mylog", ".txt")
+			 * - "mylog" => ("", "mylog", "")
+			 * - "mylog." => ("", "mylog.", "")
+			 * - "/dir1/dir2/mylog.txt" => ("/dir1/dir2/", "mylog", ".txt")
+			 * 
+			 * 隐藏文件处理：
+			 * - ".mylog" => ("", ".mylog". "")
+			 * - "my_folder/.mylog" => ("my_folder/", ".mylog", "")
+			 * - "my_folder/.mylog.txt" => ("my_folder/", ".mylog", ".txt")
+			 * 
+			 * @note 文件名开头的点被视为隐藏文件标识
+			 */
 			static std::tuple<filename_t, filename_t, filename_t> split_by_dir_and_extenstion(const spdlog::filename_t& fname)
 			{
 				auto ext_index = fname.rfind('.');
@@ -131,6 +173,7 @@ namespace spdlog
 				filename_t absolute_filename = NFFileUtility::GetAbsolutePathName(filename);
 				filename_t absolute_link_filename = NFFileUtility::GetAbsolutePathName(link_filename);
 
+				NF_ASSERT(NFFileUtility::Mkdir(NFFileUtility::GetFileDirName(filename)));
 				_file_helper.open(filename);
 
 				NFFileUtility::CreateLink(absolute_filename, absolute_link_filename);
@@ -146,6 +189,7 @@ namespace spdlog
 					filename_t absolute_filename = NFFileUtility::GetAbsolutePathName(filename);
 					filename_t absolute_link_filename = NFFileUtility::GetAbsolutePathName(link_filename);
 
+					NF_ASSERT(NFFileUtility::Mkdir(NFFileUtility::GetFileDirName(filename)));
 					_file_helper.open(filename);
 
 					NFFileUtility::CreateLink(absolute_filename, absolute_link_filename);

@@ -21,7 +21,7 @@ endif()
 
 # 构建选项
 option(BUILD_QT_GUI "Build Qt GUI version" ON)
-#set(BUILD_QT_GUI OFF)
+set(BUILD_QT_GUI OFF)
 
 # 打印构建信息
 message(STATUS "Building NFServerController CLI version")

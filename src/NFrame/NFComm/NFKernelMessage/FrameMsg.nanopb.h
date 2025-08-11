@@ -71,6 +71,7 @@ typedef enum _FrameServerMsg {
     NF_SERVER_BROAD_EVENT_TO_SERVER_CMD = 127,
     NF_SERVER_REDIRECT_MSG_TO_PROXY_SERVER_CMD = 128,
     NF_SERVER_TO_SERVER_REGISTER_ROOM_INFO_RPC = 129,
+    NF_SERVER_TO_SERVER_SYNC_DATA_RPC = 130,
     NF_STORESVR_C2S_SELECT = 200,
     NF_STORESVR_S2C_SELECT = 201,
     NF_STORESVR_C2S_SELECTOBJ = 202,
@@ -101,7 +102,7 @@ typedef enum _FrameServerMsg {
 #define _FrameServerMsg_MIN NF_FRAME_MSG_NONE
 #define _FrameServerMsg_MAX NF_STORESVR_S2C_EXECUTE_MORE
 #define _FrameServerMsg_ARRAYSIZE ((FrameServerMsg)(NF_STORESVR_S2C_EXECUTE_MORE+1))
-#define _FrameServerMsg_ALLSIZE (78)
+#define _FrameServerMsg_ALLSIZE (79)
 
 typedef enum _PacketDispType {
     E_DISP_TYPE_NONE = 0,
@@ -440,6 +441,47 @@ struct Proto_ServerDumpInfoNtf {
 /* @@protoc_insertion_point(struct:Proto_ServerDumpInfoNtf) */
 };
 
+struct Proto_ServerSyncDataReq {
+    uint32_t msg_id;
+    std::string msg_data;
+
+	Proto_ServerSyncDataReq();
+	~Proto_ServerSyncDataReq();
+	Proto_ServerSyncDataReq(const Proto_ServerSyncDataReq& stArgsData);
+	Proto_ServerSyncDataReq& operator=(const Proto_ServerSyncDataReq& stArgsData);
+	void CopyData(const Proto_ServerSyncDataReq& stArgsData);
+	int CreateInit();
+	int ResumeInit();
+	void Init();
+    bool FromPb(const NFrame::Proto_ServerSyncDataReq& cc);
+    void ToPb(NFrame::Proto_ServerSyncDataReq* cc) const;
+    NFrame::Proto_ServerSyncDataReq ToPb() const;
+    std::string ShortDebugString() const;
+
+/* @@protoc_insertion_point(struct:Proto_ServerSyncDataReq) */
+};
+
+struct Proto_ServerSyncDataRsp {
+    uint32_t msg_id;
+    std::string msg_data;
+    int32_t result;
+
+	Proto_ServerSyncDataRsp();
+	~Proto_ServerSyncDataRsp();
+	Proto_ServerSyncDataRsp(const Proto_ServerSyncDataRsp& stArgsData);
+	Proto_ServerSyncDataRsp& operator=(const Proto_ServerSyncDataRsp& stArgsData);
+	void CopyData(const Proto_ServerSyncDataRsp& stArgsData);
+	int CreateInit();
+	int ResumeInit();
+	void Init();
+    bool FromPb(const NFrame::Proto_ServerSyncDataRsp& cc);
+    void ToPb(NFrame::Proto_ServerSyncDataRsp* cc) const;
+    NFrame::Proto_ServerSyncDataRsp ToPb() const;
+    std::string ShortDebugString() const;
+
+/* @@protoc_insertion_point(struct:Proto_ServerSyncDataRsp) */
+};
+
 struct Proto_StoreInfo {
     uint64_t id;
     uint32_t table_id;
@@ -636,6 +678,55 @@ struct ServerInfoReportList {
 /* @@protoc_insertion_point(struct:ServerInfoReportList) */
 };
 
+/* Default values for struct fields */
+/* Initializer values for message structs */
+#define Proto_DispInfo_init_default              {0, 0, 0, 0, _PacketDispType_MIN}
+#define Proto_TransInfo_init_default             {0, 0}
+#define Proto_StoreInfo_init_default             {0, 0}
+#define Proto_EventInfo_init_default             {0, 0, 0, 0, ""}
+#define Proto_ScriptRpcResult_init_default       {"", "", ""}
+#define Proto_RpcInfo_init_default               {0, 0, 0, 0, 0, 0, 0, 0}
+#define Proto_RedirectInfo_init_default          {{}, 0}
+#define Proto_FramePkg_init_default              {0, 0, {0, {0}}, Proto_DispInfo_init_default, Proto_TransInfo_init_default, Proto_StoreInfo_init_default, Proto_EventInfo_init_default, Proto_RedirectInfo_init_default, Proto_RpcInfo_init_default}
+#define ServerInfoReport_init_default            {0, "", 0, "", "", "", 0, "", 0, 0, "", 0, 0, "", 0, 0, 0, "", 0, 0, 0, 0, 0, 0, "", "", 0, "", 0, "", "", {}, {}, {}}
+#define ServerInfoReportList_init_default        {{}}
+#define ServerInfoReportListRespne_init_default  {0}
+#define ZkServerInfo_init_default                {"", ""}
+#define DynLibFileInfo_init_default              {"", 0}
+#define DynLibFileInfoArray_init_default         {{}}
+#define Proto_KillAllServerNtf_init_default      {0}
+#define Proto_KillAllServerRsp_init_default      {0}
+#define Proto_STSBroadPlayerMsgNotify_init_default {{}, 0, {0, {0}}}
+#define Proto_STWebMsgRspNotify_init_default     {0, 0, ""}
+#define NFEventNoneData_init_default             {0, 0, 0, 0, 0}
+#define NFEventScriptData_init_default           {"", ""}
+#define Proto_ServerDumpInfoNtf_init_default     {"", 0}
+#define Proto_ServerSyncDataReq_init_default     {0, {0, {0}}}
+#define Proto_ServerSyncDataRsp_init_default     {0, {0, {0}}, 0}
+#define Proto_DispInfo_init_zero                 {0, 0, 0, 0, _PacketDispType_MIN}
+#define Proto_TransInfo_init_zero                {0, 0}
+#define Proto_StoreInfo_init_zero                {0, 0}
+#define Proto_EventInfo_init_zero                {0, 0, 0, 0, ""}
+#define Proto_ScriptRpcResult_init_zero          {"", "", ""}
+#define Proto_RpcInfo_init_zero                  {0, 0, 0, 0, 0, 0, 0, 0}
+#define Proto_RedirectInfo_init_zero             {{}, 0}
+#define Proto_FramePkg_init_zero                 {0, 0, {0, {0}}, Proto_DispInfo_init_zero, Proto_TransInfo_init_zero, Proto_StoreInfo_init_zero, Proto_EventInfo_init_zero, Proto_RedirectInfo_init_zero, Proto_RpcInfo_init_zero}
+#define ServerInfoReport_init_zero               {0, "", 0, "", "", "", 0, "", 0, 0, "", 0, 0, "", 0, 0, 0, "", 0, 0, 0, 0, 0, 0, "", "", 0, "", 0, "", "", {}, {}, {}}
+#define ServerInfoReportList_init_zero           {{}}
+#define ServerInfoReportListRespne_init_zero     {0}
+#define ZkServerInfo_init_zero                   {"", ""}
+#define DynLibFileInfo_init_zero                 {"", 0}
+#define DynLibFileInfoArray_init_zero            {{}}
+#define Proto_KillAllServerNtf_init_zero         {0}
+#define Proto_KillAllServerRsp_init_zero         {0}
+#define Proto_STSBroadPlayerMsgNotify_init_zero  {{}, 0, {0, {0}}}
+#define Proto_STWebMsgRspNotify_init_zero        {0, 0, ""}
+#define NFEventNoneData_init_zero                {0, 0, 0, 0, 0}
+#define NFEventScriptData_init_zero              {"", ""}
+#define Proto_ServerDumpInfoNtf_init_zero        {"", 0}
+#define Proto_ServerSyncDataReq_init_zero        {0, {0, {0}}}
+#define Proto_ServerSyncDataRsp_init_zero        {0, {0, {0}}, 0}
+
 /* Field tags (for use in manual encoding/decoding) */
 #define DynLibFileInfo_file_md5_tag              1
 #define DynLibFileInfo_file_size_tag             2
@@ -678,6 +769,11 @@ struct ServerInfoReportList {
 #define Proto_ScriptRpcResult_respone_tag        3
 #define Proto_ServerDumpInfoNtf_dump_info_tag    1
 #define Proto_ServerDumpInfoNtf_bus_id_tag       2
+#define Proto_ServerSyncDataReq_msg_id_tag       1
+#define Proto_ServerSyncDataReq_msg_data_tag     2
+#define Proto_ServerSyncDataRsp_msg_id_tag       1
+#define Proto_ServerSyncDataRsp_msg_data_tag     2
+#define Proto_ServerSyncDataRsp_result_tag       3
 #define Proto_StoreInfo_id_tag                   1
 #define Proto_StoreInfo_table_id_tag             2
 #define Proto_TransInfo_req_trans_id_tag         1
@@ -732,6 +828,29 @@ struct ServerInfoReportList {
 #define ServerInfoReportList_server_list_tag     1
 
 /* Struct field encoding specification for nanopb */
+extern const pb_field_t Proto_DispInfo_fields[6];
+extern const pb_field_t Proto_TransInfo_fields[3];
+extern const pb_field_t Proto_StoreInfo_fields[3];
+extern const pb_field_t Proto_EventInfo_fields[6];
+extern const pb_field_t Proto_ScriptRpcResult_fields[4];
+extern const pb_field_t Proto_RpcInfo_fields[9];
+extern const pb_field_t Proto_RedirectInfo_fields[3];
+extern const pb_field_t Proto_FramePkg_fields[10];
+extern const pb_field_t ServerInfoReport_fields[35];
+extern const pb_field_t ServerInfoReportList_fields[2];
+extern const pb_field_t ServerInfoReportListRespne_fields[2];
+extern const pb_field_t ZkServerInfo_fields[3];
+extern const pb_field_t DynLibFileInfo_fields[3];
+extern const pb_field_t DynLibFileInfoArray_fields[2];
+extern const pb_field_t Proto_KillAllServerNtf_fields[1];
+extern const pb_field_t Proto_KillAllServerRsp_fields[2];
+extern const pb_field_t Proto_STSBroadPlayerMsgNotify_fields[4];
+extern const pb_field_t Proto_STWebMsgRspNotify_fields[4];
+extern const pb_field_t NFEventNoneData_fields[6];
+extern const pb_field_t NFEventScriptData_fields[3];
+extern const pb_field_t Proto_ServerDumpInfoNtf_fields[3];
+extern const pb_field_t Proto_ServerSyncDataReq_fields[3];
+extern const pb_field_t Proto_ServerSyncDataRsp_fields[4];
 
 /* Maximum encoded size of messages (where known) */
 #define Proto_DispInfo_size                      46
@@ -755,6 +874,8 @@ struct ServerInfoReportList {
 #define NFEventNoneData_size                     55
 #define NFEventScriptData_size                   68
 #define Proto_ServerDumpInfoNtf_size             40
+#define Proto_ServerSyncDataReq_size             40
+#define Proto_ServerSyncDataRsp_size             51
 
 /* Message IDs (where set with "msgid" option) */
 #ifdef PB_MSGID

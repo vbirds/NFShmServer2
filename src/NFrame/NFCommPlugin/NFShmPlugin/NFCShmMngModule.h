@@ -4,6 +4,13 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFKernelPlugin
+//    @Desc             :    共享内存管理模块头文件，提供共享内存的核心管理功能。
+//                          该文件定义了共享内存管理模块的核心类，提供共享内存的分配和管理、
+//                          对象的创建和销毁、对象段的管理、全局ID管理、定时器管理、
+//                          事件管理、事务管理。主要功能包括共享内存初始化、对象生命周期管理、
+//                          内存分配和释放、对象查找和遍历、定时器调度、事件处理、事务管理。
+//                          设计特点包括基于共享内存支持跨进程、高效的内存管理、
+//                          完整的对象生命周期、多种管理功能集成、自动资源回收
 //
 // -------------------------------------------------------------------------
 
@@ -76,14 +83,51 @@ public:
     ~NFCShmMngModule() override;
 
 public:
-    bool AfterLoadAllPlugin() override;
+    int AfterLoadAllPlugin() override;
 
-    bool Execute() override;
+    int Awake() override;
 
-    /**
-    * 创建共享内存
-    */
-    bool Finalize() override;
+    int Init() override;
+
+    int Tick() override;
+
+    int Shut() override;
+
+    int Finalize() override;
+
+    int AfterOnReloadConfig() override;
+
+    int HotfixServer() override;
+
+    int CheckStopServer() override;
+
+    int StopServer() override;
+
+    int OnServerKilling() override;
+
+    int AfterAllConnectFinish() override;
+
+    int AfterAllDescStoreLoaded() override;
+
+    int AfterAllConnectAndAllDescStore() override;
+
+    int AfterObjFromDBLoaded() override;
+
+    int AfterServerSyncData() override;
+
+    int AfterAppInitFinish() override;
+
+    int AfterAllConnectFinish(NF_SERVER_TYPE serverType) override;
+
+    int AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType) override;
+
+    int AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType) override;
+
+    int AfterObjFromDBLoaded(NF_SERVER_TYPE serverType) override;
+
+    int AfterServerSyncData(NF_SERVER_TYPE serverType) override;
+
+    int AfterAppInitFinish(NF_SERVER_TYPE serverType) override;
 public:
     /**
     * 分配共享内存

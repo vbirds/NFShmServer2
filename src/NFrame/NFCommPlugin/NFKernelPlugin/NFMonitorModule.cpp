@@ -28,23 +28,23 @@ NFCMonitorModule::~NFCMonitorModule()
 
 }
 
-bool NFCMonitorModule::Init()
+int NFCMonitorModule::Init()
 {
 #if NF_PLATFORM == NF_PLATFORM_LINUX
 	this->SetTimer(MonitorTimer_SYSTEMINFO, MONITOR_TIMER_SYSTEIMINFO_INTERNAL_TIME, INFINITY_CALL);
 	mSystemInfo.Init();
 #endif
-	return true;
+	return 0;
 }
 
-bool NFCMonitorModule::Execute()
+int NFCMonitorModule::Tick()
 {
-	return true;
+	return 0;
 }
 
-bool NFCMonitorModule::Finalize()
+int NFCMonitorModule::Finalize()
 {
-	return true;
+	return 0;
 }
 
 /**

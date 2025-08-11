@@ -4,6 +4,9 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFCDescStoreModule
+//    @Desc             :    NFShmXFrame描述存储模块实现
+//                          实现配置表数据的存储、加载和管理功能
+//                          支持数据库存储和文件存储两种方式，提供统一的访问接口
 //
 // -------------------------------------------------------------------------
 
@@ -27,6 +30,13 @@
 #include "NFServerComm/NFServerCommon/NFIServerMessageModule.h"
 
 
+/**
+ * @brief 描述存储模块构造函数
+ * 
+ * 初始化描述存储模块，设置资源数据库指针和状态标志
+ * 
+ * @param p 插件管理器指针
+ */
 NFCDescStoreModule::NFCDescStoreModule(NFIPluginManager* p) : NFIDescStoreModule(p)
 {
     m_pResFileDB = NULL;
@@ -36,6 +46,11 @@ NFCDescStoreModule::NFCDescStoreModule(NFIPluginManager* p) : NFIDescStoreModule
     m_bLoadingDB = false;
 }
 
+/**
+ * @brief 描述存储模块析构函数
+ * 
+ * 清理描述存储模块资源，释放资源数据库对象
+ */
 NFCDescStoreModule::~NFCDescStoreModule()
 {
     if (m_pResFileDB)
@@ -48,7 +63,14 @@ NFCDescStoreModule::~NFCDescStoreModule()
     }
 }
 
-bool NFCDescStoreModule::AfterInitShmMem()
+/**
+ * @brief 加载配置
+ * 
+ * 加载描述存储模块的配置文件，初始化模块并加载文件描述存储
+ * 
+ * @return 加载结果状态码，0表示成功
+ */
+int NFCDescStoreModule::LoadConfig()
 {
     Initialize();
     if (!HasDBDescStore())
@@ -57,19 +79,36 @@ bool NFCDescStoreModule::AfterInitShmMem()
         if (iRetCode != 0)
         {
             LOG_ERR(0, iRetCode, "LoadFileDescStore failed");
-            return false;
+            return -1;
         }
     }
 
-    return true;
+    return 0;
 }
 
-bool NFCDescStoreModule::Awake()
+/**
+ * @brief 模块唤醒
+ * 
+ * 在模块初始化完成后调用，进行必要的初始化工作
+ * 
+ * @return 初始化结果状态码，0表示成功
+ */
+int NFCDescStoreModule::Awake()
 {
-    return true;
+    return 0;
 }
 
-bool NFCDescStoreModule::Execute()
+/**
+ * @brief 模块定时更新
+ * 
+ * 每帧调用，处理模块的定时任务，包括：
+ * - 检查描述存储加载状态
+ * - 处理数据库加载完成后的文件加载
+ * - 处理重载完成后的状态更新
+ * 
+ * @return 处理结果状态码，0表示成功
+ */
+int NFCDescStoreModule::Tick()
 {
     if (!m_bFinishLoaded)
     {
@@ -97,25 +136,38 @@ bool NFCDescStoreModule::Execute()
             if (HasDBDescStore())
             {
                 int iRet = ReLoadFileDescStore();
-                CHECK_EXPR_ASSERT(iRet == 0, false, "ReLoadFileDescStore Failed");
+                CHECK_ERR(0, iRet, "ReLoadFileDescStore Failed");
             }
-        }
-
-        if (IsAllDescStoreLoaded())
-        {
             m_bFinishReloaded = true;
         }
     }
 
-    return true;
+    return 0;
 }
 
-bool NFCDescStoreModule::OnReloadConfig()
+/**
+ * @brief 重新加载配置
+ * 
+ * 当配置文件发生变化时，重新加载配置
+ * 
+ * @return 重载结果状态码，0表示成功
+ */
+int NFCDescStoreModule::OnReloadConfig()
 {
     Reload();
-    return true;
+    return 0;
 }
 
+/**
+ * @brief 初始化模块
+ * 
+ * 初始化描述存储模块，包括资源加载和对象创建：
+ * - 设置加载状态标志
+ * - 创建文件资源数据库和SQL资源数据库
+ * - 初始化所有描述存储对象
+ * 
+ * @return 初始化结果状态码，0表示成功
+ */
 int NFCDescStoreModule::Initialize()
 {
     m_bFinishLoaded = false;
@@ -129,6 +181,16 @@ int NFCDescStoreModule::Initialize()
     return 0;
 }
 
+/**
+ * @brief 加载文件描述存储
+ * 
+ * 从文件系统加载所有描述存储数据，包括：
+ * - 加载所有文件描述存储
+ * - 检查所有数据加载完成后的处理
+ * - 加载所有扩展描述存储
+ * 
+ * @return 加载结果状态码，0表示成功
+ */
 int NFCDescStoreModule::LoadFileDescStore()
 {
     int iRet = 0;
@@ -158,6 +220,13 @@ int NFCDescStoreModule::LoadFileDescStore()
     return iRet;
 }
 
+/**
+ * @brief 从数据库加载描述存储数据
+ * 
+ * 当需要从数据库加载配置表时，应在各服务器的AfterAllConnectFinish回调中调用此接口
+ * 
+ * @return 加载结果状态码，0表示成功
+ */
 int NFCDescStoreModule::LoadDBDescStore()
 {
     if (m_bLoadingDB) return 0;
@@ -170,6 +239,11 @@ int NFCDescStoreModule::LoadDBDescStore()
     return iRet;
 }
 
+/**
+ * @brief 初始化所有描述存储对象
+ * 
+ * 遍历所有已注册的描述存储对象，逐个进行初始化
+ */
 void NFCDescStoreModule::InitAllDescStore()
 {
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -187,6 +261,11 @@ void NFCDescStoreModule::InitAllDescStore()
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- end -- ");
 }
 
+/**
+ * @brief 初始化所有扩展描述存储对象
+ * 
+ * 遍历所有已注册的扩展描述存储对象，逐个进行初始化
+ */
 void NFCDescStoreModule::InitAllDescStoreEx()
 {
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -204,6 +283,13 @@ void NFCDescStoreModule::InitAllDescStoreEx()
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- end -- ");
 }
 
+/**
+ * @brief 检查所有描述存储是否已加载
+ * 
+ * 遍历所有描述存储对象，检查是否都已加载完成
+ * 
+ * @return 如果所有描述存储都已加载返回true，否则返回false
+ */
 bool NFCDescStoreModule::IsAllDescStoreLoaded()
 {
     for (auto iter = mDescStoreMap.begin(); iter != mDescStoreMap.end(); iter++)
@@ -217,6 +303,13 @@ bool NFCDescStoreModule::IsAllDescStoreLoaded()
     return true;
 }
 
+/**
+ * @brief 检查所有数据库描述存储是否已加载
+ * 
+ * 遍历所有描述存储对象，检查数据库数据是否都已加载完成
+ * 
+ * @return 如果所有数据库描述存储都已加载返回true，否则返回false
+ */
 bool NFCDescStoreModule::IsAllDescStoreDBLoaded()
 {
     for (auto iter = mDescStoreMap.begin(); iter != mDescStoreMap.end(); iter++)
@@ -606,6 +699,13 @@ int NFCDescStoreModule::CheckWhenAllDataLoaded()
     return 0;
 }
 
+/**
+ * @brief 加载所有扩展描述存储
+ * 
+ * 遍历所有扩展描述存储对象，逐个进行加载
+ * 
+ * @return 加载结果状态码，0表示成功
+ */
 int NFCDescStoreModule::LoadAllDescStoreEx()
 {
     int iRet = 0;
@@ -624,6 +724,13 @@ int NFCDescStoreModule::LoadAllDescStoreEx()
     return 0;
 }
 
+/**
+ * @brief 检查所有扩展数据加载完成后的处理
+ * 
+ * 当所有扩展数据加载完成后进行必要的处理
+ * 
+ * @return 处理结果状态码，0表示成功
+ */
 int NFCDescStoreModule::CheckExWhenAllDataLoaded()
 {
     int iRet = 0;
@@ -644,6 +751,15 @@ int NFCDescStoreModule::CheckExWhenAllDataLoaded()
     return 0;
 }
 
+/**
+ * @brief 获取文件MD5值
+ * 
+ * 计算指定文件的MD5值，用于文件完整性校验
+ * 
+ * @param strFileName 文件名
+ * @param fileMd5 输出MD5值
+ * @return 操作结果状态码，0表示成功
+ */
 int NFCDescStoreModule::GetFileContainMD5(const std::string& strFileName, std::string& fileMd5)
 {
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -657,6 +773,15 @@ int NFCDescStoreModule::GetFileContainMD5(const std::string& strFileName, std::s
     return 0;
 }
 
+/**
+ * @brief 注册描述存储模块（指定数据库）
+ * 
+ * 注册描述存储模块，支持指定数据库名称
+ * 
+ * @param strDescName 类名
+ * @param objType 对象类型
+ * @param dbName 数据库名称
+ */
 void NFCDescStoreModule::RegisterDescStore(const std::string& strDescName, int objType, const std::string& dbName)
 {
     if (mDescStoreRegister.find(strDescName) != mDescStoreRegister.end()) return;
@@ -665,6 +790,14 @@ void NFCDescStoreModule::RegisterDescStore(const std::string& strDescName, int o
     mDescStoreDBNameMap.insert(std::make_pair(strDescName, dbName));
 }
 
+/**
+ * @brief 注册描述存储模块（默认数据库）
+ * 
+ * 注册描述存储模块，使用默认数据库
+ * 
+ * @param strDescName 类名
+ * @param objType 对象类型
+ */
 void NFCDescStoreModule::RegisterDescStore(const std::string& strDescName, int objType)
 {
     if (mDescStoreRegister.find(strDescName) != mDescStoreRegister.end()) return;
@@ -672,6 +805,14 @@ void NFCDescStoreModule::RegisterDescStore(const std::string& strDescName, int o
     mDescStoreRegisterList.push_back(strDescName);
 }
 
+/**
+ * @brief 注册扩展描述存储模块
+ * 
+ * 注册扩展描述存储模块，提供额外的功能
+ * 
+ * @param strDescName 类名
+ * @param objType 对象类型
+ */
 void NFCDescStoreModule::RegisterDescStoreEx(const std::string& strDescName, int objType)
 {
     if (mDescStoreExRegister.find(strDescName) != mDescStoreExRegister.end()) return;
@@ -795,6 +936,14 @@ void NFCDescStoreModule::RemoveDescStore(const std::string& strDescName)
     }
 }
 
+/**
+ * @brief 根据文件名查找描述存储对象
+ * 
+ * 根据文件名查找对应的描述存储对象
+ * 
+ * @param strDescName 文件名
+ * @return 描述存储对象指针，如果未找到返回nullptr
+ */
 NFIDescStore* NFCDescStoreModule::FindDescStoreByFileName(const std::string& strDescName)
 {
     auto it = mDescStoreFileMap.find(strDescName);
@@ -806,6 +955,14 @@ NFIDescStore* NFCDescStoreModule::FindDescStoreByFileName(const std::string& str
     return nullptr;
 }
 
+/**
+ * @brief 查找描述存储对象
+ * 
+ * 根据描述名称查找对应的描述存储对象，支持跨平台文件名处理
+ * 
+ * @param strDescName 描述名称
+ * @return 描述存储对象指针，如果未找到返回nullptr
+ */
 NFIDescStore* NFCDescStoreModule::FindDescStore(const std::string& strDescName)
 {
     std::string strSubDescName = strDescName;
@@ -838,16 +995,42 @@ NFIDescStore* NFCDescStoreModule::FindDescStore(const std::string& strDescName)
     return nullptr;
 }
 
+/**
+ * @brief 从真实数据库创建资源数据库
+ * 
+ * 基于真实数据库创建资源数据库对象
+ * 
+ * @return 资源数据库对象指针
+ */
 NFResDb* NFCDescStoreModule::CreateResDBFromRealDB()
 {
     return new NFResMysqlDB(m_pObjPluginManager);
 }
 
+/**
+ * @brief 从文件创建资源数据库
+ * 
+ * 基于指定目录的文件创建资源数据库对象
+ * 
+ * @param dir 文件目录
+ * @return 资源数据库对象指针
+ */
 NFResDb* NFCDescStoreModule::CreateResDBFromFiles(const std::string& dir)
 {
     return new NFFileResDB(m_pObjPluginManager, dir);
 }
 
+/**
+ * @brief 通过RPC获取描述存储数据
+ * 
+ * 通过RPC调用从指定服务器获取描述存储数据
+ * 
+ * @param eType 服务器类型
+ * @param dbName 数据库名称
+ * @param table_name 表名
+ * @param pMessage 输出消息数据
+ * @return 操作结果状态码
+ */
 int NFCDescStoreModule::GetDescStoreByRpc(NF_SERVER_TYPE eType, const std::string& dbName, const std::string& table_name,
                                           google::protobuf::Message* pMessage)
 {
@@ -855,30 +1038,49 @@ int NFCDescStoreModule::GetDescStoreByRpc(NF_SERVER_TYPE eType, const std::strin
                                                                         "", 100, 0, dbName);
 }
 
+/**
+ * @brief 共享内存初始化后运行
+ * 
+ * 在共享内存初始化完成后执行必要的操作
+ */
 void NFCDescStoreModule::runAfterShmInit()
 {
     Initialize();
 }
 
-bool NFCDescStoreModule::CheckStopServer()
+/**
+ * @brief 检查停服条件
+ * 
+ * 停服之前，检查服务器是否满足停服条件
+ * 
+ * @return 检查结果状态码，0表示成功
+ */
+int NFCDescStoreModule::CheckStopServer()
 {
-    if (!NFDBObjMgr::Instance()->CheckStopServer())
-    {
-        return false;
-    }
-    return true;
+    return 0;
 }
 
-bool NFCDescStoreModule::StopServer()
+/**
+ * @brief 停服处理
+ * 
+ * 停服之前，做一些操作，满足停服条件
+ * 
+ * @return 处理结果状态码，0表示成功
+ */
+int NFCDescStoreModule::StopServer()
 {
-    if (!NFDBObjMgr::Instance()->StopServer())
-    {
-        return false;
-    }
-    return true;
+    return 0;
 }
 
-bool NFCDescStoreModule::AfterAllConnectFinish(NF_SERVER_TYPE serverType)
+/**
+ * @brief 所有连接完成后的处理
+ * 
+ * 当所有服务器连接建立完成后调用，处理数据库加载等任务
+ * 
+ * @param serverType 服务器类型
+ * @return 处理结果状态码，0表示成功
+ */
+int NFCDescStoreModule::AfterAllConnectFinish(NF_SERVER_TYPE serverType)
 {
     if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode())
     {
@@ -891,6 +1093,6 @@ bool NFCDescStoreModule::AfterAllConnectFinish(NF_SERVER_TYPE serverType)
         }
     }
 
-    return true;
+    return 0;
 }
 

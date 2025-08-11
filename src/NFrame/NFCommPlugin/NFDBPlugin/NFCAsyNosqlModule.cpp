@@ -1,9 +1,10 @@
 // -------------------------------------------------------------------------
-//    @FileName         :    NFCAsyNoSqlModule.cpp
+//    @FileName         :    NFCAsyNosqlModule.cpp
 //    @Author           :    gaoyi
 //    @Date             :    23-8-15
 //    @Email			:    445267987@qq.com
-//    @Module           :    NFCAsyNoSqlModule
+//    @Module           :    NFCAsyNosqlModule
+//    @Description      :    异步NoSQL模块实现文件，提供异步NoSQL数据库操作的核心实现
 //
 // -------------------------------------------------------------------------
 
@@ -12,31 +13,63 @@
 #include "NFComm/NFPluginModule/NFITaskComponent.h"
 #include "NFComm/NFPluginModule/NFCheck.h"
 
+/**
+ * @class NFNosqlTask
+ * @brief NoSQL异步任务类
+ * 
+ * 继承自NFTask，专门用于处理NoSQL相关的异步任务。
+ * 提供NoSQL数据库操作的异步执行能力，避免阻塞主线程。
+ */
 class NFNosqlTask : public NFTask
 {
 public:
+    /**
+     * @brief 构造函数
+     * @param serverId 服务器ID，用于标识任务所属的NoSQL服务器
+     */
     explicit NFNosqlTask(const std::string& serverId) : m_serverId(serverId)
     {
         m_pNosqlDriver = nullptr;
         m_taskName = GET_CLASS_NAME(NFNosqlTask);
     }
 
+    /**
+     * @brief 析构函数
+     * 释放任务相关资源
+     */
     ~NFNosqlTask() override
     {
     }
 
+    /**
+     * @brief 检查任务是否需要执行检查操作
+     * @return 返回false，表示默认不执行检查操作
+     */
     virtual bool IsCheck()
     {
         return false;
     }
 
+    /**
+     * @brief 检查任务是否需要连接操作
+     * @return 返回false，表示默认不执行连接操作
+     */
     virtual bool IsConnect()
     {
         return false;
     }
 
 public:
+    /**
+     * @brief NoSQL驱动指针
+     * 指向执行任务的NoSQL驱动实例
+     */
     NFINosqlDriver* m_pNosqlDriver;
+    
+    /**
+     * @brief 服务器ID
+     * 标识任务所属的NoSQL服务器
+     */
     std::string m_serverId;
 };
 
@@ -461,9 +494,9 @@ NFCAsyNosqlModule::~NFCAsyNosqlModule()
 {
 }
 
-bool NFCAsyNosqlModule::Execute()
+int NFCAsyNosqlModule::Tick()
 {
-    return NFIModule::Execute();
+    return NFIModule::Tick();
 }
 
 bool NFCAsyNosqlModule::InitActorPool(int iMaxTaskGroup, int iMaxActorNum)

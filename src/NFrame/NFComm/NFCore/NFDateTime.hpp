@@ -6,6 +6,14 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFDateTime.hpp
+ * @brief 日期时间工具类集合
+ * 
+ * 此文件提供了完整的日期时间处理功能，包括时间跨度计算、日期时间操作、
+ * 时区转换等。主要包含NFTimeSpan和NFDateTime两个核心类。
+ */
+
 #ifndef NF_DATETIME_HPP
 #define NF_DATETIME_HPP
 
@@ -21,141 +29,278 @@
 #include "NFPlatform.h"
 
 //for timespan
+/** @brief 秒到毫秒的转换因子 */
 #define FACTOR_SEC_TO_MILLI                     (1000)
+/** @brief 分钟到毫秒的转换因子 */
 #define FACTOR_MIN_TO_MILLI                (60 * 1000)
+/** @brief 分钟到秒的转换因子 */
 #define FACTOR_MIN_TO_SEC                         (60)
+/** @brief 小时到毫秒的转换因子 */
 #define FACTOR_HOUR_TO_MILLI          (60 * 60 * 1000)
+/** @brief 小时到分钟的转换因子 */
 #define FACTOR_HOUR_TO_MIN                        (60)
+/** @brief 天到毫秒的转换因子 */
 #define FACTOR_DAY_TO_MILLI      (24 * 60 * 60 * 1000)
+/** @brief 天到小时的转换因子 */
 #define FACTOR_DAY_TO_HOUR                        (24)
+
 ///////////////////////////////
 //for datetime
+/** @brief 时间基准年份（1900年） */
 #define SINCE_YEAR               1900
 
 // Summertime
+/** @brief 夏令时开始月份 */
 #define SUMMERTIME_BEGIN_MONTH      3
+/** @brief 夏令时结束月份 */
 #define SUMMERTIME_END_MONTH       10
 
 // Min and Max values
+/** @brief 最小月份值 */
 #define MIN_MONTH                   1
+/** @brief 最大月份值 */
 #define MAX_MONTH                  12
 
+/** @brief 最小日期值 */
 #define MIN_DAY                     1
+/** @brief 最大日期值 */
 #define MAX_DAY                    30
 
+/** @brief 最小星期值 */
 #define MIN_WEEKDAY                 0
+/** @brief 最大星期值 */
 #define MAX_WEEKDAY                 7
 
+/** @brief 最小小时值 */
 #define MIN_HOUR                    0
+/** @brief 最大小时值 */
 #define MAX_HOUR                   24
 
+/** @brief 最小分钟值 */
 #define MIN_MINUTE                  0
+/** @brief 最大分钟值 */
 #define MAX_MINUTE                 60
 
+/** @brief 最小秒数值 */
 #define MIN_SECOND                  0
+/** @brief 最大秒数值 */
 #define MAX_SECOND                 60
 
+/** @brief 最小毫秒值 */
 #define MIN_MILLISECOND             0
+/** @brief 最大毫秒值 */
 #define MAX_MILLISECOND          1000
 
+/**
+ * @brief 时间跨度类
+ * 
+ * NFTimeSpan类用于表示一个时间间隔，可以精确到毫秒级别。
+ * 支持天、小时、分钟、秒、毫秒的组合表示，提供各种时间单位之间的转换。
+ * 
+ * 主要功能：
+ * - 支持多种时间单位的构造
+ * - 提供静态工厂方法创建时间跨度
+ * - 支持获取各个时间分量
+ * - 提供总时间的毫秒、秒、分钟表示
+ * 
+ * 使用方法：
+ * @code
+ * NFTimeSpan span1(1, 2, 30, 45, 500); // 1天2小时30分45秒500毫秒
+ * NFTimeSpan span2 = NFTimeSpan::FromHours(3); // 3小时
+ * long long totalMs = span1.GetTotalMilliseconds();
+ * @endcode
+ */
 class NFTimeSpan
 {
 public:
+	/**
+	 * @brief 构造函数（仅秒）
+	 * @param seconds 秒数
+	 */
 	NFTimeSpan(int seconds)
 	{
 		Init(0, 0, 0, seconds, 0);
 	}
 
+	/**
+	 * @brief 构造函数（小时、分钟、秒）
+	 * @param hours 小时数
+	 * @param minutes 分钟数
+	 * @param seconds 秒数
+	 */
 	NFTimeSpan(int hours, int minutes, int seconds)
 	{
 		Init(0, hours, minutes, seconds, 0);
 	}
 
+	/**
+	 * @brief 构造函数（天、小时、分钟、秒）
+	 * @param days 天数
+	 * @param hours 小时数
+	 * @param minutes 分钟数
+	 * @param seconds 秒数
+	 */
 	NFTimeSpan(int days, int hours, int minutes, int seconds)
 	{
 		Init(days, hours, minutes, seconds, 0);
 	}
 
+	/**
+	 * @brief 构造函数（完整参数）
+	 * @param days 天数
+	 * @param hours 小时数
+	 * @param minutes 分钟数
+	 * @param seconds 秒数
+	 * @param milliseconds 毫秒数
+	 */
 	NFTimeSpan(int days, int hours, int minutes, int seconds, int milliseconds)
 	{
 		Init(days, hours, minutes, seconds, milliseconds);
 	}
 
+	/**
+	 * @brief 虚析构函数
+	 */
 	virtual ~NFTimeSpan()
 	{
 	}
 
+	/**
+	 * @brief 从毫秒创建时间跨度
+	 * @param milliseconds 毫秒数
+	 * @return NFTimeSpan 时间跨度对象
+	 */
 	static NFTimeSpan FromMilliseconds(int milliseconds)
 	{
 		return NFTimeSpan(0, 0, 0, 0, milliseconds);
 	}
 
+	/**
+	 * @brief 从秒创建时间跨度
+	 * @param seconds 秒数
+	 * @return NFTimeSpan 时间跨度对象
+	 */
 	static NFTimeSpan FromSeconds(int seconds)
 	{
 		return NFTimeSpan(0, 0, 0, seconds, 0);
 	}
 
+	/**
+	 * @brief 从分钟创建时间跨度
+	 * @param minutes 分钟数
+	 * @return NFTimeSpan 时间跨度对象
+	 */
 	static NFTimeSpan FromMinutes(int minutes)
 	{
 		return NFTimeSpan(0, 0, minutes, 0, 0);
 	}
 
+	/**
+	 * @brief 从小时创建时间跨度
+	 * @param hours 小时数
+	 * @return NFTimeSpan 时间跨度对象
+	 */
 	static NFTimeSpan FromHours(int hours)
 	{
 		return NFTimeSpan(0, hours, 0, 0, 0);
 	}
 
+	/**
+	 * @brief 从天数创建时间跨度
+	 * @param days 天数
+	 * @return NFTimeSpan 时间跨度对象
+	 */
 	static NFTimeSpan FromDays(int days)
 	{
 		return NFTimeSpan(days, 0, 0, 0, 0);
 	}
 
+	/**
+	 * @brief 获取毫秒分量
+	 * @return int 毫秒数（0-999）
+	 */
 	int GetMilliseconds() const
 	{
 		return mMilliseconds;
 	}
 
+	/**
+	 * @brief 获取秒分量
+	 * @return int 秒数（0-59）
+	 */
 	int GetSeconds() const
 	{
 		return mSeconds;
 	}
 
+	/**
+	 * @brief 获取分钟分量
+	 * @return int 分钟数（0-59）
+	 */
 	int GetMinutes() const
 	{
 		return mMinutes;
 	}
 
+	/**
+	 * @brief 获取小时分量
+	 * @return int 小时数（0-23）
+	 */
 	int GetHours() const
 	{
 		return mHours;
 	}
 
+	/**
+	 * @brief 获取天数分量
+	 * @return int 天数
+	 */
 	int GetDays() const
 	{
 		return mDays;
 	}
 
+	/**
+	 * @brief 获取总毫秒数
+	 * @return long long 时间跨度的总毫秒数
+	 */
 	long long GetTotalMilliseconds() const
 	{
 		return mMilliseconds + static_cast<long long>(mSeconds) * FACTOR_SEC_TO_MILLI + static_cast<long long>(mMinutes) * FACTOR_MIN_TO_MILLI + static_cast<long long>(mHours) * FACTOR_HOUR_TO_MILLI + (long long)mDays * FACTOR_DAY_TO_MILLI;
 	}
 
-	//updated : GetTotalXXXXs never return double
+	/**
+	 * @brief 获取总秒数
+	 * @return long long 时间跨度的总秒数
+	 * @note 更新：GetTotalXXXXs系列函数不再返回double类型
+	 */
 	long long GetTotalSeconds() const
 	{
 		return GetTotalMilliseconds() / FACTOR_SEC_TO_MILLI;
 	}
 
+	/**
+	 * @brief 获取总分钟数
+	 * @return long long 时间跨度的总分钟数
+	 */
 	long long GetTotalMinutes() const
 	{
 		return GetTotalSeconds() / FACTOR_MIN_TO_SEC;
 	}
 
+	/**
+	 * @brief 获取总小时数
+	 * @return long long 时间跨度的总小时数
+	 */
 	long long GetTotalHours() const
 	{
 		return GetTotalMinutes() / FACTOR_HOUR_TO_MIN;
 	}
 
+	/**
+	 * @brief 获取总天数
+	 * @return long long 时间跨度的总天数
+	 */
 	long long GetTotalDays() const
 	{
 		return GetTotalHours() / FACTOR_DAY_TO_HOUR;

@@ -7,6 +7,19 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFCommonApi.h
+ * @brief 通用API函数集合
+ * 
+ * 此文件提供了各种通用的工具函数和宏定义，包括：
+ * - 内存对齐宏
+ * - 位旋转操作宏
+ * - 通用比较函数模板
+ * - 字符串处理函数
+ * - 数值处理函数
+ * - 类型转换工具
+ */
+
 #pragma once
 
 
@@ -29,39 +42,101 @@
 #endif
 
 
+/**
+ * @brief 内存对齐宏
+ * 将SIZE向上对齐到BOUNDARE的倍数
+ * @param SIZE 要对齐的大小
+ * @param BOUNDARE 对齐边界
+ */
 #ifndef  ALIGN
 #define  ALIGN(SIZE, BOUNDARE)   (((SIZE) + ((BOUNDARE) -1)) &~((BOUNDARE) - 1))
 #endif  // ALIGN
 
-// Rotation
-#define ROL8(n, r)  (((n) << (r)) | ((n) >> (8 - (r))))   // only works for u8
-#define ROR8(n, r)  (((n) >> (r)) | ((n) << (8 - (r))))   // only works for u8
-#define ROL16(n, r) (((n) << (r)) | ((n) >> (16 - (r))))  // only works for u16
-#define ROR16(n, r) (((n) >> (r)) | ((n) << (16 - (r))))  // only works for u16
-#define ROL32(n, r) (((n) << (r)) | ((n) >> (32 - (r))))  // only works for u32
-#define ROR32(n, r) (((n) >> (r)) | ((n) << (32 - (r))))  // only works for u32
+/**
+ * @name 位旋转操作宏
+ * @brief 提供各种位长度的左旋转和右旋转操作
+ * @{
+ */
+/** @brief 8位左旋转（仅适用于u8） */
+#define ROL8(n, r)  (((n) << (r)) | ((n) >> (8 - (r))))
+/** @brief 8位右旋转（仅适用于u8） */
+#define ROR8(n, r)  (((n) >> (r)) | ((n) << (8 - (r))))
+/** @brief 16位左旋转（仅适用于u16） */
+#define ROL16(n, r) (((n) << (r)) | ((n) >> (16 - (r))))
+/** @brief 16位右旋转（仅适用于u16） */
+#define ROR16(n, r) (((n) >> (r)) | ((n) << (16 - (r))))
+/** @brief 32位左旋转（仅适用于u32） */
+#define ROL32(n, r) (((n) << (r)) | ((n) >> (32 - (r))))
+/** @brief 32位右旋转（仅适用于u32） */
+#define ROR32(n, r) (((n) >> (r)) | ((n) << (32 - (r))))
+/** @} */
 
+/**
+ * @brief 模板最小值函数
+ * 返回两个值中的较小者
+ * @tparam TYPE 比较的数据类型
+ * @param a 第一个值
+ * @param b 第二个值
+ * @return TYPE 较小的值
+ */
 template<typename TYPE>
 TYPE TMIN(TYPE a, TYPE b)
 {
     return (a < b ? a : b);
 }
 
+/**
+ * @brief 模板最大值函数
+ * 返回两个值中的较大者
+ * @tparam TYPE 比较的数据类型
+ * @param a 第一个值
+ * @param b 第二个值
+ * @return TYPE 较大的值
+ */
 template<typename TYPE>
 TYPE TMAX(TYPE a, TYPE b)
 {
     return (a > b ? a : b);
 }
 
+/**
+ * @brief 布尔值到类型转换结构体
+ * 
+ * 用于编译时的布尔值到类型的转换，常用于模板元编程中
+ * 根据布尔值选择不同的代码路径
+ * 
+ * @tparam tagBool 布尔值
+ */
 template<bool tagBool>
 struct Bool2Type
 {
+    /** @brief 枚举值，等于模板参数 */
     enum {Value = tagBool};
 };
 
+/**
+ * @brief 通用API工具类
+ * 
+ * 提供各种常用的工具函数，包括：
+ * - 数学运算函数
+ * - 字符串处理函数
+ * - 类型转换函数
+ * - 容器操作函数
+ * 
+ * 所有函数都是静态函数，可以直接通过类名调用。
+ */
 class NFCommonApi
 {
 public:
+    /**
+     * @brief 将数值向上调整到2的幂
+     * 
+     * 将输入的数值调整为大于等于该数值的最小2的幂次方数
+     * 例如：输入5，返回8；输入9，返回16
+     * 
+     * @param x 输入的32位无符号整数
+     * @return uint32_t 大于等于x的最小2的幂次方数
+     */
     static uint32_t UpToPower2(uint32_t x)
     {
         x = x - 1;
@@ -73,6 +148,16 @@ public:
         return x + 1;
     }
 
+    /**
+     * @brief 分割字符串
+     * 
+     * 使用指定的分隔符将字符串分割成多个子字符串
+     * 
+     * @param str 要分割的字符串
+     * @param delimiter 分隔符字符串
+     * @param result [out] 存储分割结果的字符串向量
+     * @return int 分割后的子字符串数量
+     */
     static int SplitStr(const std::string& str,
                         const std::string& delimiter,
                         std::vector<std::string>* result)

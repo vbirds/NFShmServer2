@@ -1,3 +1,27 @@
+/**
+ * @file NFDynamicHead.h
+ * @brief 动态对象头部定义文件
+ * @details 定义了NFrame框架中动态对象的头部宏定义，提供了对象预分配、对象管理、
+ *          迭代器支持等功能的标准接口声明。这些宏用于自动生成对象的静态管理方法，
+ *          包括对象创建、销毁、查找、迭代等核心功能。
+ * 
+ * @author 系统生成
+ * @date 未知
+ * 
+ * @note 该文件包含了：
+ *       - _DECLARE_PREALLOCATED_: 预分配对象声明宏
+ *       - 对象迭代器类型定义
+ *       - 静态对象管理方法声明
+ *       - 对象创建和销毁方法声明
+ *       - 对象查找和遍历方法声明
+ * 
+ * @warning 使用这些宏时需要注意：
+ *          - 不要直接调用CreateObjectRegisterFunction等系统函数
+ *          - 这些是系统内部使用的注册函数，会导致崩溃
+ *          - 应该使用提供的静态方法来管理对象
+ *          - 确保在正确的共享内存环境中使用
+ */
+
 #pragma once
 
 #include "NFComm/NFCore/NFPlatform.h"

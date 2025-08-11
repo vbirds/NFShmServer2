@@ -3,6 +3,13 @@
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
 //    @Module           :    NFCAsyMysqlModule
+//    @Desc             :    异步MySQL模块头文件，提供异步MySQL数据库操作接口。
+//                          该文件定义了NFShmXFrame框架的异步MySQL模块，提供异步执行SQL查询、更新等操作的功能，
+//                          包括异步任务池管理、MySQL服务器配置、条件查询、对象查询、删除操作、插入操作、
+//                          修改操作、更新操作、执行操作等功能。
+//                          主要功能包括异步数据库操作的核心逻辑、任务池初始化和管理、
+//                          服务器配置添加、回调函数处理、缓存支持、错误处理
+//    @Description      :    异步MySQL模块头文件，提供异步MySQL数据库操作接口
 //
 // -------------------------------------------------------------------------
 
@@ -40,7 +47,7 @@ public:
      * 执行模块的主要逻辑，通常在每个主循环中被调用
      * @return bool 返回执行结果，true 表示成功，false 表示失败
      */
-    bool Execute() override;
+    int Tick() override;
 
     /**
      * @brief InitActorPool 函数

@@ -17,13 +17,13 @@ public:
 	explicit NFCProxyAgentServerModule(NFIPluginManager* p);
 	virtual ~NFCProxyAgentServerModule();
 
-	virtual bool Awake() override;
+	virtual int Awake() override;
 
-	virtual bool Init() override;
+	virtual int Init() override;
 
-	virtual bool Execute() override;
+	virtual int Tick() override;
 
-	virtual bool OnDynamicPlugin() override;
+	virtual int OnDynamicPlugin() override;
 
     virtual int OnTimer(uint32_t nTimerID) override;
 

@@ -4,6 +4,12 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFKernelPlugin
+//    @Desc             :    内存管理模块实现文件，提供共享内存对象、定时器、事件、事务等统一管理功能。
+//                          该文件实现了NFShmXFrame框架的内存管理模块，负责共享内存对象段的分配与管理、
+//                          全局ID分配、定时器管理、事件管理、事务管理、对象生命周期管理、
+//                          内存分配与释放、对象查找与遍历、定时器调度、事件处理、事务管理等。
+//                          主要功能包括高效的内存管理、对象生命周期管理、定时器与事件统一调度、
+//                          支持多种对象类型的注册与管理、自动资源回收、跨进程共享内存支持
 //
 // -------------------------------------------------------------------------
 
@@ -25,6 +31,7 @@
 #include "NFComm/NFCore/NFTime.h"
 #include "NFComm/NFPluginModule/NFIPlugin.h"
 #include "NFMemEventMgr.h"
+#include "NFComm/NFCore/NFServerTime.h"
 
 NFCMemMngModule::NFCMemMngModule(NFIPluginManager* p) : NFIMemMngModule(p)
 {
@@ -43,10 +50,21 @@ NFCMemMngModule::~NFCMemMngModule()
 {
 }
 
-bool NFCMemMngModule::AfterLoadAllPlugin()
+/**
+ * @brief 在所有插件加载完成后调用
+ * 
+ * 该函数在所有插件加载完成后被调用，负责：
+ * 1. 遍历所有插件，调用其InitShmObjectRegister函数注册共享内存对象
+ * 2. 初始化共享内存中的所有对象
+ * 3. 创建全局性对象
+ * @return 执行结果
+ */
+int NFCMemMngModule::AfterLoadAllPlugin()
 {
+    // 获取所有插件列表
     std::list<NFIPlugin*> listPlugin = m_pObjPluginManager->GetListPlugin();
 
+    // 遍历所有插件，调用其共享内存对象注册函数
     for (auto iter = listPlugin.begin(); iter != listPlugin.end(); ++iter)
     {
         NFIPlugin* pPlugin = *iter;
@@ -66,57 +84,83 @@ bool NFCMemMngModule::AfterLoadAllPlugin()
     */
     InitMemObjectGlobal();
 
-    return true;
+    return 0;
 }
 
-bool NFCMemMngModule::Execute()
+/**
+ * @brief 模块心跳函数，处理定时器和事务
+ * 
+ * 该函数在每个心跳周期被调用，负责：
+ * 1. 处理定时器管理器的定时器调度
+ * 2. 处理事务管理器的状态更新
+ * @return 执行结果
+ */
+int NFCMemMngModule::Tick()
 {
+    // 获取定时器管理器并执行定时器调度
     auto pTimerMng = dynamic_cast<NFMemTimerMng*>(GetHeadObj(EOT_TYPE_TIMER_MNG));
     if (pTimerMng)
     {
         pTimerMng->OnTick(NF_ADJUST_TIMENOW_MS());
     }
+    
+    // 获取事务管理器并执行事务处理
     auto pTransManager = dynamic_cast<NFMemTransMng*>(GetHeadObj(EOT_TRANS_MNG));
     if (pTransManager)
     {
         pTransManager->TickNow(m_pObjPluginManager->GetCurFrameCount());
     }
-    return true;
-}
-
-bool NFCMemMngModule::Finalize()
-{
-    return true;
+    return 0;
 }
 
 /**
-* 共享内存模式
-*/
+ * @brief 模块最终化函数
+ * @return 执行结果
+ */
+int NFCMemMngModule::Finalize()
+{
+    return 0;
+}
+
+/**
+ * @brief 获取共享内存模式
+ * @return 共享内存模式
+ */
 EN_OBJ_MODE NFCMemMngModule::GetInitMode()
 {
     return EN_OBJ_MODE_INIT;
 }
 
+/**
+ * @brief 设置共享内存模式
+ * @param mode 共享内存模式
+ */
 void NFCMemMngModule::SetInitMode(EN_OBJ_MODE mode)
 {
 }
 
 /**
-* 共享内存创建对象模式
-*/
+ * @brief 获取共享内存创建对象模式
+ * @return 创建对象模式
+ */
 EN_OBJ_MODE NFCMemMngModule::GetCreateMode()
 {
     return m_enCreateMode;
 }
 
 /**
-* 共享内存创建对象模式
-*/
+ * @brief 设置共享内存创建对象模式
+ * @param mode 创建对象模式
+ */
 void NFCMemMngModule::SetCreateMode(EN_OBJ_MODE mode)
 {
     m_enCreateMode = mode;
 }
 
+/**
+ * @brief 获取运行模式
+ * @return 运行模式
+ */
 EN_OBJ_MODE NFCMemMngModule::GetRunMode()
 {
     return m_enRunMode;
@@ -342,7 +386,7 @@ int NFCMemMngModule::InitSpecialMemObj()
         /**
          * @brief 平衡处理，大概一帧处理200个trans
          */
-        pManager->Init(1, 200);
+        pManager->InitTick(1, 200);
     }
 
     return 0;
@@ -1165,4 +1209,505 @@ int NFCMemMngModule::UnSubscribe(NFObject* pObj, NF_SERVER_TYPE serverType, uint
 int NFCMemMngModule::UnSubscribeAll(NFObject* pObj)
 {
     return NFMemEventMgr::Instance()->UnSubscribeAll(pObj);
+}
+
+int NFCMemMngModule::Awake()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->Awake();
+                    CHECK_ERR(0, iRet, "class:{} Awake Failed", pObject->GetClassName());
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::Init()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->Init();
+                    CHECK_ERR(0, iRet, "class:{} Init Failed", pObject->GetClassName());
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::Shut()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->Shut();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} Shut Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterOnReloadConfig()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterOnReloadConfig();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterOnReloadConfig Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::HotfixServer()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->HotfixServer();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} HotfixServer Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::CheckStopServer()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    int iRetTemp = pObject->CheckStopServer();
+                    if (iRetTemp != 0)
+                    {
+                        iRet = iRetTemp;
+                    }
+                }
+            }
+        }
+    }
+    return iRet;
+}
+
+int NFCMemMngModule::StopServer()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->StopServer();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} StopServer Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::OnServerKilling()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    int iRetTemp = pObject->OnServerKilling();
+                    if (iRetTemp != 0)
+                    {
+                        iRet = iRetTemp;
+                    }
+                }
+            }
+        }
+    }
+    return iRet;
+}
+
+int NFCMemMngModule::AfterAllConnectFinish()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAllConnectFinish();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAllConnectFinish Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterAllDescStoreLoaded()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAllDescStoreLoaded();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAllDescStoreLoaded Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterAllConnectAndAllDescStore()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAllDescStoreLoaded();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAllDescStoreLoaded Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterObjFromDBLoaded()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterObjFromDBLoaded();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterObjFromDBLoaded Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterServerSyncData()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterServerSyncData();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterServerSyncData Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterAppInitFinish()
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAppInitFinish();
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAppInitFinish Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+
+    SetShmInitSuccessFlag();
+
+    if (GetSecOffSet() > 0)
+    {
+        NFServerTime::Instance()->SetSecOffSet(GetSecOffSet());
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterAllConnectFinish(NF_SERVER_TYPE serverType)
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAllConnectFinish(serverType);
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAllConnectFinish Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType)
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAllDescStoreLoaded(serverType);
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAllDescStoreLoaded Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType)
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAllConnectAndAllDescStore(serverType);
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAllConnectAndAllDescStore Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterObjFromDBLoaded(NF_SERVER_TYPE serverType)
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterObjFromDBLoaded(serverType);
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterObjFromDBLoaded Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterServerSyncData(NF_SERVER_TYPE serverType)
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterServerSyncData(serverType);
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterServerSyncData Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int NFCMemMngModule::AfterAppInitFinish(NF_SERVER_TYPE serverType)
+{
+    int iRet = 0;
+    for (int i = EOT_GLOBAL_ID + 1; i < static_cast<int>(m_nObjSegSwapCounter.size()); i++)
+    {
+        if (m_nObjSegSwapCounter[i].m_nObjSize > 0 && m_nObjSegSwapCounter[i].m_iItemCount > 0)
+        {
+            NFMemObjSegSwapCounter* pObjSegSwapCounter = &m_nObjSegSwapCounter[i];
+            if (pObjSegSwapCounter->m_singleton)
+            {
+                NFObject* pObject = GetHeadObj(i);
+                if (pObject)
+                {
+                    iRet = pObject->AfterAppInitFinish(serverType);
+                    if (iRet != 0)
+                    {
+                        LOG_ERR(0, iRet, "class:{} AfterAppInitFinish Failed", pObject->GetClassName());
+                    }
+                }
+            }
+        }
+    }
+    return 0;
 }

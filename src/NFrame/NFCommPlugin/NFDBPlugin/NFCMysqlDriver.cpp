@@ -1,9 +1,18 @@
-﻿#include "NFCMysqlDriver.h"
+﻿// -------------------------------------------------------------------------
+//    @FileName         :    NFCMysqlDriver.cpp
+//    @Author           :    eliteYang
+//    @Date             :   2022-09-18
+//    @Module           :    NFCMysqlDriver
+//    @Description      :    MySQL数据库驱动实现文件，提供MySQL数据库操作的核心实现
+//
+// -------------------------------------------------------------------------
+
+#include "NFCMysqlDriver.h"
 #include "NFComm/NFCore/NFCommon.h"
 #include "NFComm/NFPluginModule/NFProtobufCommon.h"
 #include "NFComm/NFPluginModule/NFCheck.h"
 
-//m_pMysqlConnect在调用Connect会引发多线程的崩溃，必须枷锁
+// MySQL连接锁，防止多线程调用Connect时崩溃
 NFMutex NFCMysqlDriver::m_stConnectLock;
 
 NFCMysqlDriver::NFCMysqlDriver(const int nReconnectTime/* = 60*/, const int nReconnectCount /*= -1*/)

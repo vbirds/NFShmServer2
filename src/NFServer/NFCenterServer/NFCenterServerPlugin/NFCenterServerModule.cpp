@@ -26,34 +26,34 @@ NFCCenterServerModule::~NFCCenterServerModule()
 {
 }
 
-bool NFCCenterServerModule::Awake()
+int NFCCenterServerModule::Awake()
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(NF_ST_CENTER_SERVER);
-    CHECK_EXPR_ASSERT(pConfig, false, "GetAppConfig Failed, server type:{}", NF_ST_CENTER_SERVER);
-    
+    CHECK_NULL_WF(0, pConfig, "GetAppConfig Failed, server type:{}", NF_ST_CENTER_SERVER);
+
     if (!pConfig->IsCrossServer())
     {
         SetCheckCenterServer(true);
     }
     BindServer();
-	return true;
+	return 0;
 }
 
-bool NFCCenterServerModule::Init()
+int NFCCenterServerModule::Init()
 {
     ConnectMasterServer();
-    return true;
+    return 0;
 }
 
-bool NFCCenterServerModule::Execute()
+int NFCCenterServerModule::Tick()
 {
-	return true;
+	return 0;
 }
 
-bool NFCCenterServerModule::OnDynamicPlugin()
+int NFCCenterServerModule::OnDynamicPlugin()
 {
     FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_CENTER_SERVER);
-	return true;
+	return 0;
 }
 
 int NFCCenterServerModule::OnHandleServerMessage(uint64_t unLinkId, NFDataPackage& packet)

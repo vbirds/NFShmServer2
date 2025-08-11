@@ -7,6 +7,14 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFFileUtility.h
+ * @brief 文件和路径操作工具类
+ * 
+ * 此文件提供了各种文件和路径操作的工具函数，包括路径规范化、文件名分割、
+ * 目录操作、文件读写等功能。支持跨平台的文件系统操作。
+ */
+
 #pragma once
 
 #include "NFPlatform.h"
@@ -22,6 +30,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
+/** @brief Windows平台的最大路径长度定义 */
 #define _MAX_PATH 260
 #endif
 
@@ -30,80 +39,124 @@
 #include <cstring>
 #include <vector>
 
-// File access utility class which provides many help methods
-// to make it easy to do operations against file.
+/**
+ * @brief 文件访问工具类
+ * 
+ * 提供了许多帮助方法来简化文件操作，包括路径处理、文件读写、
+ * 目录操作等功能。所有方法都是静态方法，可以直接调用。
+ * 
+ * 主要功能包括：
+ * - 路径规范化和清理
+ * - 文件名和路径分离
+ * - 绝对路径和相对路径转换
+ * - 目录遍历和操作
+ * - 文件内容读写
+ */
 class _NFExport NFFileUtility
 {
 public:
-	// Query whether the file name is a valid directory. e.g. ".", ".." are invalid
-	// directory name.
+	/**
+	 * @brief 查询文件名是否为有效的目录名
+	 * @param szName 要检查的目录名
+	 * @return bool 如果是有效目录名返回true，否则返回false
+	 * @note "."和".."被认为是无效的目录名
+	 */
 	static bool IsValidDirName(const std::string& szName);
 
-	// Query whether strFileName is a absolute path.
+	/**
+	 * @brief 查询字符串是否为绝对路径
+	 * @param path 要检查的路径字符串
+	 * @return bool 如果是绝对路径返回true，否则返回false
+	 */
 	static bool IsAbsolutePath(const std::string& path);
 
-	// Gets absolute path name.
-	// @param path If it is already a absolute path, we return it or else we build
-	// a absolute path name with current path.
+	/**
+	 * @brief 获取绝对路径名
+	 * @param path 输入路径，如果已经是绝对路径则直接返回，否则与当前路径组合
+	 * @return std::string 绝对路径字符串
+	 */
 	static std::string GetAbsolutePathName(const std::string& path);
 
-	// This method is copied from Golang project
-	// Clean returns the shortest path name equivalent to path
-	// by purely lexical processing.  It applies the following rules
-	// iteratively until no further processing can be done:
-	//
-	//	1. Replace multiple Separator elements with a single one.
-	//	2. Eliminate each . path name element (the current directory).
-	//	3. Eliminate each inner .. path name element (the parent directory)
-	//	   along with the non-.. element that precedes it.
-	//	4. Eliminate .. elements that begin a rooted path:
-	//	   that is, replace "/.." by "/" at the beginning of a path,
-	//	   assuming Separator is '/'.
-	//
-	// The returned path ends in a slash only if it represents a root directory,
-	// such as "/" on Unix or `C:\` on Windows.
-	//
-	// If the result of this process is an empty string, Clean
-	// returns the string ".".
-	//
-	// See also Rob Pike, ``Lexical File Names in Plan 9 or
-	// Getting Dot-Dot Right,''
-	// http://plan9.bell-labs.com/sys/doc/lexnames.html
+	/**
+	 * @brief 清理路径名，返回等效的最短路径名
+	 * 
+	 * 此方法从Golang项目复制而来，通过纯词法处理应用以下规则：
+	 * 1. 用单个分隔符替换多个分隔符元素
+	 * 2. 消除每个 . 路径名元素（当前目录）
+	 * 3. 消除每个内部 .. 路径名元素（父目录）及其前面的非..元素
+	 * 4. 消除以根路径开头的..元素
+	 * 
+	 * @param path 要清理的路径
+	 * @return std::string 清理后的路径
+	 * @note 如果处理结果为空字符串，则返回"."
+	 */
 	static std::string Clean(const std::string& path);
 
-	// @brief splitting a fully qualified filename into file name and base path dir.
-	// @param qualifiedName Path is standardized as in <code>NormalizePath</code>
-	// @param file_name[out]
-	// @param base_dir[out]
-	// @param with_trailing_slash[in] true, End of the string With a SLASH "/".
+	/**
+	 * @brief 将完全限定的文件名分割为文件名和基路径目录
+	 * @param filepath 完整的文件路径
+	 * @param file_name [out] 分离出的文件名
+	 * @param base_dir [out] 分离出的基目录
+	 * @param with_trailing_slash [in] 是否在目录末尾添加斜杠，默认为false
+	 */
 	static void SplitFileName(const std::wstring& filepath,
 		std::wstring& file_name, std::wstring& base_dir, bool with_trailing_slash = false);
+	
+	/**
+	 * @brief 将完全限定的文件名分割为文件名和基路径目录（string版本）
+	 * @param filepath 完整的文件路径
+	 * @param file_name [out] 分离出的文件名
+	 * @param base_dir [out] 分离出的基目录
+	 * @param with_trailing_slash [in] 是否在目录末尾添加斜杠，默认为false
+	 */
 	static void SplitFileName(const std::string& filepath,
 		std::string& file_name, std::string& base_dir, bool with_trailing_slash = false);
 
-	// Concatenate tow path into one, and return it.
+	/**
+	 * @brief 连接两个路径为一个路径
+	 * @param prefix 前缀路径
+	 * @param postfix 后缀路径
+	 * @return std::string 连接后的路径
+	 */
 	static std::string Join(const std::string& prefix, const std::string& postfix);
+	
+	/**
+	 * @brief 连接两个路径为一个路径（wstring版本）
+	 * @param prefix 前缀路径
+	 * @param postfix 后缀路径
+	 * @return std::wstring 连接后的路径
+	 */
 	static std::wstring Join(const std::wstring& prefix, const std::wstring& postfix);
 
-	// @brief Method for standardizing paths - use forward slashes "/" only
-	// @param filepath
-	// @param with_trailing_slash
-	//         true, End of the string With a SLASH "/".
-	//         false, without a SLASH "/" at the end of the string
-	// @return string
+	/**
+	 * @brief 标准化路径 - 仅使用正斜杠"/"
+	 * @param filepath 要标准化的文件路径
+	 * @param with_trailing_slash true表示字符串末尾带斜杠"/"，false表示末尾不带斜杠"/"
+	 * @return std::string 标准化后的路径
+	 */
 	static std::string NormalizePath(const std::string& filepath, bool with_trailing_slash = true);
+	
+	/**
+	 * @brief 标准化路径 - 仅使用正斜杠"/"（wstring版本）
+	 * @param filepath 要标准化的文件路径
+	 * @param with_trailing_slash true表示字符串末尾带斜杠"/"，false表示末尾不带斜杠"/"
+	 * @return std::wstring 标准化后的路径
+	 */
 	static std::wstring NormalizePath(const std::wstring& filepath, bool with_trailing_slash = true);
 
-	// @brief Gets path's parent directory name. The path can be a normal file or a directory
-	// e.g. "D:\test\aab.jpg" ==> "D:/test/" or "D:/test"
-	// e.g. "D:/test/abc/" ==> "D:/test/" or "D:/test"
-	// @warning The return parent director name is suitable for <code>NormalizePath</code>
-	//         That means it uses forward slash "/" as path separator
-	// @note It take care of relative path.
-	// @param with_trailing_slash
-	//         true, End of the string With a SLASH "/".
-	//         false, without a SLASH "/" at the end of the string
-	// @return string,
+	/**
+	 * @brief 获取路径的父目录名
+	 * @param filepath 文件路径或目录路径
+	 * @param with_trailing_slash 是否在目录末尾添加斜杠，默认为true
+	 * @return std::string 父目录路径
+	 * @note 返回的父目录路径适用于<code>NormalizePath</code>，
+	 *       这意味着它使用正斜杠"/"作为路径分隔符
+	 * @note 它处理相对路径
+	 * @param with_trailing_slash
+	 *         true, End of the string With a SLASH "/".
+	 *         false, without a SLASH "/" at the end of the string
+	 * @return string,
+	 */
 	static std::string GetParentDir(const std::string& filepath, bool with_trailing_slash = true);
 
 	// Gets file name without path..

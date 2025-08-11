@@ -1,9 +1,11 @@
-// -------------------------------------------------------------------------
-//    @FileName         :    NFEvppServer.cpp
+﻿// -------------------------------------------------------------------------
+//    @FileName         :    NFEvppNetMessage.cpp
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFNetPlugin
+//    @Desc             :    基于Evpp库的网络消息处理实现文件，提供TCP连接管理和消息处理功能
+//
 // -------------------------------------------------------------------------
 
 #include "NFEvppNetMessage.h"
@@ -26,13 +28,57 @@
 #include "NFComm/NFPluginModule/NFLogMgr.h"
 #include "NFCommPlugin/NFNetPlugin/Encrypt.h"
 
+/**
+ * @file NFEvppNetMessage.cpp
+ * @brief Evpp网络消息处理实现文件
+ * 
+ * 该文件实现了基于evpp库的网络消息处理功能，包括：
+ * - 网络消息处理类的初始化和销毁
+ * - TCP连接管理和生命周期
+ * - 网络对象的创建和管理
+ * - 消息发送和接收处理
+ * - HTTP服务器和客户端集成
+ * - 心跳检测和连接监控
+ * - 数据包解析和路由
+ * 
+ * 主要功能：
+ * - 管理TCP连接和网络对象
+ * - 处理网络事件和消息
+ * - 提供HTTP服务器和客户端功能
+ * - 支持心跳检测和重连
+ * - 数据包解析和消息路由
+ * 
+ * @author Gao.Yi
+ * @date 2022-09-18
+ * @version 1.0
+ */
+
+/**
+ * @brief Evpp网络消息处理类构造函数
+ * 
+ * 初始化网络消息处理模块，包括：
+ * - 初始化网络对象池
+ * - 读取服务器配置
+ * - 设置发送和接收缓冲区
+ * - 设置定时器
+ * - 初始化HTTP服务器和客户端
+ * - 初始化网络对象数组
+ * - 设置消息处理参数
+ * 
+ * @param p 插件管理器指针
+ * @param serverType 服务器类型
+ */
 NFEvppNetMessage::NFEvppNetMessage(NFIPluginManager* p, NF_SERVER_TYPE serverType) : NFINetMessage(p, serverType), m_netObjectPool(1000, false)
 {
+    // 读取服务器配置
     auto pServerConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
     CHECK_EXPR_ASSERT_NOT_RET(pServerConfig, "m_serverType:{} Config Not Find", m_serverType);
 
+    // 设置发送和接收缓冲区
     m_sendBuffer.AssureSpace(MAX_SEND_BUFFER_SIZE);
     m_recvBuffer.AssureSpace(MAX_RECV_BUFFER_SIZE);
+    
+    // 设置定时器
 #ifdef NF_DEBUG_MODE
     SetTimer(ENUM_SERVER_CLIENT_TIMER_HEART, ENUM_SERVER_CLIENT_TIMER_HEART_TIME_LONGTH * 3);
     SetTimer(ENUM_SERVER_TIMER_CHECK_HEART, ENUM_SERVER_TIMER_CHECK_HEART_TIME_LONGTH);
@@ -40,29 +86,32 @@ NFEvppNetMessage::NFEvppNetMessage(NFIPluginManager* p, NF_SERVER_TYPE serverTyp
     SetTimer(ENUM_SERVER_CLIENT_TIMER_HEART, ENUM_SERVER_CLIENT_TIMER_HEART_TIME_LONGTH*3);
 	SetTimer(ENUM_SERVER_TIMER_CHECK_HEART, ENUM_SERVER_TIMER_CHECK_HEART_TIME_LONGTH);
 #endif
+    
+    // 初始化HTTP服务器和客户端
     m_httpServer = nullptr;
 #if defined(EVPP_HTTP_SERVER_SUPPORTS_SSL)
     m_httpServerEnableSSL = false;
 #endif
     m_httpClient = nullptr;
 
+    // 如果加载所有服务器，则创建连接线程池
     if (m_pObjPluginManager->IsLoadAllServer())
     {
         m_connectionThreadPool.reset(NF_NEW evpp::EventLoopThreadPool(nullptr, 1));
         m_connectionThreadPool->Start(true);
     }
 
-    /**
-     * @brief 0作废，作为一个错误处理，从1开始
-     */
+    // 初始化网络对象数组（从1开始，0作为错误处理）
     m_netObjectArray.resize(MAX_CLIENT_INDEX);
     for (size_t i = 1; i < m_netObjectArray.size(); i++)
     {
         m_netObjectArray[i] = nullptr;
     }
 
+    // 设置消息处理参数
     m_handleMsgNumPerFrame = pServerConfig->HandleMsgNumPerFrame;
 
+    // 初始化空闲连接ID队列
     for (int i = 1; i < MAX_CLIENT_INDEX; i++)
     {
         uint64_t unlinkId = GetUnLinkId(NF_IS_NET, m_serverType, pServerConfig->BusId, i);
@@ -71,17 +120,38 @@ NFEvppNetMessage::NFEvppNetMessage(NFIPluginManager* p, NF_SERVER_TYPE serverTyp
         }
     }
 
+    // 设置消息处理数量限制
     m_handleMsgNumPerFrame = NF_NO_FIX_FAME_HANDLE_MAX_MSG_COUNT;
 
+    // 初始化计数器
     m_curHandleMsgNum = 0;
     m_loopSendCount = 0;
 }
 
+/**
+ * @brief Evpp网络消息处理类析构函数
+ * 
+ * 清理网络消息处理模块资源，包括：
+ * - 停止所有连接
+ * - 释放网络对象
+ * - 清理HTTP服务器和客户端
+ * - 释放线程池资源
+ */
 NFEvppNetMessage::~NFEvppNetMessage()
 {
 
 }
 
+/**
+ * @brief 处理消息逻辑线程
+ * 
+ * 从消息队列中取出消息进行处理，包括：
+ * - 批量获取消息
+ * - 消息解析和路由
+ * - 调用相应的处理函数
+ * - 处理连接建立和断开事件
+ * - 管理网络对象生命周期
+ */
 void NFEvppNetMessage::ProcessMsgLogicThread()
 {
     m_curHandleMsgNum = m_handleMsgNumPerFrame;
@@ -239,9 +309,17 @@ void NFEvppNetMessage::ProcessCodeQueue()
 }
 
 /**
-* @brief 连接回调
+ * @brief 连接事件回调函数
+ * 
+ * 处理TCP连接建立和断开事件，包括：
+ * - 初始化连接上下文（接收缓冲区、发送缓冲区、压缩缓冲区等）
+ * - 设置连接参数（TCP_NODELAY等）
+ * - 创建网络对象
+ * - 处理连接建立和断开消息
+ * - 管理连接映射表
 *
-* @return
+ * @param conn TCP连接指针
+ * @param serverLinkId 服务器连接ID
 */
 void NFEvppNetMessage::ConnectionCallback(const evpp::TCPConnPtr& conn, uint64_t serverLinkId)
 {
@@ -560,11 +638,10 @@ uint64_t NFEvppNetMessage::BindServer(const NFMessageFlag& flag)
         pServer->SetMessageCallback(
             std::bind(&NFEvppNetMessage::MessageCallback, this, std::placeholders::_1, std::placeholders::_2,
                       unLinkId, flag.mPacketParseType, flag.mSecurity));
-        if (pServer->Init())
-        {
-            m_connectionList.push_back(pServer);
-            return unLinkId;
-        }
+        int iRet = pServer->Init();
+        CHECK_ERR_RE_VAL(0, iRet, 0, "pServer Init Failed");
+        m_connectionList.push_back(pServer);
+        return unLinkId;
     }
 
     return 0;
@@ -656,6 +733,19 @@ uint32_t NFEvppNetMessage::GetPort(uint64_t usLinkId)
     return 0;
 }
 
+/**
+ * @brief 添加网络对象（自动分配连接ID）
+ * 
+ * 自动获取空闲连接ID并创建TCP网络连接对象，包括：
+ * - 获取空闲连接ID
+ * - 验证连接ID有效性
+ * - 调用指定连接ID的添加函数
+ * 
+ * @param conn TCP连接指针
+ * @param parseType 数据包解析类型
+ * @param bSecurity 安全连接标志
+ * @return 网络对象指针，失败返回nullptr
+ */
 NetEvppObject* NFEvppNetMessage::AddNetObject(const evpp::TCPConnPtr& conn, uint32_t parseType, bool bSecurity)
 {
     uint64_t usLinkId = GetFreeUnLinkId();
@@ -668,6 +758,21 @@ NetEvppObject* NFEvppNetMessage::AddNetObject(const evpp::TCPConnPtr& conn, uint
     return AddNetObject(usLinkId, conn, parseType, bSecurity);
 }
 
+/**
+ * @brief 添加网络对象（指定连接ID）
+ * 
+ * 使用指定的连接ID创建TCP网络连接对象，包括：
+ * - 参数验证（连接ID有效性、索引范围检查）
+ * - 从对象池分配网络对象
+ * - 设置连接信息（IP、端口、解析类型、安全标志）
+ * - 添加到管理容器（数组和映射表）
+ * 
+ * @param unLinkId 连接ID
+ * @param conn TCP连接指针
+ * @param parseType 数据包解析类型
+ * @param bSecurity 安全连接标志
+ * @return 网络对象指针，失败返回nullptr
+ */
 NetEvppObject* NFEvppNetMessage::AddNetObject(uint64_t unLinkId, const evpp::TCPConnPtr& conn, uint32_t parseType, bool bSecurity)
 {
     int index = GetServerIndexFromUnlinkId(unLinkId);
@@ -701,6 +806,17 @@ NetEvppObject* NFEvppNetMessage::AddNetObject(uint64_t unLinkId, const evpp::TCP
     return pObject;
 }
 
+/**
+ * @brief 根据连接ID获取网络对象
+ * 
+ * 根据连接ID查找并返回对应的网络对象，包括：
+ * - 验证服务器类型匹配
+ * - 计算数组索引
+ * - 返回网络对象指针
+ * 
+ * @param linkId 连接ID
+ * @return 网络对象指针，未找到返回nullptr
+ */
 NetEvppObject* NFEvppNetMessage::GetNetObject(uint64_t linkId) const
 {
     uint32_t serverType = GetServerTypeFromUnlinkId(linkId);
@@ -767,7 +883,17 @@ uint64_t NFEvppNetMessage::GetFreeUnLinkId()
     return 0;
 }
 
-bool NFEvppNetMessage::Shut()
+/**
+ * @brief 关闭网络消息处理模块
+ * 
+ * 关闭所有网络连接，包括：
+ * - 关闭所有TCP连接
+ * - 停止HTTP服务器和客户端
+ * - 清理连接资源
+ * 
+ * @return 关闭结果，0表示成功
+ */
+int NFEvppNetMessage::Shut()
 {
     for (size_t i = 0; i < m_connectionList.size(); i++)
     {
@@ -779,10 +905,22 @@ bool NFEvppNetMessage::Shut()
     }
 
 
-    return true;
+    return 0;
 }
 
-bool NFEvppNetMessage::Finalize()
+/**
+ * @brief 释放网络消息处理模块资源
+ * 
+ * 清理所有网络资源，包括：
+ * - 释放所有连接对象
+ * - 清理HTTP服务器和客户端
+ * - 停止线程池
+ * - 释放网络对象池
+ * - 清理缓冲区
+ * 
+ * @return 释放结果，0表示成功
+ */
+int NFEvppNetMessage::Finalize()
 {
     for (size_t i = 0; i < m_connectionList.size(); i++)
     {
@@ -837,10 +975,20 @@ bool NFEvppNetMessage::Finalize()
 
     m_recvCodeQueueList.clear();
 
-    return true;
+    return 0;
 }
 
-bool NFEvppNetMessage::Execute()
+/**
+ * @brief 网络消息处理模块主循环
+ * 
+ * 执行网络消息处理的主循环，包括：
+ * - 处理消息逻辑线程
+ * - 处理代码队列
+ * - 执行HTTP服务器和客户端
+ * 
+ * @return 执行结果，0表示成功
+ */
+int NFEvppNetMessage::Tick()
 {
     ProcessMsgLogicThread();
     ProcessCodeQueue();
@@ -853,9 +1001,23 @@ bool NFEvppNetMessage::Execute()
         m_httpClient->Execute();
     }
 
-    return true;
+    return 0;
 }
 
+/**
+ * @brief 发送消息（原始数据）
+ * 
+ * 向指定连接发送原始数据消息，包括：
+ * - 根据连接ID获取网络对象
+ * - 验证网络对象有效性
+ * - 调用底层发送接口
+ * 
+ * @param usLinkId 连接ID
+ * @param packet 数据包
+ * @param msg 消息数据
+ * @param nLen 数据长度
+ * @return true 发送成功，false 发送失败
+ */
 bool NFEvppNetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const char* msg, uint32_t nLen)
 {
     NetEvppObject* pObject = GetNetObject(usLinkId);
@@ -871,6 +1033,20 @@ bool NFEvppNetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const char
     return false;
 }
 
+/**
+ * @brief 发送消息（Protobuf数据）
+ * 
+ * 向指定连接发送Protobuf格式的消息，包括：
+ * - 根据连接ID获取网络对象
+ * - 序列化Protobuf消息
+ * - 检查缓冲区大小
+ * - 调用底层发送接口
+ * 
+ * @param usLinkId 连接ID
+ * @param packet 数据包
+ * @param xData Protobuf消息对象
+ * @return true 发送成功，false 发送失败
+ */
 bool NFEvppNetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const google::protobuf::Message& xData)
 {
     NetEvppObject* pObject = GetNetObject(usLinkId);
@@ -895,6 +1071,20 @@ bool NFEvppNetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const goog
     return false;
 }
 
+/**
+ * @brief 处理网络消息对等端
+ * 
+ * 处理来自网络的消息，包括：
+ * - 接收数据消息处理
+ * - 心跳消息处理
+ * - 连接状态消息处理
+ * - 消息路由和分发
+ * 
+ * @param type 消息类型
+ * @param serverLinkId 服务器连接ID
+ * @param objectLinkId 对象连接ID
+ * @param packet 数据包
+ */
 void NFEvppNetMessage::OnHandleMsgPeer(eMsgType type, uint64_t serverLinkId, uint64_t objectLinkId, NFDataPackage& packet)
 {
     switch (type)
@@ -1086,6 +1276,17 @@ void NFEvppNetMessage::CheckServerHeartBeat()
     }
 }
 
+/**
+ * @brief 响应HTTP消息（根据HTTP句柄）
+ * 
+ * 通过HTTP请求句柄响应HTTP消息
+ * 
+ * @param req HTTP请求句柄
+ * @param strMsg 响应消息内容
+ * @param code HTTP状态码
+ * @param reason 状态原因
+ * @return true 响应成功，false 响应失败
+ */
 bool NFEvppNetMessage::ResponseHttpMsg(const NFIHttpHandle& req, const string& strMsg,
                                        NFWebStatus code, const string& reason)
 {
@@ -1106,6 +1307,17 @@ bool NFEvppNetMessage::ResponseHttpMsg(uint64_t requestId, const string& strMsg,
     return false;
 }
 
+/**
+ * @brief 发送HTTP GET请求
+ * 
+ * 发送HTTP GET请求，如果HTTP客户端不存在则创建
+ * 
+ * @param strUri 请求URI
+ * @param respone 响应回调函数
+ * @param xHeaders 请求头
+ * @param timeout 超时时间
+ * @return 请求结果
+ */
 int NFEvppNetMessage::HttpGet(const string& strUri, const HTTP_CLIENT_RESPONE& respone,
                               const map<std::string, std::string>& xHeaders, int timeout)
 {
@@ -1117,6 +1329,18 @@ int NFEvppNetMessage::HttpGet(const string& strUri, const HTTP_CLIENT_RESPONE& r
     return m_httpClient->HttpGet(strUri, respone, xHeaders, timeout);
 }
 
+/**
+ * @brief 发送HTTP POST请求
+ * 
+ * 发送HTTP POST请求，如果HTTP客户端不存在则创建
+ * 
+ * @param strUri 请求URI
+ * @param strPostData POST数据
+ * @param respone 响应回调函数
+ * @param xHeaders 请求头
+ * @param timeout 超时时间
+ * @return 请求结果
+ */
 int NFEvppNetMessage::HttpPost(const string& strUri, const string& strPostData, const HTTP_CLIENT_RESPONE& respone,
                                const map<std::string, std::string>& xHeaders, int timeout)
 {

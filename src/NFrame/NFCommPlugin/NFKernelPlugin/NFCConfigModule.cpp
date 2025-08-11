@@ -35,7 +35,7 @@ NFCConfigModule::~NFCConfigModule()
 {
 }
 
-bool NFCConfigModule::LoadConfig()
+int NFCConfigModule::LoadFrameConfig()
 {
     TryAddPackagePath(m_pObjPluginManager->GetPluginPath() + "/"  + m_pObjPluginManager->GetGame()); //Add Search Path to Lua
 
@@ -47,15 +47,14 @@ bool NFCConfigModule::LoadConfig()
         if (TryLoadScriptFile(*it) == false)
         {
             NFLogError(NF_LOG_DEFAULT, 0, "Load {} Failed!", *it);
-            assert(0);
+            return -1;
         }
     }
 
     LoadPluginConfig();
     LoadServerConfig();
     LoadLogConfig();
-    CheckConfig();
-    return true;
+    return 0;
 }
 
 bool NFCConfigModule::LoadLogConfig()
@@ -344,17 +343,17 @@ bool NFCConfigModule::LoadServerConfig()
     return true;
 }
 
-bool NFCConfigModule::BeforeShut()
+int NFCConfigModule::BeforeShut()
 {
-    return true;
+    return 0;
 }
 
-bool NFCConfigModule::Shut()
+int NFCConfigModule::Shut()
 {
-    return true;
+    return 0;
 }
 
-bool NFCConfigModule::Finalize()
+int NFCConfigModule::Finalize()
 {
     for (auto it = mPluginConfig.begin(); it != mPluginConfig.end(); ++it)
     {
@@ -375,15 +374,15 @@ bool NFCConfigModule::Finalize()
         }
     }
     mServerConfig.clear();
-    return true;
+    return 0;
 }
 
-bool NFCConfigModule::Execute()
+int NFCConfigModule::Tick()
 {
-    return true;
+    return 0;
 }
 
-bool NFCConfigModule::OnReloadConfig()
+int NFCConfigModule::OnReloadConfig()
 {
     return true;
 }
@@ -522,12 +521,4 @@ NFrame::ServerInfoReport NFCConfigModule::GetDefaultMasterInfo(NF_SERVER_TYPE eS
     }
 }
 
-bool NFCConfigModule::CheckConfig()
-{
-    if (!m_pObjPluginManager->IsLoadAllServer())
-    {
-        NF_ASSERT(m_appConfig);
-        //NF_ASSERT(GetServerName((NF_SERVER_TYPE) m_appConfig->ServerType) == m_pObjPluginManager->GetAppName());
-    }
-    return true;
-}
+

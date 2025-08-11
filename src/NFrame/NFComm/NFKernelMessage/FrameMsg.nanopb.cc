@@ -2099,6 +2099,174 @@ std::string Proto_ServerDumpInfoNtf::ShortDebugString() const
     return ss.str();
 }
 
+Proto_ServerSyncDataReq::Proto_ServerSyncDataReq()
+{
+	if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode()) {
+		CreateInit();
+	} else {
+		ResumeInit();
+	}
+}
+
+Proto_ServerSyncDataReq::~Proto_ServerSyncDataReq()
+{
+}
+
+Proto_ServerSyncDataReq::Proto_ServerSyncDataReq(const Proto_ServerSyncDataReq& stArgsData)
+{
+	if (this != &stArgsData) {
+		CopyData(stArgsData);
+	}
+}
+
+Proto_ServerSyncDataReq& Proto_ServerSyncDataReq::operator=(const Proto_ServerSyncDataReq& stArgsData)
+{
+	if (this != &stArgsData) {
+		CopyData(stArgsData);
+	}
+	return *this;
+}
+
+void Proto_ServerSyncDataReq::CopyData(const Proto_ServerSyncDataReq& stArgsData)
+{
+    msg_id = stArgsData.msg_id;
+    msg_data = stArgsData.msg_data;
+}
+
+int Proto_ServerSyncDataReq::CreateInit()
+{
+    msg_id = 0;
+	return 0;
+}
+
+int Proto_ServerSyncDataReq::ResumeInit()
+{
+	return 0;
+}
+
+void Proto_ServerSyncDataReq::Init()
+{
+    msg_id = 0;
+}
+
+bool Proto_ServerSyncDataReq::FromPb(const NFrame::Proto_ServerSyncDataReq& cc)
+{
+    msg_id = cc.msg_id();
+    msg_data = cc.msg_data();
+    return true;
+}
+
+void Proto_ServerSyncDataReq::ToPb(NFrame::Proto_ServerSyncDataReq* cc) const
+{
+    cc->set_msg_id(msg_id);
+    cc->set_msg_data(msg_data);
+    return;
+}
+
+NFrame::Proto_ServerSyncDataReq Proto_ServerSyncDataReq::ToPb() const
+{
+    NFrame::Proto_ServerSyncDataReq cc;
+    ToPb(&cc);
+    return cc;
+}
+
+std::string Proto_ServerSyncDataReq::ShortDebugString() const
+{
+    std::stringstream ss;
+    ss << "{";
+    ss << "msg_id:" << msg_id << ", ";
+    ss << "msg_data:" << "(skip print BYTES)";
+    ss << "}";
+    return ss.str();
+}
+
+Proto_ServerSyncDataRsp::Proto_ServerSyncDataRsp()
+{
+	if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode()) {
+		CreateInit();
+	} else {
+		ResumeInit();
+	}
+}
+
+Proto_ServerSyncDataRsp::~Proto_ServerSyncDataRsp()
+{
+}
+
+Proto_ServerSyncDataRsp::Proto_ServerSyncDataRsp(const Proto_ServerSyncDataRsp& stArgsData)
+{
+	if (this != &stArgsData) {
+		CopyData(stArgsData);
+	}
+}
+
+Proto_ServerSyncDataRsp& Proto_ServerSyncDataRsp::operator=(const Proto_ServerSyncDataRsp& stArgsData)
+{
+	if (this != &stArgsData) {
+		CopyData(stArgsData);
+	}
+	return *this;
+}
+
+void Proto_ServerSyncDataRsp::CopyData(const Proto_ServerSyncDataRsp& stArgsData)
+{
+    msg_id = stArgsData.msg_id;
+    msg_data = stArgsData.msg_data;
+    result = stArgsData.result;
+}
+
+int Proto_ServerSyncDataRsp::CreateInit()
+{
+    msg_id = 0;
+    result = 0;
+	return 0;
+}
+
+int Proto_ServerSyncDataRsp::ResumeInit()
+{
+	return 0;
+}
+
+void Proto_ServerSyncDataRsp::Init()
+{
+    msg_id = 0;
+    result = 0;
+}
+
+bool Proto_ServerSyncDataRsp::FromPb(const NFrame::Proto_ServerSyncDataRsp& cc)
+{
+    msg_id = cc.msg_id();
+    msg_data = cc.msg_data();
+    result = cc.result();
+    return true;
+}
+
+void Proto_ServerSyncDataRsp::ToPb(NFrame::Proto_ServerSyncDataRsp* cc) const
+{
+    cc->set_msg_id(msg_id);
+    cc->set_msg_data(msg_data);
+    cc->set_result(result);
+    return;
+}
+
+NFrame::Proto_ServerSyncDataRsp Proto_ServerSyncDataRsp::ToPb() const
+{
+    NFrame::Proto_ServerSyncDataRsp cc;
+    ToPb(&cc);
+    return cc;
+}
+
+std::string Proto_ServerSyncDataRsp::ShortDebugString() const
+{
+    std::stringstream ss;
+    ss << "{";
+    ss << "msg_id:" << msg_id << ", ";
+    ss << "msg_data:" << "(skip print BYTES)" << ", ";
+    ss << "result:" << result;
+    ss << "}";
+    return ss.str();
+}
+
 
 
 
@@ -2116,7 +2284,7 @@ std::string Proto_ServerDumpInfoNtf::ShortDebugString() const
  * numbers or field sizes that are larger than what can fit in 8 or 16 bit
  * field descriptors.
  */
-PB_STATIC_ASSERT((pb_membersize(Proto_FramePkg, disp_info) < 65536 && pb_membersize(Proto_FramePkg, trans_info) < 65536 && pb_membersize(Proto_FramePkg, store_info) < 65536 && pb_membersize(Proto_FramePkg, event_info) < 65536 && pb_membersize(Proto_FramePkg, redirect_info) < 65536 && pb_membersize(Proto_FramePkg, rpc_info) < 65536 && pb_membersize(ServerInfoReportList, server_list[0]) < 65536 && pb_membersize(DynLibFileInfoArray, file_list[0]) < 65536), YOU_MUST_DEFINE_PB_FIELD_32BIT_FOR_MESSAGES_Proto_DispInfo_Proto_TransInfo_Proto_StoreInfo_Proto_EventInfo_Proto_ScriptRpcResult_Proto_RpcInfo_Proto_RedirectInfo_Proto_FramePkg_ServerInfoReport_ServerInfoReportList_ServerInfoReportListRespne_ZkServerInfo_DynLibFileInfo_DynLibFileInfoArray_Proto_KillAllServerNtf_Proto_KillAllServerRsp_Proto_STSBroadPlayerMsgNotify_Proto_STWebMsgRspNotify_NFEventNoneData_NFEventScriptData_Proto_ServerDumpInfoNtf)
+PB_STATIC_ASSERT((pb_membersize(Proto_FramePkg, disp_info) < 65536 && pb_membersize(Proto_FramePkg, trans_info) < 65536 && pb_membersize(Proto_FramePkg, store_info) < 65536 && pb_membersize(Proto_FramePkg, event_info) < 65536 && pb_membersize(Proto_FramePkg, redirect_info) < 65536 && pb_membersize(Proto_FramePkg, rpc_info) < 65536 && pb_membersize(ServerInfoReportList, server_list[0]) < 65536 && pb_membersize(DynLibFileInfoArray, file_list[0]) < 65536), YOU_MUST_DEFINE_PB_FIELD_32BIT_FOR_MESSAGES_Proto_DispInfo_Proto_TransInfo_Proto_StoreInfo_Proto_EventInfo_Proto_ScriptRpcResult_Proto_RpcInfo_Proto_RedirectInfo_Proto_FramePkg_ServerInfoReport_ServerInfoReportList_ServerInfoReportListRespne_ZkServerInfo_DynLibFileInfo_DynLibFileInfoArray_Proto_KillAllServerNtf_Proto_KillAllServerRsp_Proto_STSBroadPlayerMsgNotify_Proto_STWebMsgRspNotify_NFEventNoneData_NFEventScriptData_Proto_ServerDumpInfoNtf_Proto_ServerSyncDataReq_Proto_ServerSyncDataRsp)
 #endif
 
 #if !defined(PB_FIELD_16BIT) && !defined(PB_FIELD_32BIT)
@@ -2127,7 +2295,7 @@ PB_STATIC_ASSERT((pb_membersize(Proto_FramePkg, disp_info) < 65536 && pb_members
  * numbers or field sizes that are larger than what can fit in the default
  * 8 bit descriptors.
  */
-PB_STATIC_ASSERT((pb_membersize(Proto_FramePkg, disp_info) < 256 && pb_membersize(Proto_FramePkg, trans_info) < 256 && pb_membersize(Proto_FramePkg, store_info) < 256 && pb_membersize(Proto_FramePkg, event_info) < 256 && pb_membersize(Proto_FramePkg, redirect_info) < 256 && pb_membersize(Proto_FramePkg, rpc_info) < 256 && pb_membersize(ServerInfoReportList, server_list[0]) < 256 && pb_membersize(DynLibFileInfoArray, file_list[0]) < 256), YOU_MUST_DEFINE_PB_FIELD_16BIT_FOR_MESSAGES_Proto_DispInfo_Proto_TransInfo_Proto_StoreInfo_Proto_EventInfo_Proto_ScriptRpcResult_Proto_RpcInfo_Proto_RedirectInfo_Proto_FramePkg_ServerInfoReport_ServerInfoReportList_ServerInfoReportListRespne_ZkServerInfo_DynLibFileInfo_DynLibFileInfoArray_Proto_KillAllServerNtf_Proto_KillAllServerRsp_Proto_STSBroadPlayerMsgNotify_Proto_STWebMsgRspNotify_NFEventNoneData_NFEventScriptData_Proto_ServerDumpInfoNtf)
+PB_STATIC_ASSERT((pb_membersize(Proto_FramePkg, disp_info) < 256 && pb_membersize(Proto_FramePkg, trans_info) < 256 && pb_membersize(Proto_FramePkg, store_info) < 256 && pb_membersize(Proto_FramePkg, event_info) < 256 && pb_membersize(Proto_FramePkg, redirect_info) < 256 && pb_membersize(Proto_FramePkg, rpc_info) < 256 && pb_membersize(ServerInfoReportList, server_list[0]) < 256 && pb_membersize(DynLibFileInfoArray, file_list[0]) < 256), YOU_MUST_DEFINE_PB_FIELD_16BIT_FOR_MESSAGES_Proto_DispInfo_Proto_TransInfo_Proto_StoreInfo_Proto_EventInfo_Proto_ScriptRpcResult_Proto_RpcInfo_Proto_RedirectInfo_Proto_FramePkg_ServerInfoReport_ServerInfoReportList_ServerInfoReportListRespne_ZkServerInfo_DynLibFileInfo_DynLibFileInfoArray_Proto_KillAllServerNtf_Proto_KillAllServerRsp_Proto_STSBroadPlayerMsgNotify_Proto_STWebMsgRspNotify_NFEventNoneData_NFEventScriptData_Proto_ServerDumpInfoNtf_Proto_ServerSyncDataReq_Proto_ServerSyncDataRsp)
 #endif
 
 

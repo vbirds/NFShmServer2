@@ -23,41 +23,37 @@ NFTutorialModule::~NFTutorialModule()
 {
 }
 
-bool NFTutorialModule::Awake()
+int NFTutorialModule::Awake()
 {
 	NFLogError(NF_LOG_DEFAULT, 0, "tutorial awake...........");
-	/**
-	 * ��һ��10��ִ��һ�εĶ�ʱ��
-	 */
 	SetTimer(TUTORIAL_TIMER_ID, 10000);
-	return NFIDynamicModule::Awake();
+	return 0;
 }
 
-bool NFTutorialModule::Init()
+int NFTutorialModule::Init()
 {
 	NFLogError(NF_LOG_DEFAULT, 0, "tutorial init...........");
-
-	return NFIDynamicModule::Init();
+	return 0;
 }
 
-bool NFTutorialModule::Execute()
+int NFTutorialModule::Tick()
 {
-	return NFIDynamicModule::Execute();
+	return NFIDynamicModule::Tick();
 }
 
-bool NFTutorialModule::Shut()
+int NFTutorialModule::Shut()
 {
 	NFLogError(NF_LOG_DEFAULT, 0, "tutorial shut...........");
 	return NFIDynamicModule::Shut();
 }
 
-bool NFTutorialModule::Finalize()
+int NFTutorialModule::Finalize()
 {
 	NFLogError(NF_LOG_DEFAULT, 0, "tutorial finalize...........");
 	return NFIDynamicModule::Finalize();
 }
 
-bool NFTutorialModule::OnDynamicPlugin()
+int NFTutorialModule::OnDynamicPlugin()
 {
 	NFLogError(NF_LOG_DEFAULT, 0, "tutorial OnDynamicPlugin...........");
 	return NFIDynamicModule::OnDynamicPlugin();

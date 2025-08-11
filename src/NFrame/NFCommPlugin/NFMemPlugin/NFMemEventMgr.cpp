@@ -4,6 +4,11 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFMemEventMgr
+//    @Desc             :    内存事件管理器实现文件，提供事件订阅和发布功能。
+//                          该文件实现了NFShmXFrame框架的内存事件管理器，负责事件的订阅和取消订阅、
+//                          事件的发布和执行、事件键值管理、订阅信息管理等。
+//                          主要功能包括事件订阅管理、事件发布机制、事件执行调度、
+//                          订阅信息维护、事件对象生命周期管理
 //
 // -------------------------------------------------------------------------
 
@@ -38,11 +43,31 @@ int NFMemEventMgr::ResumeInit()
     return 0;
 }
 
+/**
+ * @brief 订阅事件
+ * 
+ * 该函数用于订阅指定的事件，建立事件与对象的关联关系。
+ * 订阅过程包括：
+ * 1. 创建事件键值对象
+ * 2. 检查对象是否已注册，如果未注册则创建新的订阅列表
+ * 3. 检查事件键值是否已存在，如果不存在则创建新的事件键值列表
+ * 4. 创建订阅信息对象并设置相关属性
+ * 5. 将订阅信息添加到对象列表和事件键值列表中
+ * 
+ * @param pSink 订阅对象指针
+ * @param serverType 服务器类型
+ * @param eventId 事件ID
+ * @param srcType 源类型
+ * @param srcId 源ID
+ * @param desc 订阅描述
+ * @return 订阅结果，0表示成功，-1表示失败
+ */
 int NFMemEventMgr::Subscribe(NFObject* pSink, NF_SERVER_TYPE serverType, uint32_t eventId, uint32_t srcType, uint64_t srcId, const std::string& desc)
 {
     CHECK_NULL(0, pSink);
     CHECK_EXPR_ASSERT(pSink->GetGlobalId() != INVALID_ID, -1, "NFObject GetGlobalID == INVALID_ID, desc:{}", desc);
 
+    // 创建事件键值对象
     NFMemEventKey skey;
     skey.m_serverType = serverType;
     skey.m_eventId = eventId;
@@ -64,6 +89,7 @@ int NFMemEventMgr::Subscribe(NFObject* pSink, NF_SERVER_TYPE serverType, uint32_
 
     auto pObjList = &objListIter->second;
 
+    // 检查事件键值是否已存在，如果不存在则创建新的事件键值列表
     auto eventKeyListIter = m_eventKeyAllSubscribe.find(skey);
     if (eventKeyListIter == m_eventKeyAllSubscribe.end())
     {
@@ -77,6 +103,7 @@ int NFMemEventMgr::Subscribe(NFObject* pSink, NF_SERVER_TYPE serverType, uint32_
     /**
     *@brief 判断skey有没有存在，把对象存入skey的链表里
     */
+    // 创建订阅信息对象并设置相关属性
     auto pInfo = NFMemSubscribeInfo::CreateObj();
     CHECK_EXPR(pInfo, -1, "CreateObj NFMemSubscribeInfo Failed, desc:{}", desc);
     pInfo->m_pSink = pSink;
@@ -84,6 +111,7 @@ int NFMemEventMgr::Subscribe(NFObject* pSink, NF_SERVER_TYPE serverType, uint32_
     pInfo->m_eventKey = skey;
     pInfo->m_shmObjId = pSink->GetGlobalId();
 
+    // 将订阅信息添加到对象列表和事件键值列表中
     int ret = pObjList->AddNode(NF_SHM_SUBSCRIBEINFO_SHM_OBJ_INDEX_1, pInfo);
     CHECK_EXPR_ASSERT(ret == 0, -1, "AddNode Failed, desc:{}", desc);
     ret = pEventKeyList->AddNode(NF_SHM_SUBSCRIBEINFO_EVENT_KEY_INDEX_0, pInfo);
@@ -93,10 +121,29 @@ int NFMemEventMgr::Subscribe(NFObject* pSink, NF_SERVER_TYPE serverType, uint32_
     return 0;
 }
 
+/**
+ * @brief 取消订阅事件
+ * 
+ * 该函数用于取消指定事件的订阅，移除事件与对象的关联关系。
+ * 取消订阅过程包括：
+ * 1. 创建事件键值对象
+ * 2. 检查对象是否已注册，如果未注册则直接返回
+ * 3. 遍历对象的订阅列表，查找匹配的事件键值
+ * 4. 移除匹配的订阅信息
+ * 5. 如果对象的订阅列表为空，则删除对象注册
+ * 
+ * @param pSink 订阅对象指针
+ * @param serverType 服务器类型
+ * @param eventId 事件ID
+ * @param srcType 源类型
+ * @param srcId 源ID
+ * @return 取消订阅结果，0表示成功，-1表示失败
+ */
 int NFMemEventMgr::UnSubscribe(const NFObject* pSink, NF_SERVER_TYPE serverType, uint32_t eventId, uint32_t srcType, uint64_t srcId)
 {
     CHECK_NULL(0, pSink);
 
+    // 创建事件键值对象
     NFMemEventKey skey;
     skey.m_serverType = serverType;
     skey.m_eventId = eventId;
@@ -108,6 +155,7 @@ int NFMemEventMgr::UnSubscribe(const NFObject* pSink, NF_SERVER_TYPE serverType,
     *		存在的话，删除对应的key, 如果pSink集合为空的话，
     *       删除pSink
     */
+    // 检查对象是否已注册
     auto shmObjListIter = m_shmObjAllSubscribe.find(pSink->GetGlobalId());
     if (shmObjListIter == m_shmObjAllSubscribe.end())
     {
@@ -116,12 +164,14 @@ int NFMemEventMgr::UnSubscribe(const NFObject* pSink, NF_SERVER_TYPE serverType,
 
     auto pShmObjList = &shmObjListIter->second;
 
+    // 遍历对象的订阅列表，查找匹配的事件键值
     auto pNode = pShmObjList->GetHeadNodeObj(NF_SHM_SUBSCRIBEINFO_SHM_OBJ_INDEX_1);
     while (pNode)
     {
         CHECK_EXPR_ASSERT(pNode->m_shmObjId == pSink->GetGlobalId(), -1, "");
         if (pNode->m_eventKey == skey)
         {
+            // 移除匹配的订阅信息
             auto pLastNode = pNode;
             pNode = pShmObjList->GetNextNodeObj(NF_SHM_SUBSCRIBEINFO_SHM_OBJ_INDEX_1, pNode);
             pShmObjList->RemoveNode(NF_SHM_SUBSCRIBEINFO_SHM_OBJ_INDEX_1, pLastNode);
@@ -134,6 +184,7 @@ int NFMemEventMgr::UnSubscribe(const NFObject* pSink, NF_SERVER_TYPE serverType,
         }
     }
 
+    // 如果对象的订阅列表为空，则删除对象注册
     if (pShmObjList->IsEmpty())
     {
         m_shmObjAllSubscribe.erase(pSink->GetGlobalId());

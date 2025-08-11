@@ -1,8 +1,9 @@
 // -------------------------------------------------------------------------
-//    @FileName         :    NFCAsyMysqlModule.h
+//    @FileName         :    NFCAsyDBModule.cpp
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
-//    @Module           :    NFCAsyMysqlModule
+//    @Module           :    NFCAsyDBModule
+//    @Description      :    异步数据库模块实现文件，提供异步数据库操作的核心实现
 //
 // -------------------------------------------------------------------------
 
@@ -1937,10 +1938,10 @@ int NFCAsyDbModule::ExecuteMore(const std::string& strServerId, const NFrame::st
     return 0;
 }
 
-bool NFCAsyDbModule::Execute()
+int NFCAsyDbModule::Tick()
 {
-    if (!m_bInitComponent) return true;
-    if (NFGetTime() - m_ullLastCheckTime < 10000) return true;
+    if (!m_bInitComponent) return 0;
+    if (NFGetTime() - m_ullLastCheckTime < 10000) return 0;
 
     m_ullLastCheckTime = NFGetTime();
 
@@ -1953,5 +1954,5 @@ bool NFCAsyDbModule::Execute()
         }
     }
 
-    return true;
+    return 0;
 }

@@ -40,7 +40,7 @@ namespace protobuf_FrameMsg_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[21];
+  static const ::google::protobuf::internal::ParseTable schema[23];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -93,6 +93,12 @@ extern Proto_ScriptRpcResultDefaultTypeInternal _Proto_ScriptRpcResult_default_i
 class Proto_ServerDumpInfoNtf;
 class Proto_ServerDumpInfoNtfDefaultTypeInternal;
 extern Proto_ServerDumpInfoNtfDefaultTypeInternal _Proto_ServerDumpInfoNtf_default_instance_;
+class Proto_ServerSyncDataReq;
+class Proto_ServerSyncDataReqDefaultTypeInternal;
+extern Proto_ServerSyncDataReqDefaultTypeInternal _Proto_ServerSyncDataReq_default_instance_;
+class Proto_ServerSyncDataRsp;
+class Proto_ServerSyncDataRspDefaultTypeInternal;
+extern Proto_ServerSyncDataRspDefaultTypeInternal _Proto_ServerSyncDataRsp_default_instance_;
 class Proto_StoreInfo;
 class Proto_StoreInfoDefaultTypeInternal;
 extern Proto_StoreInfoDefaultTypeInternal _Proto_StoreInfo_default_instance_;
@@ -129,6 +135,8 @@ template<> ::NFrame::Proto_STSBroadPlayerMsgNotify* Arena::CreateMaybeMessage<::
 template<> ::NFrame::Proto_STWebMsgRspNotify* Arena::CreateMaybeMessage<::NFrame::Proto_STWebMsgRspNotify>(Arena*);
 template<> ::NFrame::Proto_ScriptRpcResult* Arena::CreateMaybeMessage<::NFrame::Proto_ScriptRpcResult>(Arena*);
 template<> ::NFrame::Proto_ServerDumpInfoNtf* Arena::CreateMaybeMessage<::NFrame::Proto_ServerDumpInfoNtf>(Arena*);
+template<> ::NFrame::Proto_ServerSyncDataReq* Arena::CreateMaybeMessage<::NFrame::Proto_ServerSyncDataReq>(Arena*);
+template<> ::NFrame::Proto_ServerSyncDataRsp* Arena::CreateMaybeMessage<::NFrame::Proto_ServerSyncDataRsp>(Arena*);
 template<> ::NFrame::Proto_StoreInfo* Arena::CreateMaybeMessage<::NFrame::Proto_StoreInfo>(Arena*);
 template<> ::NFrame::Proto_TransInfo* Arena::CreateMaybeMessage<::NFrame::Proto_TransInfo>(Arena*);
 template<> ::NFrame::ServerInfoReport* Arena::CreateMaybeMessage<::NFrame::ServerInfoReport>(Arena*);
@@ -192,6 +200,7 @@ enum FrameServerMsg {
   NF_SERVER_BROAD_EVENT_TO_SERVER_CMD = 127,
   NF_SERVER_REDIRECT_MSG_TO_PROXY_SERVER_CMD = 128,
   NF_SERVER_TO_SERVER_REGISTER_ROOM_INFO_RPC = 129,
+  NF_SERVER_TO_SERVER_SYNC_DATA_RPC = 130,
   NF_STORESVR_C2S_SELECT = 200,
   NF_STORESVR_S2C_SELECT = 201,
   NF_STORESVR_C2S_SELECTOBJ = 202,
@@ -3311,6 +3320,249 @@ class Proto_ServerDumpInfoNtf : public ::google::protobuf::Message /* @@protoc_i
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_FrameMsg_2eproto::TableStruct;
 };
+// -------------------------------------------------------------------
+
+class Proto_ServerSyncDataReq : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:NFrame.Proto_ServerSyncDataReq) */ {
+ public:
+  Proto_ServerSyncDataReq();
+  virtual ~Proto_ServerSyncDataReq();
+
+  Proto_ServerSyncDataReq(const Proto_ServerSyncDataReq& from);
+
+  inline Proto_ServerSyncDataReq& operator=(const Proto_ServerSyncDataReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Proto_ServerSyncDataReq(Proto_ServerSyncDataReq&& from) noexcept
+    : Proto_ServerSyncDataReq() {
+    *this = ::std::move(from);
+  }
+
+  inline Proto_ServerSyncDataReq& operator=(Proto_ServerSyncDataReq&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Proto_ServerSyncDataReq& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Proto_ServerSyncDataReq* internal_default_instance() {
+    return reinterpret_cast<const Proto_ServerSyncDataReq*>(
+               &_Proto_ServerSyncDataReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    21;
+
+  void Swap(Proto_ServerSyncDataReq* other);
+  friend void swap(Proto_ServerSyncDataReq& a, Proto_ServerSyncDataReq& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Proto_ServerSyncDataReq* New() const final {
+    return CreateMaybeMessage<Proto_ServerSyncDataReq>(NULL);
+  }
+
+  Proto_ServerSyncDataReq* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Proto_ServerSyncDataReq>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Proto_ServerSyncDataReq& from);
+  void MergeFrom(const Proto_ServerSyncDataReq& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Proto_ServerSyncDataReq* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // bytes msg_data = 2;
+  void clear_msg_data();
+  static const int kMsgDataFieldNumber = 2;
+  const ::std::string& msg_data() const;
+  void set_msg_data(const ::std::string& value);
+  #if LANG_CXX11
+  void set_msg_data(::std::string&& value);
+  #endif
+  void set_msg_data(const char* value);
+  void set_msg_data(const void* value, size_t size);
+  ::std::string* mutable_msg_data();
+  ::std::string* release_msg_data();
+  void set_allocated_msg_data(::std::string* msg_data);
+
+  // uint32 msg_id = 1;
+  void clear_msg_id();
+  static const int kMsgIdFieldNumber = 1;
+  ::google::protobuf::uint32 msg_id() const;
+  void set_msg_id(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:NFrame.Proto_ServerSyncDataReq)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr msg_data_;
+  ::google::protobuf::uint32 msg_id_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_FrameMsg_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Proto_ServerSyncDataRsp : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:NFrame.Proto_ServerSyncDataRsp) */ {
+ public:
+  Proto_ServerSyncDataRsp();
+  virtual ~Proto_ServerSyncDataRsp();
+
+  Proto_ServerSyncDataRsp(const Proto_ServerSyncDataRsp& from);
+
+  inline Proto_ServerSyncDataRsp& operator=(const Proto_ServerSyncDataRsp& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Proto_ServerSyncDataRsp(Proto_ServerSyncDataRsp&& from) noexcept
+    : Proto_ServerSyncDataRsp() {
+    *this = ::std::move(from);
+  }
+
+  inline Proto_ServerSyncDataRsp& operator=(Proto_ServerSyncDataRsp&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Proto_ServerSyncDataRsp& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Proto_ServerSyncDataRsp* internal_default_instance() {
+    return reinterpret_cast<const Proto_ServerSyncDataRsp*>(
+               &_Proto_ServerSyncDataRsp_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    22;
+
+  void Swap(Proto_ServerSyncDataRsp* other);
+  friend void swap(Proto_ServerSyncDataRsp& a, Proto_ServerSyncDataRsp& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Proto_ServerSyncDataRsp* New() const final {
+    return CreateMaybeMessage<Proto_ServerSyncDataRsp>(NULL);
+  }
+
+  Proto_ServerSyncDataRsp* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Proto_ServerSyncDataRsp>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Proto_ServerSyncDataRsp& from);
+  void MergeFrom(const Proto_ServerSyncDataRsp& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Proto_ServerSyncDataRsp* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // bytes msg_data = 2;
+  void clear_msg_data();
+  static const int kMsgDataFieldNumber = 2;
+  const ::std::string& msg_data() const;
+  void set_msg_data(const ::std::string& value);
+  #if LANG_CXX11
+  void set_msg_data(::std::string&& value);
+  #endif
+  void set_msg_data(const char* value);
+  void set_msg_data(const void* value, size_t size);
+  ::std::string* mutable_msg_data();
+  ::std::string* release_msg_data();
+  void set_allocated_msg_data(::std::string* msg_data);
+
+  // uint32 msg_id = 1;
+  void clear_msg_id();
+  static const int kMsgIdFieldNumber = 1;
+  ::google::protobuf::uint32 msg_id() const;
+  void set_msg_id(::google::protobuf::uint32 value);
+
+  // int32 result = 3;
+  void clear_result();
+  static const int kResultFieldNumber = 3;
+  ::google::protobuf::int32 result() const;
+  void set_result(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:NFrame.Proto_ServerSyncDataRsp)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr msg_data_;
+  ::google::protobuf::uint32 msg_id_;
+  ::google::protobuf::int32 result_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_FrameMsg_2eproto::TableStruct;
+};
 // ===================================================================
 
 
@@ -6109,9 +6361,169 @@ inline void Proto_ServerDumpInfoNtf::set_bus_id(::google::protobuf::uint32 value
   // @@protoc_insertion_point(field_set:NFrame.Proto_ServerDumpInfoNtf.bus_id)
 }
 
+// -------------------------------------------------------------------
+
+// Proto_ServerSyncDataReq
+
+// uint32 msg_id = 1;
+inline void Proto_ServerSyncDataReq::clear_msg_id() {
+  msg_id_ = 0u;
+}
+inline ::google::protobuf::uint32 Proto_ServerSyncDataReq::msg_id() const {
+  // @@protoc_insertion_point(field_get:NFrame.Proto_ServerSyncDataReq.msg_id)
+  return msg_id_;
+}
+inline void Proto_ServerSyncDataReq::set_msg_id(::google::protobuf::uint32 value) {
+  
+  msg_id_ = value;
+  // @@protoc_insertion_point(field_set:NFrame.Proto_ServerSyncDataReq.msg_id)
+}
+
+// bytes msg_data = 2;
+inline void Proto_ServerSyncDataReq::clear_msg_data() {
+  msg_data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Proto_ServerSyncDataReq::msg_data() const {
+  // @@protoc_insertion_point(field_get:NFrame.Proto_ServerSyncDataReq.msg_data)
+  return msg_data_.GetNoArena();
+}
+inline void Proto_ServerSyncDataReq::set_msg_data(const ::std::string& value) {
+  
+  msg_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:NFrame.Proto_ServerSyncDataReq.msg_data)
+}
+#if LANG_CXX11
+inline void Proto_ServerSyncDataReq::set_msg_data(::std::string&& value) {
+  
+  msg_data_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:NFrame.Proto_ServerSyncDataReq.msg_data)
+}
+#endif
+inline void Proto_ServerSyncDataReq::set_msg_data(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  msg_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:NFrame.Proto_ServerSyncDataReq.msg_data)
+}
+inline void Proto_ServerSyncDataReq::set_msg_data(const void* value, size_t size) {
+  
+  msg_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:NFrame.Proto_ServerSyncDataReq.msg_data)
+}
+inline ::std::string* Proto_ServerSyncDataReq::mutable_msg_data() {
+  
+  // @@protoc_insertion_point(field_mutable:NFrame.Proto_ServerSyncDataReq.msg_data)
+  return msg_data_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Proto_ServerSyncDataReq::release_msg_data() {
+  // @@protoc_insertion_point(field_release:NFrame.Proto_ServerSyncDataReq.msg_data)
+  
+  return msg_data_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Proto_ServerSyncDataReq::set_allocated_msg_data(::std::string* msg_data) {
+  if (msg_data != NULL) {
+    
+  } else {
+    
+  }
+  msg_data_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg_data);
+  // @@protoc_insertion_point(field_set_allocated:NFrame.Proto_ServerSyncDataReq.msg_data)
+}
+
+// -------------------------------------------------------------------
+
+// Proto_ServerSyncDataRsp
+
+// uint32 msg_id = 1;
+inline void Proto_ServerSyncDataRsp::clear_msg_id() {
+  msg_id_ = 0u;
+}
+inline ::google::protobuf::uint32 Proto_ServerSyncDataRsp::msg_id() const {
+  // @@protoc_insertion_point(field_get:NFrame.Proto_ServerSyncDataRsp.msg_id)
+  return msg_id_;
+}
+inline void Proto_ServerSyncDataRsp::set_msg_id(::google::protobuf::uint32 value) {
+  
+  msg_id_ = value;
+  // @@protoc_insertion_point(field_set:NFrame.Proto_ServerSyncDataRsp.msg_id)
+}
+
+// bytes msg_data = 2;
+inline void Proto_ServerSyncDataRsp::clear_msg_data() {
+  msg_data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Proto_ServerSyncDataRsp::msg_data() const {
+  // @@protoc_insertion_point(field_get:NFrame.Proto_ServerSyncDataRsp.msg_data)
+  return msg_data_.GetNoArena();
+}
+inline void Proto_ServerSyncDataRsp::set_msg_data(const ::std::string& value) {
+  
+  msg_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:NFrame.Proto_ServerSyncDataRsp.msg_data)
+}
+#if LANG_CXX11
+inline void Proto_ServerSyncDataRsp::set_msg_data(::std::string&& value) {
+  
+  msg_data_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:NFrame.Proto_ServerSyncDataRsp.msg_data)
+}
+#endif
+inline void Proto_ServerSyncDataRsp::set_msg_data(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  msg_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:NFrame.Proto_ServerSyncDataRsp.msg_data)
+}
+inline void Proto_ServerSyncDataRsp::set_msg_data(const void* value, size_t size) {
+  
+  msg_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:NFrame.Proto_ServerSyncDataRsp.msg_data)
+}
+inline ::std::string* Proto_ServerSyncDataRsp::mutable_msg_data() {
+  
+  // @@protoc_insertion_point(field_mutable:NFrame.Proto_ServerSyncDataRsp.msg_data)
+  return msg_data_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Proto_ServerSyncDataRsp::release_msg_data() {
+  // @@protoc_insertion_point(field_release:NFrame.Proto_ServerSyncDataRsp.msg_data)
+  
+  return msg_data_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Proto_ServerSyncDataRsp::set_allocated_msg_data(::std::string* msg_data) {
+  if (msg_data != NULL) {
+    
+  } else {
+    
+  }
+  msg_data_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg_data);
+  // @@protoc_insertion_point(field_set_allocated:NFrame.Proto_ServerSyncDataRsp.msg_data)
+}
+
+// int32 result = 3;
+inline void Proto_ServerSyncDataRsp::clear_result() {
+  result_ = 0;
+}
+inline ::google::protobuf::int32 Proto_ServerSyncDataRsp::result() const {
+  // @@protoc_insertion_point(field_get:NFrame.Proto_ServerSyncDataRsp.result)
+  return result_;
+}
+inline void Proto_ServerSyncDataRsp::set_result(::google::protobuf::int32 value) {
+  
+  result_ = value;
+  // @@protoc_insertion_point(field_set:NFrame.Proto_ServerSyncDataRsp.result)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

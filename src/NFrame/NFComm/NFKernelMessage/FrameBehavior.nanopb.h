@@ -157,6 +157,19 @@ struct ServerStateFlow {
 /* @@protoc_insertion_point(struct:ServerStateFlow) */
 };
 
+/* Default values for struct fields */
+/* Initializer values for message structs */
+#define BevLogBaseInfo_init_default              {"", 0, "", 0, 0, ""}
+#define BevLogDeviceInfo_init_default            {"", "", "", "", "", 0, 0, 0, "", 0, "", "", "", 0, "", 0, "", "", "", 0}
+#define BevLogRoleBaseInfo_init_default          {"", "", 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define BevLogTransBaseInfo_init_default         {0, 0, 0, 0, 0}
+#define ServerStateFlow_init_default             {0, "", 0, 0}
+#define BevLogBaseInfo_init_zero                 {"", 0, "", 0, 0, ""}
+#define BevLogDeviceInfo_init_zero               {"", "", "", "", "", 0, 0, 0, "", 0, "", "", "", 0, "", 0, "", "", "", 0}
+#define BevLogRoleBaseInfo_init_zero             {"", "", 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define BevLogTransBaseInfo_init_zero            {0, 0, 0, 0, 0}
+#define ServerStateFlow_init_zero                {0, "", 0, 0}
+
 /* Field tags (for use in manual encoding/decoding) */
 #define BevLogBaseInfo_szGameSvrId_tag           1
 #define BevLogBaseInfo_tDtEventTime_tag          2
@@ -206,6 +219,11 @@ struct ServerStateFlow {
 #define ServerStateFlow_iITimeShift_tag          4
 
 /* Struct field encoding specification for nanopb */
+extern const pb_field_t BevLogBaseInfo_fields[7];
+extern const pb_field_t BevLogDeviceInfo_fields[21];
+extern const pb_field_t BevLogRoleBaseInfo_fields[12];
+extern const pb_field_t BevLogTransBaseInfo_fields[6];
+extern const pb_field_t ServerStateFlow_fields[5];
 
 /* Maximum encoded size of messages (where known) */
 #define BevLogBaseInfo_size                      167

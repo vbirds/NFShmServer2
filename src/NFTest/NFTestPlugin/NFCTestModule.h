@@ -22,13 +22,13 @@ public:
 	explicit NFCTestModule(NFIPluginManager* p);
 	virtual ~NFCTestModule();
 
-	virtual bool Init() override;
+	virtual int Init() override;
 
-	virtual bool Execute() override;
+	virtual int Tick() override;
 
-	virtual bool BeforeShut() override;
+	virtual int BeforeShut() override;
 
-	virtual bool Shut() override;
+	virtual int Shut() override;
 
 	virtual int OnTimer(uint32_t nTimerID) override;
 };

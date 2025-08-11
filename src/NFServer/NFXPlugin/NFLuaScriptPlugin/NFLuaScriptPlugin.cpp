@@ -45,7 +45,7 @@ bool NFLuaScriptPlugin::IsDynamicLoad()
 
 void NFLuaScriptPlugin::Install()
 {
-    REGISTER_MODULE(m_pObjPluginManager, NFILuaScriptModule, NFCLuaScriptModule);
+    REGISTER_MODULE_TICK(m_pObjPluginManager, NFILuaScriptModule, NFCLuaScriptModule);
 }
 
 void NFLuaScriptPlugin::Uninstall()

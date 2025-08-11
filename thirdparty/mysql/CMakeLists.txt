@@ -15,10 +15,10 @@
 
 IF(WIN32)
   # CMake 2.8.12 is needed for Visual Studio 2013
-  CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
+  CMAKE_MINIMUM_REQUIRED(VERSION 3.5.12)
 ELSE()
   # There's a bug in unzipping prior to 2.8.2
-  CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2)
+  CMAKE_MINIMUM_REQUIRED(VERSION 3.5.2)
 ENDIF()
 
 # We use CMAKE_SHARED_LIBRARY_<Lang>_FLAGS. See cmake --help-policy CMP0018

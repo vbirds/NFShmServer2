@@ -31,12 +31,12 @@ NFCNamingModule::~NFCNamingModule()
 
 }
 
-bool NFCNamingModule::BeforeShut()
+int NFCNamingModule::BeforeShut()
 {
     return NFIModule::BeforeShut();
 }
 
-bool NFCNamingModule::Shut()
+int NFCNamingModule::Shut()
 {
     for(int i = 0; i < (int)m_namingList.size(); i++)
     {
@@ -45,10 +45,10 @@ bool NFCNamingModule::Shut()
             NF_SAFE_DELETE(m_namingList[i]);
         }
     }
-    return true;
+    return 0;
 }
 
-bool NFCNamingModule::Execute()
+int NFCNamingModule::Tick()
 {
     for(int i = 0; i < (int)m_namingList.size(); i++)
     {
@@ -57,12 +57,12 @@ bool NFCNamingModule::Execute()
             m_namingList[i]->Update();
         }
     }
-    return true;
+    return 0;
 }
 
-bool NFCNamingModule::OnReloadConfig()
+int NFCNamingModule::OnReloadConfig()
 {
-    return true;
+    return 0;
 }
 
 NFrame::ServerInfoReport NFCNamingModule::GetDefaultMasterInfo(NF_SERVER_TYPE eServerType)

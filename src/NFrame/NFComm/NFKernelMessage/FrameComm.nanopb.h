@@ -371,6 +371,37 @@ struct pbNFServerConfig {
 /* @@protoc_insertion_point(struct:pbNFServerConfig) */
 };
 
+/* Default values for struct fields */
+/* Initializer values for message structs */
+#define tbServerMgr_init_default                 {0, "", "", "", "", "", 0, 0, 0, 0}
+#define pbMysqlConfig_init_default               {"", 0, "", "", "", {}}
+#define pbRedisConfig_init_default               {"", 0, ""}
+#define pbRouteConfig_init_default               {"", 0, "", "", ""}
+#define pbPluginConfig_init_default              {0, {}, {}, {}, {}}
+#define pbAllServerConfig_init_default           {"", "", 0}
+#define pbTableConfig_init_default               {"", 0, 0}
+#define pbEncryptConfig_init_default             {"", 0, 0, ""}
+#define pbNFServerConfig_init_default            {"", 0, "", 0, 0, "", "", 0, 0, 0, "", 0, "", 0, "", 0, 0, 0, 0, 0, 0, 0, 0, pbRouteConfig_init_default, pbMysqlConfig_init_default, "", "", pbRedisConfig_init_default, "", "", "", "", "", "", 0, 0, 0, 0, 0, pbEncryptConfig_init_default}
+#define wxWorkRobotText_init_default             {"", {}, {}}
+#define wxWorkRobotHttpPost_init_default         {"", wxWorkRobotText_init_default}
+#define ExcelSheetInfo_init_default              {"", "", "", "", 0, "", "", "", "", "", "", ""}
+#define ExcelPbInfo_init_default                 {"", {}}
+#define ExcelParseInfo_init_default              {{}}
+#define tbServerMgr_init_zero                    {0, "", "", "", "", "", 0, 0, 0, 0}
+#define pbMysqlConfig_init_zero                  {"", 0, "", "", "", {}}
+#define pbRedisConfig_init_zero                  {"", 0, ""}
+#define pbRouteConfig_init_zero                  {"", 0, "", "", ""}
+#define pbPluginConfig_init_zero                 {0, {}, {}, {}, {}}
+#define pbAllServerConfig_init_zero              {"", "", 0}
+#define pbTableConfig_init_zero                  {"", 0, 0}
+#define pbEncryptConfig_init_zero                {"", 0, 0, ""}
+#define pbNFServerConfig_init_zero               {"", 0, "", 0, 0, "", "", 0, 0, 0, "", 0, "", 0, "", 0, 0, 0, 0, 0, 0, 0, 0, pbRouteConfig_init_zero, pbMysqlConfig_init_zero, "", "", pbRedisConfig_init_zero, "", "", "", "", "", "", 0, 0, 0, 0, 0, pbEncryptConfig_init_zero}
+#define wxWorkRobotText_init_zero                {"", {}, {}}
+#define wxWorkRobotHttpPost_init_zero            {"", wxWorkRobotText_init_zero}
+#define ExcelSheetInfo_init_zero                 {"", "", "", "", 0, "", "", "", "", "", "", ""}
+#define ExcelPbInfo_init_zero                    {"", {}}
+#define ExcelParseInfo_init_zero                 {{}}
+
 /* Field tags (for use in manual encoding/decoding) */
 #define ExcelSheetInfo_name_tag                  1
 #define ExcelSheetInfo_unique_index_tag          2
@@ -473,6 +504,20 @@ struct pbNFServerConfig {
 #define pbNFServerConfig_EncryptConfig_tag       110
 
 /* Struct field encoding specification for nanopb */
+extern const pb_field_t tbServerMgr_fields[11];
+extern const pb_field_t pbMysqlConfig_fields[7];
+extern const pb_field_t pbRedisConfig_fields[4];
+extern const pb_field_t pbRouteConfig_fields[6];
+extern const pb_field_t pbPluginConfig_fields[6];
+extern const pb_field_t pbAllServerConfig_fields[4];
+extern const pb_field_t pbTableConfig_fields[4];
+extern const pb_field_t pbEncryptConfig_fields[5];
+extern const pb_field_t pbNFServerConfig_fields[41];
+extern const pb_field_t wxWorkRobotText_fields[4];
+extern const pb_field_t wxWorkRobotHttpPost_fields[3];
+extern const pb_field_t ExcelSheetInfo_fields[13];
+extern const pb_field_t ExcelPbInfo_fields[3];
+extern const pb_field_t ExcelParseInfo_fields[2];
 
 /* Maximum encoded size of messages (where known) */
 #define tbServerMgr_size                         220

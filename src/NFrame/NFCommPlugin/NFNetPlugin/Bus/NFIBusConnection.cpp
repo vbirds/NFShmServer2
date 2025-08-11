@@ -1,9 +1,10 @@
-// -------------------------------------------------------------------------
+﻿// -------------------------------------------------------------------------
 //    @FileName         :    NFIBusConnect.cpp
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFIBusConnect.cpp
+//    @Desc             :    Bus连接接口实现文件，提供进程间通信的基础连接功能
 //
 // -------------------------------------------------------------------------
 
@@ -26,10 +27,34 @@
 #endif
 
 /**
- * @brief 获得连接IP
+ * @file NFIBusConnection.cpp
+ * @brief Bus连接接口实现文件
+ * 
+ * 该文件实现了Bus进程间通信的核心连接功能，包括：
+ * - 共享内存管理操作
+ * - 消息发送和接收实现
+ * - 连接状态管理
+ * - 数据节点和块操作
+ * - 跨平台兼容性处理
+ * 
+ * 主要功能：
+ * - 共享内存的创建、附加和初始化
+ * - 数据节点的读写操作
+ * - 消息的发送和接收处理
+ * - 连接状态监控和管理
+ * - 错误处理和恢复机制
+ * 
+ * @author Gao.Yi
+ * @date 2022-09-18
+ * @version 1.0
+ */
+
+/**
+ * @brief 获得连接IP地址
  *
- * @param  usLinkId
- * @return std::string
+ * 返回当前Bus连接的IP地址信息
+ * 
+ * @return IP地址字符串，使用Bus名称作为标识
  */
 std::string NFIBusConnection::GetLinkIp()
 {
@@ -39,8 +64,7 @@ std::string NFIBusConnection::GetLinkIp()
 /**
 * @brief 关闭连接
 *
-* @param  usLinkId
-* @return
+ * 关闭当前Bus连接，设置连接状态为未连接
 */
 void NFIBusConnection::CloseLinkId()
 {
@@ -48,12 +72,17 @@ void NFIBusConnection::CloseLinkId()
 }
 
 /**
- * @brief 获取数据节点head
- * @param channel 内存通道
+ * @brief 获取数据节点头
+ * 
+ * 根据节点索引获取共享内存中数据节点的头部信息
+ * 
+ * @param channel 内存通道指针
  * @param index 节点索引
- * @param data 数据区起始地址
- * @param dataLen 到缓冲区末尾的长度
- * @return 节点head指针
+ * @param data 输出参数，数据区起始地址
+ * @param dataLen 输出参数，到缓冲区末尾的长度
+ * @return 节点头指针
+ * 
+ * @note 该函数会计算节点在共享内存中的准确位置
  */
 volatile NFShmNodeHead* NFIBusConnection::GetNodeHead(NFShmChannel* channel, size_t index, void** data, size_t* dataLen)
 {
@@ -78,10 +107,17 @@ volatile NFShmNodeHead* NFIBusConnection::GetNodeHead(NFShmChannel* channel, siz
 }
 
 /**
- * @brief 获取数据块head
- * @param channel 内存通道
+ * @brief 获取数据块头
+ * 
+ * 根据节点索引获取共享内存中数据块的头部信息
+ * 
+ * @param channel 内存通道指针
  * @param index 节点索引
- * @return 数据块head指针
+ * @param data 输出参数，数据区起始地址
+ * @param dataLen 输出参数，可用数据长度
+ * @return 数据块头指针
+ * 
+ * @note 该函数会计算数据块在共享内存中的准确位置
  */
 NFShmBlockHead* NFIBusConnection::GetBlockHead(NFShmChannel* channel, size_t index, void** data, size_t* dataLen)
 {
@@ -100,11 +136,14 @@ NFShmBlockHead* NFIBusConnection::GetBlockHead(NFShmChannel* channel, size_t ind
 }
 
 /**
- * @brief 获取后面的数据块index
- * @param channel 内存通道
- * @param index 节点索引
+ * @brief 获取下一个索引
+ * 
+ * 根据当前索引和偏移量计算下一个索引位置
+ * 
+ * @param channel 内存通道指针
+ * @param index 当前索引
  * @param offset 索引偏移
- * @return 数据块head指针
+ * @return 下一个索引位置
  */
 size_t NFIBusConnection::GetNextIndex(NFShmChannel *channel, size_t index, size_t offset)
 {
@@ -114,7 +153,10 @@ size_t NFIBusConnection::GetNextIndex(NFShmChannel *channel, size_t index, size_
 
 /**
  * @brief 获取可用的数据节点数量
- * @param channel 内存通道
+ * 
+ * 计算当前可用的数据节点数量，考虑保护节点
+ * 
+ * @param channel 内存通道指针
  * @param readCur 当前读游标
  * @param writeCur 当前写游标
  * @return 可用的节点数量
@@ -138,7 +180,10 @@ size_t NFIBusConnection::GetAvailableNodeCount(NFShmChannel* channel, size_t rea
 
 /**
  * @brief 获取使用的数据节点数量
- * @param channel 内存通道
+ * 
+ * 计算指定范围内使用的数据节点数量
+ * 
+ * @param channel 内存通道指针
  * @param beginCur 起始游标
  * @param endCur 结束游标
  * @return 使用的数据节点数量
@@ -161,6 +206,14 @@ size_t NFIBusConnection::GetNodeRangeCount(NFShmChannel* channel, size_t beginCu
 //    return (index + channel->node_count - offset) % channel->node_count;
 //}
 
+/**
+ * @brief 获取操作序列号
+ * 
+ * 获取并递增操作序列号，确保序列号不为0
+ * 
+ * @param channel 内存通道指针
+ * @return 操作序列号
+ */
 uint32_t NFIBusConnection::FetchOperationSeq(NFShmChannel *channel)
 {
     uint32_t ret = ++channel->m_nAtomicOperationSeq;
@@ -173,9 +226,13 @@ uint32_t NFIBusConnection::FetchOperationSeq(NFShmChannel *channel)
 }
 
 /**
- * @brief 计算一定长度数据需要的数据node数量
+ * @brief 计算节点数量
+ * 
+ * 根据数据长度计算需要的节点数量
+ * 
+ * @param channel 内存通道指针
  * @param len 数据长度
- * @return 数据长度需要的数据块数量
+ * @return 需要的节点数量
  */
 size_t NFIBusConnection::CalcNodeNum(NFShmChannel *channel, size_t len)
 {
@@ -185,10 +242,13 @@ size_t NFIBusConnection::CalcNodeNum(NFShmChannel *channel, size_t len)
 }
 
 /**
- * @brief 生成校验码
+ * @brief 快速校验
+ * 
+ * 使用哈希算法对数据进行快速校验
+ * 
  * @param src 源数据
  * @param len 数据长度
- * @note Hash 快速校验
+ * @return 校验值
  */
 NFDataAlignType NFIBusConnection::FastCheck(const void *src, size_t len)
 {
@@ -772,12 +832,12 @@ int NFIBusConnection::ShmRecv(NFShmChannel* channel, void* buf, size_t len, size
          *   0: 移动游标后尚未设置MF_START_NODE，这个出现概率非常低，但是也会出现。（也可能是发送端在写出过程中崩溃）
          *
          * 由于MF_START_NODE和0都是无法判定是没写完还是写出端崩溃的，所以都要走超时检测逻辑。
-         * 但是如果被判定超时并且写出端只写出了部分节点的的 MF_WRITEN 这时候剩下的节点的flag都会是0。
+         * 但是如果被判定超时并且写出端只写出了部分节点的 MF_WRITEN 这时候剩下的节点的flag都会是0。
          *   如果这些都通过超时机制判定，则最多可能等待 消息长度*超时判定时长/节点长度，默认设置是最少2秒钟。
          *   所以这里需要特别处理下，当进入超时流程后，所有非 MF_START_NODE 并且operation_seq相等的节点也应该视为错误。
          *   注意上面这个流程只能在超时流程中进行，因为其他错误流程可能第一个数据块错误，但是紧接着的第二个数据块处于正在写出的状态而没有设置
          *   MF_START_NODE和operation_seq。我们的operation_seq取值范围是uint32，所以max(uint32)*节点长度（默认是500GB）以内的通道里operation_seq不会重复
-         *   我们的数据通道不可能使用这么大的内存，所以加上operation_seq后能尽可能地消除空数据快的超时影响
+         *   我们的数据通道不可能使用这么大的内存，所以加上operation_seq后能尽可能地消除空数据块的超时影响
          */
         // 容错处理 -- 未写入完成
         if (likely(CheckFlag(node_head->m_nFlag, NF_WRITEN)))
@@ -882,7 +942,7 @@ int NFIBusConnection::ShmRecv(NFShmChannel* channel, void* buf, size_t len, size
                 break;
             }
 
-            // 如果出现异常了两个连续写入块有相同的operation_seq，会在这里被会切割开
+            // 如果出现异常了两个连续写入块有相同的operation_seq，会在这里被切割开
             if (read_end_cur != read_begin_cur && CheckFlag(this_node_head->m_nFlag, MF_START_NODE))
             {
                 break;
@@ -1209,11 +1269,27 @@ int NFIBusConnection::CloseShmBuffer()
     return NFrame::ERR_CODE_SVR_OK;
 }
 
+/**
+ * @brief 设置消息对等回调函数
+ * 
+ * 设置用于处理对等消息的回调函数
+ * 
+ * @param cb 回调函数
+ */
 void NFIBusConnection::SetMsgPeerCallback(const BusMsgPeerCallback &cb)
 {
     m_busMsgPeerCb = cb;
 }
 
+/**
+ * @brief 发送Bus连接消息
+ * 
+ * 发送Bus连接请求消息
+ * 
+ * @param busId Bus ID
+ * @param busLength Bus长度
+ * @return 发送结果，0表示成功
+ */
 int NFIBusConnection::SendBusConnectMsg(uint64_t busId, uint64_t busLength)
 {
     NFDataPackage package;
@@ -1227,6 +1303,15 @@ int NFIBusConnection::SendBusConnectMsg(uint64_t busId, uint64_t busLength)
     return 0;
 }
 
+/**
+ * @brief 发送Bus连接响应消息
+ * 
+ * 发送Bus连接响应消息
+ * 
+ * @param busId Bus ID
+ * @param busLength Bus长度
+ * @return 发送结果，0表示成功
+ */
 int NFIBusConnection::SendBusConnectRspMsg(uint64_t busId, uint64_t busLength)
 {
     NFDataPackage package;
@@ -1240,6 +1325,15 @@ int NFIBusConnection::SendBusConnectRspMsg(uint64_t busId, uint64_t busLength)
     return 0;
 }
 
+/**
+ * @brief 发送Bus心跳消息
+ * 
+ * 发送Bus心跳消息
+ * 
+ * @param busId Bus ID
+ * @param busLength Bus长度
+ * @return 发送结果，0表示成功
+ */
 int NFIBusConnection::SendBusHeartBeatMsg(uint64_t busId, uint64_t busLength)
 {
     NFDataPackage package;
@@ -1253,6 +1347,15 @@ int NFIBusConnection::SendBusHeartBeatMsg(uint64_t busId, uint64_t busLength)
     return 0;
 }
 
+/**
+ * @brief 发送Bus心跳响应消息
+ * 
+ * 发送Bus心跳响应消息
+ * 
+ * @param busId Bus ID
+ * @param busLength Bus长度
+ * @return 发送结果，0表示成功
+ */
 int NFIBusConnection::SendBusHeartBeatRspMsg(uint64_t busId, uint64_t busLength)
 {
     NFDataPackage package;
@@ -1266,6 +1369,13 @@ int NFIBusConnection::SendBusHeartBeatRspMsg(uint64_t busId, uint64_t busLength)
     return 0;
 }
 
+/**
+ * @brief 获取绑定标志
+ * 
+ * 返回当前连接的绑定标志信息
+ * 
+ * @return 绑定标志的常量引用
+ */
 const NFMessageFlag &NFIBusConnection::GetBindFlag() const
 {
     return m_bindFlag;

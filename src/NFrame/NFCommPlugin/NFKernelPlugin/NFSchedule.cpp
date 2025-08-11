@@ -126,14 +126,14 @@ NFCoroutine *NFSchedule::NewCoroutine(NFCoroutineFunc func, void *ud)
 	return co;
 }
 
-bool NFSchedule::CheckStopServer()
+int NFSchedule::CheckStopServer()
 {
     if (co_hash_map.size() > 0)
     {
         NFLogInfo(NF_LOG_DEFAULT, 0, "NFSchedule StopServer, co size:{}", co_hash_map.size());
-        return false;
+        return -1;
     }
-    return true;
+    return 0;
 }
 
 int64_t NFSchedule::CreateCoroutine(const std::function<void()>& std_func)

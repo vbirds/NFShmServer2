@@ -7,6 +7,15 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFCommon.h
+ * @brief 通用工具函数集合
+ * 
+ * 此文件提供了一套全面的通用工具函数，涵盖字符串处理、类型转换、
+ * 时间操作、数据编码解码、网络工具等多个方面。所有函数都是静态函数，
+ * 可以直接调用而无需实例化对象。
+ */
+
 #pragma once
 
 #include <time.h>
@@ -30,122 +39,277 @@
 #include <set>
 #include "NFPlatform.h"
 
-/////////////////////////////////////////////////
 /**
-* @file NFCommon.h
-* @brief  帮助类,都是静态函数,提供一些常用的函数 .
-*
-*/
-/////////////////////////////////////////////////
-
-/**
-* @brief  基础工具类，提供了一些非常基本的函数使用.
-*
-* 这些函数都是以静态函数提供。 包括以下几种函数:
-*
-* Trim类函数,大小写转换函数,分隔字符串函数（直接分隔字符串，
-*
-* 数字等）,时间相关函数,字符串转换函数,二进制字符串互转函数,
-*
-* 替换字符串函数,Ip匹配函数,判断一个数是否是素数等
-*/
+ * @brief 通用工具类
+ * 
+ * NFCommon提供了一套完整的通用工具函数集合，专为高性能应用设计。
+ * 所有函数都是静态函数，按功能分组，涵盖了日常开发中最常用的操作。
+ * 
+ * 主要功能模块：
+ * - 位操作：GetBit、SetBit等位级操作函数
+ * - 字符串处理：trim、大小写转换、分割、替换等字符串操作
+ * - 时间处理：时间格式转换、解析、计算等时间相关操作
+ * - 类型转换：各种数据类型之间的安全转换
+ * - 编码解码：二进制数据与字符串的相互转换
+ * - 网络工具：IP地址处理、网络数据转换等
+ * - 数学计算：素数判断、数值计算等数学工具
+ * - 容器操作：STL容器的序列化和反序列化
+ * 
+ * 设计特点：
+ * - 纯静态函数：所有函数都是静态的，无需实例化
+ * - 类型安全：使用模板和类型检查确保类型安全
+ * - 异常安全：适当的异常处理和错误检查
+ * - 性能优化：针对高频使用场景进行性能优化
+ * - 跨平台：支持Windows、Linux等多种平台
+ * 
+ * 适用场景：
+ * - 服务器开发中的通用工具需求
+ * - 游戏开发中的数据处理
+ * - 网络编程中的协议处理
+ * - 系统编程中的底层操作
+ * - 通用应用开发中的工具函数
+ * 
+ * 使用方法：
+ * @code
+ * // 字符串操作
+ * std::string cleaned = NFCommon::trim("  hello world  ");
+ * std::string upper = NFCommon::upper("hello");
+ * 
+ * // 时间操作
+ * std::string timeStr = NFCommon::tm2str(tm);
+ * time_t timestamp = NFCommon::str2time("2023-01-01 00:00:00");
+ * 
+ * // 类型转换
+ * int value = NFCommon::strto<int>("123");
+ * std::string str = NFCommon::tostr(456);
+ * 
+ * // 编码解码
+ * std::string binStr = NFCommon::bin2str(data, len);
+ * std::string decoded = NFCommon::str2bin(binStr);
+ * 
+ * // 位操作
+ * bool bit = NFCommon::GetBit(value, 3);
+ * NFCommon::SetBit(value, 3, true);
+ * @endcode
+ * 
+ * @note 所有函数都是线程安全的，除非特别说明
+ * @note 大部分函数都有异常安全保证
+ * @note 字符串函数支持UTF-8编码
+ */
 class _NFExport NFCommon
 {
 public:
 
-	//操作bit
+	/**
+	 * @name 位操作函数
+	 * @brief 提供位级别的数据操作功能
+	 * @{
+	 */
+	
+	/**
+	 * @brief 获取指定位置的位值
+	 * 
+	 * 检查32位整数中指定位置的位是否为1。
+	 * 
+	 * @param src 源32位整数
+	 * @param pos 位位置（0-31，0表示最低位）
+	 * @return bool 指定位为1返回true，为0返回false
+	 * 
+	 * @pre pos必须在0-31范围内
+	 * 
+	 * 使用示例：
+	 * @code
+	 * uint32_t value = 0x0F; // 二进制: 00001111
+	 * bool bit2 = NFCommon::GetBit(value, 2); // true
+	 * bool bit5 = NFCommon::GetBit(value, 5); // false
+	 * @endcode
+	 */
 	static bool GetBit(uint32_t src, uint32_t pos);
+	
+	/**
+	 * @brief 设置指定位置的位值
+	 * 
+	 * 设置32位整数中指定位置的位为指定值。
+	 * 
+	 * @param src [in,out] 要修改的32位整数引用
+	 * @param pos 位位置（0-31，0表示最低位）
+	 * @param flag 要设置的位值，true表示1，false表示0
+	 * 
+	 * @pre pos必须在0-31范围内
+	 * 
+	 * 使用示例：
+	 * @code
+	 * uint32_t value = 0x00; // 二进制: 00000000
+	 * NFCommon::SetBit(value, 2, true);  // 设置第2位为1
+	 * NFCommon::SetBit(value, 5, false); // 设置第5位为0（本来就是0）
+	 * // 现在value为0x04 (二进制: 00000100)
+	 * @endcode
+	 */
 	static void SetBit(uint32_t &src, uint32_t pos, bool flag);
 
+	/** @} */
+
 	/**
-	* @brief  去掉头部以及尾部的字符或字符串.
-	*
-	* @param sStr    输入字符串
-	* @param s       需要去掉的字符
-	* @param bChar   如果为true, 则去掉s中每个字符; 如果为false, 则去掉s字符串
-	* @return string 返回去掉后的字符串
-	*/
+	 * @name 字符串清理函数
+	 * @brief 移除字符串首尾或指定位置的空白字符或指定字符
+	 * @{
+	 */
+
+	/**
+	 * @brief 去掉头部以及尾部的字符或字符串
+	 * 
+	 * 从字符串的开头和结尾移除指定的字符或字符串。
+	 * 
+	 * @param sStr 输入字符串
+	 * @param s 需要去掉的字符或字符串，默认为空白字符
+	 * @param bChar 如果为true，则去掉s中每个字符；如果为false，则去掉s字符串
+	 * @return std::string 返回去掉后的字符串
+	 * 
+	 * 使用示例：
+	 * @code
+	 * std::string result1 = NFCommon::trim("  hello world  "); // "hello world"
+	 * std::string result2 = NFCommon::trim("***hello***", "*", false); // "hello"
+	 * std::string result3 = NFCommon::trim("abchelloabc", "abc", true); // "hello"
+	 * @endcode
+	 */
 	static std::string trim(const std::string &sStr, const std::string &s = " \r\n\t", bool bChar = true);
 
 	/**
-	* @brief  去掉左边的字符或字符串.
-	*
-	* @param sStr    输入字符串
-	* @param s       需要去掉的字符
-	* @param bChar   如果为true, 则去掉s中每个字符; 如果为false, 则去掉s字符串
-	* @return string 返回去掉后的字符串
-	*/
+	 * @brief 去掉左边的字符或字符串
+	 * 
+	 * 从字符串的开头移除指定的字符或字符串。
+	 * 
+	 * @param sStr 输入字符串
+	 * @param s 需要去掉的字符或字符串，默认为空白字符
+	 * @param bChar 如果为true，则去掉s中每个字符；如果为false，则去掉s字符串
+	 * @return std::string 返回去掉后的字符串
+	 */
 	static std::string trimleft(const std::string &sStr, const std::string &s = " \r\n\t", bool bChar = true);
 
 	/**
-	* @brief  去掉右边的字符或字符串.
-	*
-	* @param sStr    输入字符串
-	* @param s       需要去掉的字符
-	* @param bChar   如果为true, 则去掉s中每个字符; 如果为false, 则去掉s字符串
-	* @return string 返回去掉后的字符串
-	*/
+	 * @brief 去掉右边的字符或字符串
+	 * 
+	 * 从字符串的结尾移除指定的字符或字符串。
+	 * 
+	 * @param sStr 输入字符串
+	 * @param s 需要去掉的字符或字符串，默认为空白字符
+	 * @param bChar 如果为true，则去掉s中每个字符；如果为false，则去掉s字符串
+	 * @return std::string 返回去掉后的字符串
+	 */
 	static std::string trimright(const std::string &sStr, const std::string &s = " \r\n\t", bool bChar = true);
 
+	/** @} */
+
 	/**
-	* @brief  字符串转换成小写.
-	*
-	* @param sString  字符串
-	* @return string  转换后的字符串
-	*/
+	 * @name 大小写转换函数
+	 * @brief 字符串大小写转换功能
+	 * @{
+	 */
+
+	/**
+	 * @brief 字符串转换成小写
+	 * 
+	 * 将字符串中的所有大写字母转换为小写字母。
+	 * 
+	 * @param sString 输入字符串
+	 * @return std::string 转换后的小写字符串
+	 * 
+	 * @note 只转换ASCII字符，非ASCII字符保持不变
+	 */
 	static std::string lower(const std::string &sString);
 
 	/**
-	* @brief  字符串转换成大写.
-	*
-	* @param sString  字符串
-	* @return string  转换后的大写的字符串
-	*/
+	 * @brief 字符串转换成大写
+	 * 
+	 * 将字符串中的所有小写字母转换为大写字母。
+	 * 
+	 * @param sString 输入字符串
+	 * @return std::string 转换后的大写字符串
+	 * 
+	 * @note 只转换ASCII字符，非ASCII字符保持不变
+	 */
 	static std::string upper(const std::string &sString);
 
-	/**
-	* @brief  字符串是否都是数字的.
-	*
-	* @param sString  字符串
-	* @return bool    是否是数字
-	*/
-	static bool isdigit(const std::string &sInput);
+	/** @} */
 
 	/**
-	* @brief  字符串转换成时间结构.
-	*
-	* @param sString  字符串时间格式
-	* @param sFormat  格式
-	* @param stTm     时间结构
-	* @return         0: 成功, -1:失败
-	*/
+	 * @name 字符串验证函数
+	 * @brief 字符串内容格式验证
+	 * @{
+	 */
+
+	/**
+	 * @brief 检查字符串是否都是数字
+	 * 
+	 * 检查字符串是否只包含数字字符（0-9）。
+	 * 
+	 * @param sInput 要检查的字符串
+	 * @return bool 如果字符串只包含数字返回true，否则返回false
+	 * 
+	 * @note 空字符串返回false
+	 * @note 不支持负号和小数点
+	 */
+	static bool isdigit(const std::string &sInput);
+
+	/** @} */
+
+	/**
+	 * @name 时间转换函数
+	 * @brief 时间格式转换和解析功能
+	 * @{
+	 */
+
+	/**
+	 * @brief 字符串转换成时间结构
+	 * 
+	 * 根据指定格式将时间字符串解析为tm结构。
+	 * 
+	 * @param sString 时间字符串
+	 * @param sFormat 时间格式字符串，使用strptime格式
+	 * @param stTm [out] 输出的时间结构
+	 * @return int 成功返回0，失败返回-1
+	 * 
+	 * 使用示例：
+	 * @code
+	 * struct tm tm;
+	 * int result = NFCommon::str2tm("2023-01-01 12:30:45", "%Y-%m-%d %H:%M:%S", tm);
+	 * @endcode
+	 */
 	static int str2tm(const std::string &sString, const std::string &sFormat, struct tm &stTm);
 
 	/**
-	* @brief GMT格式的时间转化为时间结构
-	*
-	* eg.Sat, 06 Feb 2010 09:29:29 GMT, %a, %d %b %Y %H:%M:%S GMT
-	*
-	* 可以用mktime换成time_t, 但是注意时区 可以用mktime(&stTm)
-	*
-	* - timezone换成本地的秒(time(NULL)值相同) timezone是系统的 ,
-	*
-	* 需要extern long timezone;
-	*
-	* @param sString  GMT格式的时间
-	* @param stTm     转换后的时间结构
-	* @return         0: 成功, -1:失败
-	*/
+	 * @brief GMT格式的时间转化为时间结构
+	 * 
+	 * 将GMT格式的时间字符串（如"Sat, 06 Feb 2010 09:29:29 GMT"）转换为tm结构。
+	 * 
+	 * @param sString GMT格式的时间字符串
+	 * @param stTm [out] 转换后的时间结构
+	 * @return int 成功返回0，失败返回-1
+	 * 
+	 * @note 可以用mktime(&stTm) - timezone转换成本地时间的time_t值
+	 * @note 需要extern long timezone声明
+	 */
 	static int strgmt2tm(const std::string &sString, struct tm &stTm);
 
 	/**
-	* @brief  时间转换成字符串.
-	*
-	* @param stTm     时间结构
-	* @param sFormat  需要转换的目标格式，默认为紧凑格式
-	* @return string  转换后的时间字符串
-	*/
+	 * @brief 时间结构转换成字符串
+	 * 
+	 * 将tm结构格式化为指定格式的时间字符串。
+	 * 
+	 * @param stTm 时间结构
+	 * @param sFormat 目标格式字符串，默认为紧凑格式"%Y%m%d%H%M%S"
+	 * @return std::string 转换后的时间字符串
+	 * 
+	 * 使用示例：
+	 * @code
+	 * struct tm tm = {...};
+	 * std::string timeStr1 = NFCommon::tm2str(tm); // "20230101123045"
+	 * std::string timeStr2 = NFCommon::tm2str(tm, "%Y-%m-%d %H:%M:%S"); // "2023-01-01 12:30:45"
+	 * @endcode
+	 */
 	static std::string tm2str(const struct tm &stTm, const std::string &sFormat = "%Y%m%d%H%M%S");
+
+	/** @} */
 
 	/**
 	* @brief  时间转换成字符串.
@@ -1122,15 +1286,93 @@ std::string NFCommon::tostr(InputIter iFirst, InputIter iLast, const std::string
 	return sBuffer;
 }
 
+/**
+ * @brief 分布式唯一ID生成器
+ * 
+ * NFIdGenerator提供了基于时间戳和服务器ID的分布式唯一ID生成功能。
+ * 生成的ID具有时间有序性和全局唯一性，适用于分布式系统中的唯一标识需求。
+ * 
+ * ID生成原理：
+ * - 高位：时间戳信息，保证时间有序性
+ * - 低位：服务器ID和序列号，保证同一时刻的唯一性
+ * - 组合：确保全局唯一且递增
+ * 
+ * 主要特性：
+ * - 全局唯一：结合时间戳和服务器ID确保全局唯一性
+ * - 时间有序：生成的ID按时间递增，支持时间排序
+ * - 高性能：内存操作，无需网络通信或数据库查询
+ * - 分布式安全：不同服务器ID保证分布式环境下的唯一性
+ * - 故障恢复：服务重启后可以继续生成唯一ID
+ * 
+ * 适用场景：
+ * - 分布式系统中的订单号生成
+ * - 用户ID、商品ID等业务唯一标识
+ * - 数据库主键（无需依赖数据库自增）
+ * - 消息队列中的消息ID
+ * - 日志追踪ID生成
+ * 
+ * 使用方法：
+ * @code
+ * // 每个服务器实例使用不同的server_id
+ * NFIdGenerator generator(1001);  // 服务器ID为1001
+ * 
+ * // 生成唯一ID
+ * uint64_t id1 = generator.GenId();
+ * uint64_t id2 = generator.GenId();
+ * uint64_t id3 = generator.GenId();
+ * 
+ * // ID保证递增：id1 < id2 < id3
+ * assert(id1 < id2 && id2 < id3);
+ * @endcode
+ * 
+ * @note 不同服务器实例必须使用不同的server_id以确保全局唯一性
+ * @note 服务器时钟回拨可能影响ID的单调性，需要注意时间同步
+ * @note 建议将server_id作为配置参数，避免硬编码
+ */
 class NFIdGenerator
 {
 private:
+	/** @brief 服务器唯一标识ID */
 	uint64_t m_nServerID;
+	/** @brief 上次生成ID时的时间戳，用于检测时间变化 */
 	uint64_t m_nLastTime;
+	/** @brief 上次生成的ID值，用于确保同一时刻的唯一性 */
 	uint64_t m_nLastID;
 
 public:
+	/**
+	 * @brief 构造函数
+	 * 
+	 * 初始化ID生成器，设置服务器唯一标识。
+	 * 每个服务器实例应该使用不同的server_id以确保生成ID的全局唯一性。
+	 * 
+	 * @param server_id 服务器唯一标识ID
+	 * 
+	 * @note server_id必须在所有服务器实例中保持唯一
+	 * @note 建议server_id使用配置文件管理，避免冲突
+	 */
 	NFIdGenerator(uint64_t server_id);
+	
+	/**
+	 * @brief 生成唯一ID
+	 * 
+	 * 生成一个64位的全局唯一ID。生成的ID具有以下特性：
+	 * - 全局唯一：在所有服务器实例中都不重复
+	 * - 时间有序：后生成的ID数值大于先生成的ID
+	 * - 高性能：纯内存操作，无外部依赖
+	 * 
+	 * 生成算法：
+	 * 1. 获取当前时间戳
+	 * 2. 如果时间发生变化，重置序列号
+	 * 3. 如果时间相同，序列号递增
+	 * 4. 组合时间戳、服务器ID和序列号生成最终ID
+	 * 
+	 * @return uint64_t 生成的唯一ID
+	 * 
+	 * @note 此方法是线程安全的（如果类设计考虑了线程安全）
+	 * @note 如果系统时钟回拨，可能会影响ID的单调性
+	 * @note 高并发场景下建议评估性能是否满足需求
+	 */
 	uint64_t GenId();
 };
 

@@ -101,7 +101,7 @@ int NFLuaTimer::OnTimer(uint32_t nTimerID)
 	return 0;
 }
 
-bool NFCLuaScriptModule::Awake()
+int NFCLuaScriptModule::Awake()
 {
 	Register();
 	LoadScript();
@@ -118,13 +118,13 @@ bool NFCLuaScriptModule::Awake()
 	//一月定时器，多加了一秒，避免定时器32ms的误差
 	uint64_t monthtime = NFTime::GetNextMonthRemainingTime() + 1;
 	SetTimer(EnumLuaModule_MONTH, monthtime * 1000, 1);
-	return true;
+	return 0;
 }
 
-bool NFCLuaScriptModule::Init()
+int NFCLuaScriptModule::Init()
 {
 	TryRunGlobalScriptFunc("LuaNFrame.Init");
-	return true;
+	return 0;
 }
 
 int NFCLuaScriptModule::OnTimer(uint32_t nTimerID)
@@ -173,19 +173,19 @@ int NFCLuaScriptModule::OnTimer(uint32_t nTimerID)
 	return 0;
 }
 
-bool NFCLuaScriptModule::OnReloadConfig()
+int NFCLuaScriptModule::OnReloadConfig()
 {
 	ReloadAllLuaFiles();
-	return true;
+	return 0;
 }
 
-bool NFCLuaScriptModule::Shut()
+int NFCLuaScriptModule::Shut()
 {
 	TryRunGlobalScriptFunc("LuaNFrame.Shut");
-	return true;
+	return 0;
 }
 
-bool NFCLuaScriptModule::Finalize()
+int NFCLuaScriptModule::Finalize()
 {
 	for (auto iter = m_luaTimerMap.begin(); iter != m_luaTimerMap.end(); iter++)
 	{
@@ -196,7 +196,7 @@ bool NFCLuaScriptModule::Finalize()
 	return true;
 }
 
-bool NFCLuaScriptModule::Execute()
+int NFCLuaScriptModule::Tick()
 {
 	for (auto iter = m_luaTimerMap.begin(); iter != m_luaTimerMap.end();)
 	{
@@ -214,9 +214,9 @@ bool NFCLuaScriptModule::Execute()
 				}
 			}
 		}
-		iter++;
+		++iter;
 	}
-	return true;
+	return 0;
 }
 
 void NFCLuaScriptModule::LoadScript()

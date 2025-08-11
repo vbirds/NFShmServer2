@@ -4,6 +4,13 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFShmTimerMng.cpp
+//    @Desc             :    共享内存定时器管理器实现文件，提供定时器的集中管理和调度功能。
+//                          该文件实现了定时器管理器的核心功能，包括定时器槽位的管理、
+//                          定时器的添加和删除、定时器的调度和执行、多种定时器类型的支持、
+//                          定时器生命周期管理。主要功能包括定时器槽位管理、定时器调度算法、
+//                          多种定时器类型支持、定时器超时处理、定时器状态管理。
+//                          设计特点包括基于共享内存支持跨进程、高效的槽位调度算法、
+//                          支持多种定时器类型、自动超时处理、内存自动回收
 //
 // -------------------------------------------------------------------------
 
@@ -14,6 +21,11 @@
 #include "NFComm/NFPluginModule/NFIMemMngModule.h"
 #include "NFComm/NFPluginModule/NFCheck.h"
 
+/**
+ * @brief 定时器槽位构造函数
+ * 
+ * 初始化定时器槽位，根据共享内存模式选择初始化方式
+ */
 NFShmTimerSlot::NFShmTimerSlot()
 {
     if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode())
@@ -26,18 +38,33 @@ NFShmTimerSlot::NFShmTimerSlot()
     }
 }
 
+/**
+ * @brief 定时器槽位析构函数
+ * 
+ * 清理定时器槽位资源
+ */
 NFShmTimerSlot::~NFShmTimerSlot()
 {
 }
 
+/**
+ * @brief 创建初始化
+ * 
+ * 在创建时进行初始化，设置所有成员变量为默认值
+ * 
+ * @return 0 成功，其他值表示失败
+ */
 int NFShmTimerSlot::CreateInit()
 {
+    // 初始化头节点数据
     m_headData.m_nextIndex = -1;
     m_headData.m_preIndex = -1;
     m_headData.m_curIndex = -1;
     m_headData.m_objId = -1;
     m_headData.m_slotId = -1;
     m_headData.m_isValid = false;
+    
+    // 初始化槽位信息
     m_index = -1;
     m_slotSeq = 0;
     m_curRunIndex = -1;
@@ -46,19 +73,40 @@ int NFShmTimerSlot::CreateInit()
     return 0;
 }
 
+/**
+ * @brief 恢复初始化
+ * 
+ * 在恢复时进行初始化
+ * 
+ * @return 0 成功，其他值表示失败
+ */
 int NFShmTimerSlot::ResumeInit()
 {
     return 0;
 }
 
+/**
+ * @brief 添加定时器到槽位
+ * 
+ * 将定时器添加到指定的槽位中
+ * 
+ * @param timer 要添加的定时器指针
+ * @param idData 定时器ID数据
+ * @param allIdData 所有定时器ID数据数组
+ * @return 0 成功，其他值表示失败
+ */
 int NFShmTimerSlot::AddTimer(NFShmTimer* timer, NFTimerIdData* idData, NFTimerIdData* allIdData)
 {
+    // 设置定时器ID数据
     idData->m_objId = timer->GetObjId();
     idData->m_slotId = m_index;
     timer->SetSlotIndex(m_index);
     timer->SetListIndex(idData->m_curIndex);
+    
+    // 添加到链表头部
     if (m_headData.m_preIndex == -1)
     {
+        // 空链表，直接设置为头节点
         m_headData.m_preIndex = idData->m_curIndex;
         m_headData.m_nextIndex = idData->m_curIndex;
         idData->m_preIndex = -1;
@@ -66,6 +114,7 @@ int NFShmTimerSlot::AddTimer(NFShmTimer* timer, NFTimerIdData* idData, NFTimerId
     }
     else
     {
+        // 非空链表，添加到头部
         if (m_headData.m_preIndex >= 0 && m_headData.m_preIndex < ALL_TIMER_COUNT)
         {
             allIdData[m_headData.m_preIndex].m_nextIndex = idData->m_curIndex;
@@ -84,12 +133,31 @@ int NFShmTimerSlot::AddTimer(NFShmTimer* timer, NFTimerIdData* idData, NFTimerId
     return 0;
 }
 
+/**
+ * @brief 清除运行状态
+ * 
+ * 清除槽位的运行状态，重置序列号
+ * 
+ * @param seq 新的序列号
+ */
 void NFShmTimerSlot::ClearRunStatus(uint32_t seq)
 {
     m_curRunIndex = -1;
     m_slotSeq = seq;
 }
 
+/**
+ * @brief 槽位心跳处理
+ * 
+ * 处理槽位中的定时器心跳，检查超时并收集超时定时器
+ * 
+ * @param pTimerManager 定时器管理器指针
+ * @param tick 当前时间戳
+ * @param timeoutList 超时定时器列表
+ * @param seq 序列号
+ * @param allIdData 所有定时器ID数据数组
+ * @return true 处理完成，false 继续处理
+ */
 bool NFShmTimerSlot::OnTick(NFShmTimerMng* pTimerManager, int64_t tick, list<NFShmTimer*>& timeoutList, uint32_t seq, NFTimerIdData* allIdData)
 {
     if (seq == m_slotSeq)
@@ -274,6 +342,11 @@ bool NFShmTimerSlot::DeleteTimer(NFShmTimerMng* pTimerManager, NFShmTimer* timer
     return true;
 }
 
+/**
+ * @brief 定时器管理器构造函数
+ * 
+ * 初始化定时器管理器，根据共享内存模式选择初始化方式
+ */
 NFShmTimerMng::NFShmTimerMng()
 {
     if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode())
@@ -286,12 +359,25 @@ NFShmTimerMng::NFShmTimerMng()
     }
 }
 
+/**
+ * @brief 定时器管理器析构函数
+ * 
+ * 清理定时器管理器资源
+ */
 NFShmTimerMng::~NFShmTimerMng()
 {
 }
 
+/**
+ * @brief 创建初始化
+ * 
+ * 在创建时进行初始化，设置所有槽位和定时器ID数据
+ * 
+ * @return 0 成功，其他值表示失败
+ */
 int NFShmTimerMng::CreateInit()
 {
+    // 初始化所有槽位
     for (int i = 0; i < SLOT_COUNT; ++i)
     {
         m_slots[i].CreateInit();
@@ -299,10 +385,14 @@ int NFShmTimerMng::CreateInit()
     }
 
     NFLogInfo(NF_LOG_DEFAULT, 0, " init timer manager : {}", NF_ADJUST_TIMENOW_MS());
+    
+    // 初始化管理器状态
     m_currSlot = 0;
     m_beforeTick = NF_ADJUST_TIMENOW_MS();
     m_iFreeIndex = 0;
     m_timerSeq = 1;
+    
+    // 初始化定时器ID数据链表
     for (int i = 0; i < ALL_TIMER_COUNT; ++i)
     {
         m_timerIdData[i].m_nextIndex = i + 1;
@@ -313,6 +403,7 @@ int NFShmTimerMng::CreateInit()
         m_timerIdData[i].m_isValid = false;
     }
 
+    // 设置链表尾节点
     m_timerIdData[ALL_TIMER_COUNT].m_nextIndex = ALL_TIMER_COUNT;
     m_timerIdData[ALL_TIMER_COUNT].m_preIndex = ALL_TIMER_COUNT;
     m_timerIdData[ALL_TIMER_COUNT].m_curIndex = ALL_TIMER_COUNT;
@@ -323,8 +414,16 @@ int NFShmTimerMng::CreateInit()
     return 0;
 }
 
+/**
+ * @brief 恢复初始化
+ * 
+ * 在恢复时进行初始化，重新附加所有定时器
+ * 
+ * @return 0 成功，其他值表示失败
+ */
 int NFShmTimerMng::ResumeInit()
 {
+    // 遍历所有定时器对象，重新附加到管理器
     auto pTimer = dynamic_cast<NFShmTimer*>(FindModule<NFIMemMngModule>()->GetHeadObj(EOT_TYPE_TIMER_OBJ));
     while (pTimer)
     {
@@ -335,6 +434,7 @@ int NFShmTimerMng::ResumeInit()
 
         NFLogTrace(NF_LOG_DEFAULT, 0, " time set callback : {}", pTimer->GetDetailStructMsg());
 
+        // 检查定时器是否已在列表中
         if (pTimer->GetListIndex() < 0)
         {
             NFLogTrace(NF_LOG_DEFAULT, 0, "timer not in list: {}", pTimer->GetDetailStructMsg());
@@ -349,11 +449,27 @@ int NFShmTimerMng::ResumeInit()
     return 0;
 }
 
+/**
+ * @brief 获取定时器
+ * 
+ * 根据对象ID获取定时器对象
+ * 
+ * @param objectId 对象ID
+ * @return 定时器对象指针
+ */
 NFShmTimer* NFShmTimerMng::GetTimer(int objectId)
 {
     return NFShmTimer::GetObjByObjId(objectId);
 }
 
+/**
+ * @brief 删除定时器
+ * 
+ * 根据对象ID删除定时器
+ * 
+ * @param objectId 对象ID
+ * @return 0 成功，其他值表示失败
+ */
 int NFShmTimerMng::Delete(int objectId)
 {
     NFShmTimer* timer = GetTimer(objectId);

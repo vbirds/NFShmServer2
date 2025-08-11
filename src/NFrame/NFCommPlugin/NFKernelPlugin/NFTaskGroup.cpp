@@ -29,22 +29,22 @@ NFTaskGroup::~NFTaskGroup()
 {
 }
 
-bool NFTaskGroup::Awake()
+int NFTaskGroup::Awake()
+{
+    return 0;
+}
+
+int NFTaskGroup::Init()
+{
+    return 0;
+}
+
+int NFTaskGroup::BeforeShut()
 {
     return true;
 }
 
-bool NFTaskGroup::Init()
-{
-    return true;
-}
-
-bool NFTaskGroup::BeforeShut()
-{
-    return true;
-}
-
-bool NFTaskGroup::Shut()
+int NFTaskGroup::Shut()
 {
     uint32_t startTime = NFGetSecondTime();
     //等待异步处理完毕，然后再退出系统
@@ -58,20 +58,20 @@ bool NFTaskGroup::Shut()
         }
     }
 
-    return true;
+    return 0;
 }
 
-bool NFTaskGroup::Finalize()
+int NFTaskGroup::Finalize()
 {
     CloseActorPool();
-    return true;
+    return 0;
 }
 
-bool NFTaskGroup::Execute()
+int NFTaskGroup::Tick()
 {
     OnMainThreadTick();
     CheckTimeOutTask();
-    return true;
+    return 0;
 }
 
 

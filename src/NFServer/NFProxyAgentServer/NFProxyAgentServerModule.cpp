@@ -28,7 +28,7 @@ NFCProxyAgentServerModule::~NFCProxyAgentServerModule()
 {
 }
 
-bool NFCProxyAgentServerModule::Awake()
+int NFCProxyAgentServerModule::Awake()
 {
     //不需要固定帧，需要尽可能跑得快
     //m_pObjPluginManager->SetFixedFrame(false);
@@ -62,18 +62,18 @@ bool NFCProxyAgentServerModule::Awake()
         {
             NFLogInfo(NF_LOG_DEFAULT, 0, "proxy agent server listen failed!, serverId:{}, ip:{}, port:{}",
                       pConfig->ServerId, pConfig->ServerIp, pConfig->ServerPort);
-            return false;
+            return -1;
         }
     }
     else
     {
         NFLogError(NF_LOG_DEFAULT, 0, "I Can't get the Proxy Agent Server config!");
-        return false;
+        return -1;
     }
 
     Subscribe(NF_ST_PROXY_AGENT_SERVER, NFrame::NF_EVENT_SERVER_DEAD_EVENT, NFrame::NF_EVENT_SERVER_TYPE, 0, __FUNCTION__);
     Subscribe(NF_ST_PROXY_AGENT_SERVER, NFrame::NF_EVENT_SERVER_APP_FINISH_INITED, NFrame::NF_EVENT_SERVER_TYPE, 0, __FUNCTION__);
-    return true;
+    return 0;
 }
 
 int NFCProxyAgentServerModule::OnExecute(uint32_t serverType, uint32_t nEventID, uint32_t bySrcType, uint64_t nSrcID, const google::protobuf::Message *pMessage)
@@ -129,37 +129,37 @@ int NFCProxyAgentServerModule::ConnectMasterServer(const NFrame::ServerInfoRepor
     return 0;
 }
 
-bool NFCProxyAgentServerModule::Init()
+int NFCProxyAgentServerModule::Init()
 {
     NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(NF_ST_PROXY_AGENT_SERVER);
     NF_ASSERT(pConfig);
 #if NF_PLATFORM == NF_PLATFORM_WIN
     NFrame::ServerInfoReport masterData = FindModule<NFIConfigModule>()->GetDefaultMasterInfo(NF_ST_PROXY_AGENT_SERVER);
 	int32_t ret = ConnectMasterServer(masterData);
-	CHECK_EXPR(ret == 0, false, "ConnectMasterServer Failed, url:{}", masterData.DebugString());
+	CHECK_ERR(0, ret, "ConnectMasterServer Failed, url:{}", masterData.DebugString());
 #else
     if (pConfig->RouteConfig.NamingHost.empty())
     {
         NFrame::ServerInfoReport masterData = FindModule<NFIConfigModule>()->GetDefaultMasterInfo(NF_ST_PROXY_AGENT_SERVER);
         int32_t ret = ConnectMasterServer(masterData);
-        CHECK_EXPR(ret == 0, false, "ConnectMasterServer Failed, url:{}", masterData.DebugString());
+        CHECK_ERR(0, ret, "ConnectMasterServer Failed, url:{}", masterData.DebugString());
     }
 #endif
 
-    return true;
+    return 0;
 }
 
-bool NFCProxyAgentServerModule::Execute()
+int NFCProxyAgentServerModule::Tick()
 {
     ServerReport();
-    return true;
+    return 0;
 }
 
-bool NFCProxyAgentServerModule::OnDynamicPlugin()
+int NFCProxyAgentServerModule::OnDynamicPlugin()
 {
     FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_PROXY_AGENT_SERVER);
 
-    return true;
+    return 0;
 }
 
 /*

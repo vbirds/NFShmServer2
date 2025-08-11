@@ -31,7 +31,7 @@ NFCConsoleModule::~NFCConsoleModule()
 {
 }
 
-bool NFCConsoleModule::Shut()
+int NFCConsoleModule::Shut()
 {
     if (mBackThread && mBackThread->joinable())
     {
@@ -57,10 +57,10 @@ bool NFCConsoleModule::Shut()
         mPluginThread.reset();
     }
 
-    return true;
+    return 0;
 }
 
-bool NFCConsoleModule::Awake()
+int NFCConsoleModule::Awake()
 {
     if (m_pObjPluginManager->IsDaemon() == false)
     {
@@ -94,7 +94,7 @@ bool NFCConsoleModule::Awake()
     */
     SetTimer(0, 1000, INFINITY_CALL);
 
-    return true;
+    return 0;
 }
 
 void NFCConsoleModule::CreateBackThread()
@@ -124,14 +124,14 @@ void NFCConsoleModule::CheckPluginThreadLoop()
     }
 }
 
-bool NFCConsoleModule::Execute()
+int NFCConsoleModule::Tick()
 {
-    return true;
+    return 0;
 }
 
-bool NFCConsoleModule::OnReloadConfig()
+int NFCConsoleModule::OnReloadConfig()
 {
-    return true;
+    return 0;
 }
 
 void NFCConsoleModule::BackThreadLoop()

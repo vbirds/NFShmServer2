@@ -86,17 +86,17 @@ uint8_t NFCKernelModule::UpdateCheckSeq(const std::string &szCheckSeqFile)
     return cCheckSeq;
 }
 
-bool NFCKernelModule::Execute()
+int NFCKernelModule::Tick()
 {
-    return true;
+    return 0;
 }
 
-bool NFCKernelModule::BeforeShut()
+int NFCKernelModule::BeforeShut()
 {
-    return true;
+    return 0;
 }
 
-bool NFCKernelModule::Init()
+int NFCKernelModule::Init()
 {
     auto &allServerType = NFGlobalSystem::Instance()->GetAllServerType();
     for (auto iter = allServerType.begin(); iter != allServerType.end(); iter++)
@@ -110,17 +110,17 @@ bool NFCKernelModule::Init()
                                                            &NFCKernelModule::OnKillServerProcess);
     }
 
-    return true;
+    return 0;
 }
 
-bool NFCKernelModule::Shut()
+int NFCKernelModule::Shut()
 {
-    return true;
+    return 0;
 }
 
-bool NFCKernelModule::Finalize()
+int NFCKernelModule::Finalize()
 {
-    return true;
+    return 0;
 }
 
 int NFCKernelModule::Next(int iNowSec)

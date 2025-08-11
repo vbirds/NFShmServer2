@@ -137,43 +137,46 @@ void NFCPluginManager::SetLoadAllServer(bool b)
 	m_isAllServer = b;
 }
 
-bool NFCPluginManager::AfterLoadAllPlugin()
+int NFCPluginManager::AfterLoadAllPlugin()
 {
 	// 在所有插件加载完成后调用，用于执行插件间的依赖初始化
 	// 遍历所有插件实例，调用其AfterLoadAllPlugin方法
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		(*iter)->AfterLoadAllPlugin();
+		int iRet = (*iter)->AfterLoadAllPlugin();
+		CHECK_ERR(0, iRet, "{} AfterLoadAllPlugin failed", (*iter)->GetPluginName());
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterInitShmMem()
+int NFCPluginManager::LoadConfig()
 {
 	// 在共享内存初始化完成后调用，用于执行共享内存相关的初始化
 	// 遍历所有插件实例，调用其AfterInitShmMem方法
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		(*iter)->AfterInitShmMem();
+		int iRet = (*iter)->LoadConfig();
+		CHECK_ERR(0, iRet, "{} AfterInitShmMem failed", (*iter)->GetPluginName());
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::Awake()
+int NFCPluginManager::Awake()
 {
 	// 插件系统启动时调用，用于执行插件的初始化逻辑
 	// 遍历所有插件实例，调用其Awake方法
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		(*iter)->Awake();
+		int iRet = (*iter)->Awake();
+		CHECK_ERR(0, iRet, "{} Awake failed", (*iter)->GetPluginName());
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::LoadAllPlugin()
+int NFCPluginManager::LoadAllPlugin()
 {
 #ifndef NF_DYNAMIC_PLUGIN
 	// 静态插件加载流程
@@ -215,42 +218,54 @@ bool NFCPluginManager::LoadAllPlugin()
         }
     }
 #endif
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::Begin()
+int NFCPluginManager::Begin()
 {
 	// 启动插件管理器，按顺序执行以下步骤：
-	LoadAllPlugin(); // 1. 加载所有插件
-	AfterLoadAllPlugin(); // 2. 插件后加载处理
-	AfterInitShmMem(); // 3. 共享内存初始化
-	Awake(); // 4. 插件唤醒
-	Init(); // 5. 插件初始化
-	CheckConfig(); // 6. 配置检查
-	ReadyExecute(); // 7. 准备执行
-	return true;
+	int iRet = 0;
+	iRet = LoadAllPlugin(); // 1. 加载所有插件
+	CHECK_ERR(0, iRet, "LoadAllPlugin Failed");
+
+	iRet = AfterLoadAllPlugin(); // 2. 插件后加载处理
+	CHECK_ERR(0, iRet, "AfterLoadAllPlugin Failed");
+
+	iRet = LoadConfig(); // 3. 共享内存初始化
+	CHECK_ERR(0, iRet, "AfterInitShmMem Failed");
+
+	iRet = Awake(); // 4. 插件唤醒
+	CHECK_ERR(0, iRet, "Awake Failed");
+
+	iRet = Init(); // 5. 插件初始化
+	CHECK_ERR(0, iRet, "Init Failed");
+
+	iRet = ReadyTick(); // 7. 准备执行
+	CHECK_ERR(0, iRet, "ReadyExecute Failed");
+	return 0;
 }
 
-bool NFCPluginManager::End()
+int NFCPluginManager::End()
 {
 	// 关闭插件管理器，按顺序执行以下步骤：
 	BeforeShut(); // 1. 关闭前处理
 	Shut(); // 2. 关闭插件
 	Finalize(); // 3. 资源清理
-	return true;
+	return 0;
 }
 
-inline bool NFCPluginManager::Init()
+inline int NFCPluginManager::Init()
 {
 	// 初始化插件管理器，调用所有已注册插件的Init方法
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager Init................");
 	// 遍历插件实例列表，逐个调用插件的初始化方法
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		(*iter)->Init();
+		int iRet = (*iter)->Init();
+		CHECK_ERR(0, iRet, "{} Init Failed", (*iter)->GetPluginName());
 	}
 
-	return true;
+	return 0;
 }
 
 bool NFCPluginManager::LoadPluginConfig()
@@ -373,10 +388,10 @@ NFIPlugin* NFCPluginManager::FindPlugin(const std::string& strPluginName)
 	return nullptr;
 }
 
-bool NFCPluginManager::Execute()
+int NFCPluginManager::Tick()
 {
 	// 主循环执行函数
-	bool bRet = true;
+	int iRet = 0;
 	// 更新当前时间
 	m_nNowTime = NF_ADJUST_TIMENOW_MS();
 	// 记录开始时间
@@ -403,9 +418,7 @@ bool NFCPluginManager::Execute()
 		// 开始单个插件的性能分析
 		BeginProfiler(it->first + "--Loop");
 		// 执行插件逻辑
-		bool tempRet = it->second->Execute();
-		// 汇总执行结果
-		bRet = bRet && tempRet;
+		it->second->Tick();
 		// 结束性能分析并获取耗时
 		uint64_t useTime = EndProfiler();
 		// 如果执行时间超过30ms（10毫秒）则记录错误日志
@@ -504,7 +517,7 @@ bool NFCPluginManager::Execute()
 		}
 	}
 
-	return bRet;
+	return 0;
 }
 
 
@@ -698,21 +711,9 @@ NFIModule* NFCPluginManager::FindModule(const std::string& strModuleName)
 	return nullptr;
 }
 
-
-bool NFCPluginManager::CheckConfig()
+int NFCPluginManager::ReadyTick()
 {
-	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager CheckConfig................");
-
-	for (auto itCheckInstance = m_nPluginInstanceMap.begin(); itCheckInstance != m_nPluginInstanceMap.end(); ++itCheckInstance)
-	{
-		itCheckInstance->second->CheckConfig();
-	}
-	return true;
-}
-
-bool NFCPluginManager::ReadyExecute()
-{
-	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager ReadyExecute................");
+	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager ReadyTick................");
 
 	if (!m_bFixedFrame)
 	{
@@ -723,13 +724,13 @@ bool NFCPluginManager::ReadyExecute()
 
 	for (auto itCheckInstance = m_nPluginInstanceMap.begin(); itCheckInstance != m_nPluginInstanceMap.end(); ++itCheckInstance)
 	{
-		itCheckInstance->second->ReadyExecute();
+		itCheckInstance->second->ReadyTick();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::BeforeShut()
+int NFCPluginManager::BeforeShut()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager BeforeShut................");
 
@@ -738,10 +739,10 @@ bool NFCPluginManager::BeforeShut()
 		itBeforeInstance->second->BeforeShut();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::Shut()
+int NFCPluginManager::Shut()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager Shut................");
 
@@ -750,10 +751,10 @@ bool NFCPluginManager::Shut()
 		itInstance->second->Shut();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::OnReloadConfig()
+int NFCPluginManager::OnReloadConfig()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager OnReloadConfig................");
 
@@ -767,11 +768,11 @@ bool NFCPluginManager::OnReloadConfig()
 		itInstance->second->OnReloadConfig();
 	}
 
-	return true;
+	return 0;
 }
 
 
-bool NFCPluginManager::AfterOnReloadConfig()
+int NFCPluginManager::AfterOnReloadConfig()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager AfterOnReloadConfig................");
 
@@ -780,10 +781,10 @@ bool NFCPluginManager::AfterOnReloadConfig()
 		itInstance->second->AfterOnReloadConfig();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::Finalize()
+int NFCPluginManager::Finalize()
 {
 	// 插件管理器最终化处理
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager Finalize................");
@@ -829,7 +830,7 @@ bool NFCPluginManager::Finalize()
 	m_nPluginInstanceList.clear();
 	m_nModuleInstanceMap.clear();
 	m_nPluginNameVec.clear();
-	return true;
+	return 0;
 }
 
 bool NFCPluginManager::LoadStaticPlugin(const std::string& strPluginName)
@@ -944,7 +945,7 @@ int NFCPluginManager::GetMachineAddr(const std::string& str)
 	return 0;
 }
 
-bool NFCPluginManager::LoadPluginLibrary(const std::string& strPluginDLLName)
+int NFCPluginManager::LoadPluginLibrary(const std::string& strPluginDLLName)
 {
 	// 加载动态链接库插件
 	// 检查是否已经加载过该插件
@@ -968,13 +969,13 @@ bool NFCPluginManager::LoadPluginLibrary(const std::string& strPluginDLLName)
 				// 如果找不到DllStartPlugin函数，记录错误日志并报错
 				NFLogError(NF_LOG_DEFAULT, 0, "Find function DllStartPlugin Failed in [{}]", pLib->GetName());
 				assert(0);
-				return false;
+				return -1;
 			}
 
 			// 调用插件的启动函数
 			pFunc(this);
 
-			return true;
+			return 0;
 		}
 
 #if NF_PLATFORM == NF_PLATFORM_LINUX || NF_PLATFORM == NF_PLATFORM_APPLE
@@ -987,7 +988,7 @@ bool NFCPluginManager::LoadPluginLibrary(const std::string& strPluginDLLName)
             NFLogError(NF_LOG_DEFAULT, 0, " Load DLL[{0}] failed, ErrorNo. = [{1}] Load [{0}] failed", strPluginDLLName, error);
             NFSLEEP(1000);
             exit(0);
-            return false;
+            return -1;
         }
         else
         {
@@ -995,7 +996,7 @@ bool NFCPluginManager::LoadPluginLibrary(const std::string& strPluginDLLName)
             std::cout << "Load shared lib failed: " << strPluginDLLName << std::endl;
             NFSLEEP(1000);
             exit(0);
-            return false;
+            return -1;
         }
 #elif NF_PLATFORM == NF_PLATFORM_WIN
 		// Windows平台错误处理
@@ -1004,10 +1005,10 @@ bool NFCPluginManager::LoadPluginLibrary(const std::string& strPluginDLLName)
 #endif // NF_PLATFORM
 	}
 
-	return false;
+	return -1;
 }
 
-bool NFCPluginManager::UnLoadPluginLibrary(const std::string& strPluginDLLName)
+int NFCPluginManager::UnLoadPluginLibrary(const std::string& strPluginDLLName)
 {
 	// 卸载动态链接库插件
 	// 查找要卸载的插件
@@ -1032,13 +1033,13 @@ bool NFCPluginManager::UnLoadPluginLibrary(const std::string& strPluginDLLName)
 		// 从映射表中移除
 		m_nPluginLibMap.erase(it);
 
-		return true;
+		return 0;
 	}
 
-	return false;
+	return -1;
 }
 
-bool NFCPluginManager::DynamicLoadPluginLibrary(const std::string& strPluginDLLName)
+int NFCPluginManager::DynamicLoadPluginLibrary(const std::string& strPluginDLLName)
 {
 #ifndef NF_DYNAMIC_PLUGIN
 	NFLogError(NF_LOG_DEFAULT, 0, "can't load plugin:{}, you are static load!", strPluginDLLName);
@@ -1049,7 +1050,7 @@ bool NFCPluginManager::DynamicLoadPluginLibrary(const std::string& strPluginDLLN
 		if (pPlugin->IsDynamicLoad() == false)
 		{
 			NFLogError(NF_LOG_DEFAULT, 0, "plugin:{} can't not dynamic load!", strPluginDLLName);
-			return false;
+			return -1;
 		}
 
 		/*
@@ -1084,10 +1085,10 @@ bool NFCPluginManager::DynamicLoadPluginLibrary(const std::string& strPluginDLLN
 	else
 	{
 		NFLogError(NF_LOG_DEFAULT, 0, "plugin:{} is not exist!", strPluginDLLName);
-		return false;
+		return -1;
 	}
 #endif
-	return true;
+	return 0;
 }
 
 void NFCPluginManager::BeginProfiler(const std::string& funcName)
@@ -1731,18 +1732,19 @@ int NFCPluginManager::SendDumpInfo(const std::string& dumpInfo)
 }
 
 
-bool NFCPluginManager::HotfixServer()
+int NFCPluginManager::HotfixServer()
 {
-	bool ret = true;
+	int iRet = 0;
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		if ((*iter)->HotfixServer() == false)
+		int iRetTemp = (*iter)->HotfixServer();
+		if (iRetTemp != 0)
 		{
-			ret = false;
+			iRet = iRetTemp;
 		}
 	}
 
-	return ret;
+	return iRet;
 }
 
 std::list<NFIPlugin*> NFCPluginManager::GetListPlugin()
@@ -1764,78 +1766,66 @@ bool NFCPluginManager::LoadKernelPlugin()
     m_nPluginNameVec.push_back("NFKernelPlugin");
     LoadPluginLibrary("NFKernelPlugin");
 #endif
-
-	/*
-	    log 系统第一个启动，然后是配置
-	*/
-	FindModule<NFILogModule>()->InitLogSystem();
-	/*
-	    加载服务器配置
-	*/
-	FindModule<NFIConfigModule>()->LoadConfig();
-
 	return true;
 }
 
-bool NFCPluginManager::OnServerKilling()
+int NFCPluginManager::OnServerKilling()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager OnServerKilling................");
-	bool ret = true;
+	int iRet = 0;
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		if ((*iter)->OnServerKilling() == false)
+		int iRetTemp = (*iter)->OnServerKilling();
+		if (iRetTemp != 0)
 		{
-			ret = false;
+			iRet = iRetTemp;
 		}
 	}
 
-	return ret;
+	return iRet;
 }
 
-bool NFCPluginManager::OnStopServer()
+int NFCPluginManager::OnStopServer()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager StopServer................");
-	bool ret = true;
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		if ((*iter)->StopServer() == false)
-		{
-			ret = false;
-		}
+		(*iter)->StopServer();
 	}
 
-	return ret;
+	return 0;
 }
 
-bool NFCPluginManager::CheckStopServer()
+int NFCPluginManager::CheckStopServer()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager CheckStopServer................");
-	bool ret = true;
+	int iRet = 0;
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		if ((*iter)->CheckStopServer() == false)
+		int iRetTemp = (*iter)->CheckStopServer();
+		if (iRetTemp != 0)
 		{
-			ret = false;
+			iRet = iRetTemp;
 		}
 	}
 
-	return ret;
+	return iRet;
 }
 
-bool NFCPluginManager::StopServer()
+int NFCPluginManager::StopServer()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager StopServer................");
-	bool ret = CheckStopServer();
-	if (ret == false)
+	int iRet = CheckStopServer();
+	if (iRet != 0)
 	{
 		OnStopServer();
-		return false;
+		return iRet;
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAllConnectFinish()
+int NFCPluginManager::AfterAllConnectFinish()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager AfterAllConnectFinish................");
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1843,10 +1833,10 @@ bool NFCPluginManager::AfterAllConnectFinish()
 		(*iter)->AfterAllConnectFinish();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAllDescStoreLoaded()
+int NFCPluginManager::AfterAllDescStoreLoaded()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager AfterAllDescStoreLoaded................");
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1854,10 +1844,10 @@ bool NFCPluginManager::AfterAllDescStoreLoaded()
 		(*iter)->AfterAllDescStoreLoaded();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAllConnectAndAllDescStore()
+int NFCPluginManager::AfterAllConnectAndAllDescStore()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager AfterAllConnectAndAllDescStore................");
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1865,10 +1855,10 @@ bool NFCPluginManager::AfterAllConnectAndAllDescStore()
 		(*iter)->AfterAllConnectAndAllDescStore();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterObjFromDBLoaded()
+int NFCPluginManager::AfterObjFromDBLoaded()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager AfterObjFromDBLoaded................");
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1876,21 +1866,21 @@ bool NFCPluginManager::AfterObjFromDBLoaded()
 		(*iter)->AfterObjFromDBLoaded();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterServerRegisterFinish()
+int NFCPluginManager::AfterServerSyncData()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager AfterServerRegisterFinish................");
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		(*iter)->AfterServerRegisterFinish();
+		(*iter)->AfterServerSyncData();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAppInitFinish()
+int NFCPluginManager::AfterAppInitFinish()
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "NFPluginManager AfterAppInitFinish................");
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1898,10 +1888,10 @@ bool NFCPluginManager::AfterAppInitFinish()
 		(*iter)->AfterAppInitFinish();
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAllConnectFinish(NF_SERVER_TYPE serverType)
+int NFCPluginManager::AfterAllConnectFinish(NF_SERVER_TYPE serverType)
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "{} AfterAllConnectFinish................", NF_SERVER_TYPE_name(serverType));
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1909,10 +1899,10 @@ bool NFCPluginManager::AfterAllConnectFinish(NF_SERVER_TYPE serverType)
 		(*iter)->AfterAllConnectFinish(serverType);
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType)
+int NFCPluginManager::AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType)
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "{} AfterAllDescStoreLoaded................", NF_SERVER_TYPE_name(serverType));
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1920,10 +1910,10 @@ bool NFCPluginManager::AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType)
 		(*iter)->AfterAllDescStoreLoaded(serverType);
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType)
+int NFCPluginManager::AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType)
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "{} AfterAllConnectAndAllDescStore................", NF_SERVER_TYPE_name(serverType));
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1931,10 +1921,10 @@ bool NFCPluginManager::AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType)
 		(*iter)->AfterAllConnectAndAllDescStore(serverType);
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterObjFromDBLoaded(NF_SERVER_TYPE serverType)
+int NFCPluginManager::AfterObjFromDBLoaded(NF_SERVER_TYPE serverType)
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "{} AfterObjFromDBLoaded................", NF_SERVER_TYPE_name(serverType));
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1942,21 +1932,21 @@ bool NFCPluginManager::AfterObjFromDBLoaded(NF_SERVER_TYPE serverType)
 		(*iter)->AfterObjFromDBLoaded(serverType);
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterServerRegisterFinish(NF_SERVER_TYPE serverType)
+int NFCPluginManager::AfterServerSyncData(NF_SERVER_TYPE serverType)
 {
-	NFLogInfo(NF_LOG_DEFAULT, 0, "{} AfterServerRegisterFinish................", NF_SERVER_TYPE_name(serverType));
+	NFLogInfo(NF_LOG_DEFAULT, 0, "{} AfterServerSyncData................", NF_SERVER_TYPE_name(serverType));
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
 	{
-		(*iter)->AfterServerRegisterFinish(serverType);
+		(*iter)->AfterServerSyncData(serverType);
 	}
 
-	return true;
+	return 0;
 }
 
-bool NFCPluginManager::AfterAppInitFinish(NF_SERVER_TYPE serverType)
+int NFCPluginManager::AfterAppInitFinish(NF_SERVER_TYPE serverType)
 {
 	NFLogInfo(NF_LOG_DEFAULT, 0, "{} AfterAppInitFinish................", NF_SERVER_TYPE_name(serverType));
 	for (auto iter = m_nPluginInstanceList.begin(); iter != m_nPluginInstanceList.end(); ++iter)
@@ -1964,7 +1954,7 @@ bool NFCPluginManager::AfterAppInitFinish(NF_SERVER_TYPE serverType)
 		(*iter)->AfterAppInitFinish(serverType);
 	}
 
-	return true;
+	return 0;
 }
 
 

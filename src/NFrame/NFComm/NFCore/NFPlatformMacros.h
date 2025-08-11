@@ -7,78 +7,155 @@
 //
 // ------------------------------------------------------------------------
 
+/**
+ * @file NFPlatformMacros.h
+ * @brief 平台相关宏定义
+ * 
+ * 此文件定义了跨平台开发所需的各种宏，包括：
+ * - 平台检测宏（Windows/Linux）
+ * - 编译器检测宏（MSVC/GCC）
+ * - 架构检测宏（32位/64位）
+ * - 字节序检测宏（大端/小端）
+ * - 导出符号宏定义
+ * 
+ * 通过这些宏定义，可以在编译时自动适配不同的平台和编译器环境。
+ */
+
 #pragma once
 
+/**
+ * @name 平台标识宏
+ * @brief 用于标识不同的操作系统平台
+ * @{
+ */
+/** @brief Windows平台标识 */
 #define NF_PLATFORM_WIN 1
+/** @brief Linux平台标识 */
 #define NF_PLATFORM_LINUX 2
+/** @} */
 
+/**
+ * @name 编译器标识宏
+ * @brief 用于标识不同的编译器
+ * @{
+ */
+/** @brief Microsoft Visual C++编译器标识 */
 #define NF_COMPILER_MSVC 1
+/** @brief GNU C++编译器标识 */
 #define NF_COMPILER_GNUC 2
+/** @} */
 
+/**
+ * @name 字节序标识宏
+ * @brief 用于标识处理器的字节序
+ * @{
+ */
+/** @brief 小端序标识 */
 #define NF_ENDIAN_LITTLE 1
+/** @brief 大端序标识 */
 #define NF_ENDIAN_BIG 2
+/** @} */
 
+/**
+ * @name 架构标识宏
+ * @brief 用于标识处理器架构
+ * @{
+ */
+/** @brief 32位架构标识 */
 #define NF_ARCHITECTURE_32 1
+/** @brief 64位架构标识 */
 #define NF_ARCHITECTURE_64 2
+/** @} */
 
-/* Finds the compiler type and version.
-*/
+/**
+ * @name 编译器检测和版本定义
+ * @brief 自动检测编译器类型和版本
+ * @{
+ */
 #if defined( _MSC_VER )
+/** @brief 当前编译器类型（MSVC） */
 #   define NF_COMPILER NF_COMPILER_MSVC
+/** @brief 编译器版本号 */
 #   define NF_COMP_VER _MSC_VER
 #elif defined( __GNUC__ )
+/** @brief 当前编译器类型（GCC） */
 #   define NF_COMPILER NF_COMPILER_GNUC
+/** @brief 编译器版本号（GCC格式：主版本*100 + 次版本*10 + 补丁版本） */
 #   define NF_COMP_VER (((__GNUC__)*100) + \
                         (__GNUC_MINOR__*10) + \
                         __GNUC_PATCHLEVEL__)
 #else
 #   pragma error "No known compiler. Abort! Abort!"
 #endif
+/** @} */
 
-/* Finds the current platform */
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @name 平台检测
+ * @brief 自动检测当前编译的目标平台
+ * @{
+ */
 #if defined( __WIN32__ ) || defined( _WIN32 ) || defined(_WINDOWS) || defined(WIN) || defined(_WIN64) || defined( __WIN64__ )
+/** @brief 当前平台为Windows */
 #   define NF_PLATFORM NF_PLATFORM_WIN
-//////////////////////////////////////////////////////////////////////////
 #else
+/** @brief 当前平台为Linux */
 #   define NF_PLATFORM NF_PLATFORM_LINUX
 #endif
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* Find the arch type */
+/** @} */
+
+/**
+ * @name 架构类型检测
+ * @brief 根据平台自动检测处理器架构
+ * @{
+ */
 #if NF_PLATFORM == NF_PLATFORM_WIN
 
 #if defined(_WIN64) || defined(__WIN64__)
+/** @brief Windows 64位架构 */
 #   define NF_ARCH_TYPE NF_ARCHITECTURE_64
 #else
+/** @brief Windows 32位架构 */
 #   define NF_ARCH_TYPE NF_ARCHITECTURE_32
 #endif
 
 #elif NF_PLATFORM == NF_PLATFORM_LINUX
 
 #if defined(__x86_64__)
+/** @brief Linux 64位架构 */
 #   define NF_ARCH_TYPE NF_ARCHITECTURE_64
 #else
+/** @brief Linux 32位架构 */
 #   define NF_ARCH_TYPE NF_ARCHITECTURE_32
 #endif
 
 #endif
+/** @} */
 
-//----------------------------------------------------------------------------
-// Windows Settings
+/**
+ * @name Windows平台设置
+ * @brief Windows平台特定的配置和宏定义
+ * @{
+ */
 #if NF_PLATFORM == NF_PLATFORM_WIN
 
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+/** @brief 从Windows头文件中排除很少使用的内容 */
+#define WIN32_LEAN_AND_MEAN
 #endif
 
+/** @brief 禁用MSVC编译器警告4091 */
 #pragma warning(disable:4091)
 #include <Windows.h>
+/** @brief Windows平台的C导出宏 */
 #define NF_EXPORT extern "C"  __declspec(dllexport)
 
 #include <Dbghelp.h>
 
-// Win32 compilers use _DEBUG for specifying debug builds.
-// for MinGW, we set DEBUG
+/**
+ * @brief 调试模式检测
+ * Win32编译器使用_DEBUG来指定调试构建
+ * 对于MinGW，我们设置DEBUG
+ */
 #   if defined(_DEBUG) || defined(DEBUG)
 #       define NF_DEBUG_MODE 1
 #   endif
@@ -86,27 +163,37 @@
 //#define NF_STATIC_PLUGIN 1
 
 #ifndef NF_STATIC_PLUGIN
+/** @brief 启用动态插件支持 */
 #define NF_DYNAMIC_PLUGIN 1
 #endif
 
-// If we're not including this from a client build, specify that the stuff
-// should get exported. Otherwise, import it.
+/**
+ * @name 符号导入导出宏
+ * @brief Windows平台的DLL符号导入导出宏定义
+ * @{
+ */
 #   if defined( NF_STATIC_PLUGIN )
-// Linux compilers don't have symbol import/export directives.
+/** @brief 静态插件模式下的导出宏（空定义） */
 #       define _NFExport
+/** @brief 静态插件模式下的私有宏（空定义） */
 #       define _NFPrivate
 #   else
 #       if defined( NF_NONCLIENT_BUILD )
+/** @brief 非客户端构建时的导出宏 */
 #           define _NFExport __declspec( dllexport )
 #       else
 #           if defined( __MINGW32__ )
+/** @brief MinGW编译器下的导出宏 */
 #               define _NFExport
 #           else
+/** @brief 其他编译器下的导出宏 */
 #               define _NFExport __declspec( dllimport )
 #           endif
 #       endif
+/** @brief 静态插件模式下的私有宏 */
 #       define _NFPrivate
 #   endif
+/** @} */
 
 // Disable unicode support on MingW for GCC 3, poorly supported in stdlibc++
 // STLPORT fixes this though so allow if found

@@ -23,15 +23,11 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <cstring>
-#include <cstdlib>
-#include <pthread.h>
-#include <sys/ipc.h>
+#include <unistd.h>
 #include <sys/shm.h>
+#include <sys/ipc.h>
+#include <errno.h>
 #endif
 
 NFServerController::NFServerController()
@@ -410,7 +406,7 @@ bool NFServerController::StartServerProcess(NFServerConfig& config)
         args.push_back("--Log=" + config.m_logPath);
         args.push_back("--Game=" + config.m_gameName);
         args.push_back("--Start");
-        args.push_back(" -d");
+        args.push_back("-d");
 
         // Convert to char* array
         std::vector<char*> argv;
@@ -424,29 +420,31 @@ bool NFServerController::StartServerProcess(NFServerConfig& config)
         execv(executablePath.c_str(), argv.data());
 
         // If we reach here, execv failed
-        LogError("execv failed: " + std::string(strerror(errno)));
+        LogError("execv failed for start: " + std::string(strerror(errno)));
         exit(1);
     }
     else if (pid > 0)
     {
-        // Parent process
-        config.m_processId = pid;
-
-        // Wait for process to start up stably
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-
-        // Check if child process is still running
+        // Parent process - wait for restart command to complete
         int status;
-        pid_t result = waitpid(pid, &status, WNOHANG);
-        if (result == 0)
+        waitpid(pid, &status, 0);
+
+        LogInfo("Start command executed, waiting for server to start...");
+
+        // Wait for server to start and read new PID from file
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+
+        // Try to read new PID from PID file
+        int newPid = ReadPidFile(config);
+        if (newPid > 0 && IsProcessRunningAndValid(newPid, config))
         {
-            // Child process is still running
+            config.m_processId = newPid;
             return true;
         }
         else
         {
-            // Child process has exited
-            LogError("Child process exited immediately after startup, exit status: " + std::to_string(status));
+            LogError("Server start failed - no valid process found after start");
+            config.m_processId = 0;
             return false;
         }
     }
@@ -2135,16 +2133,8 @@ bool NFServerController::ClearShmServer(const std::string& serverName)
     // Stop the server first if it's running
     if (config->m_status == NFServerStatus::SERVER_STATUS_RUNNING)
     {
-        LogInfo("Stopping server before clearing shared memory: " + serverName);
-        if (!StopServer(serverName))
-        {
-            LogWarning("Failed to stop server, proceeding with shared memory cleanup anyway");
-        }
-        else
-        {
-            // Wait a moment for the server to fully stop
-            std::this_thread::sleep_for(std::chrono::seconds(2));
-        }
+        LogWarning("the server is running, can not clear shm");
+        return false;
     }
 
     // Use server-specific cleanup based on serverId
@@ -2165,10 +2155,6 @@ bool NFServerController::ClearShmServer(const std::string& serverName)
 bool NFServerController::ClearShmAllServers()
 {
     LogInfo("Clearing shared memory for all servers");
-
-    // Stop all servers first
-    LogInfo("Stopping all servers before clearing shared memory");
-    StopAllServers();
 
     // Wait for all servers to stop
     std::this_thread::sleep_for(std::chrono::seconds(3));
@@ -2208,8 +2194,6 @@ bool NFServerController::ClearShmServersByPattern(const std::string& pattern)
         return true; // Not an error, just no servers to clear
     }
 
-    // Stop matching servers first and collect their server IDs
-    LogInfo("Stopping matching servers before clearing shared memory");
     std::vector<std::string> serverIds;
     for (const auto& serverName : matchingServers)
     {
@@ -2218,14 +2202,12 @@ bool NFServerController::ClearShmServersByPattern(const std::string& pattern)
         {
             if (it->second->m_status == NFServerStatus::SERVER_STATUS_RUNNING)
             {
-                StopServer(serverName);
+                LogWarning("the server is running, cant' not clear server shm");
+                continue;
             }
             serverIds.push_back(it->second->m_serverId);
         }
     }
-
-    // Wait for servers to stop
-    std::this_thread::sleep_for(std::chrono::seconds(2));
 
     // Use server-specific cleanup for matching servers
     bool success = ClearShmByServerIds(serverIds);
@@ -2520,24 +2502,24 @@ bool NFServerController::ClearShmByServerId(const std::string& serverId)
 #else
     // Get shared memory keys for this server
     std::vector<uint32_t> keys = GetServerShmKeys(serverId);
-    
+
     if (keys.empty())
     {
         LogInfo("No shared memory keys found for server: " + serverId);
         return true; // Not an error
     }
-    
+
     LogInfo("Found " + std::to_string(keys.size()) + " shared memory keys for server: " + serverId);
-    
+
     bool allSuccess = true;
     int removedCount = 0;
-    
+
     for (uint32_t key : keys)
     {
         std::ostringstream keyHex;
         keyHex << "0x" << std::hex << key;
         LogInfo("Processing shared memory key: " + keyHex.str() + " for server: " + serverId);
-        
+
         if (RemoveSharedMemoryByKey(key))
         {
             removedCount++;
@@ -2547,18 +2529,18 @@ bool NFServerController::ClearShmByServerId(const std::string& serverId)
             allSuccess = false;
         }
     }
-    
+
     if (allSuccess)
     {
-        LogInfo("Shared memory cleanup completed successfully for server: " + serverId + 
-                " (" + std::to_string(removedCount) + " segments removed)");
+        LogInfo("Shared memory cleanup completed successfully for server: " + serverId +
+            " (" + std::to_string(removedCount) + " segments removed)");
     }
     else
     {
         LogWarning("Shared memory cleanup completed with some errors for server: " + serverId +
-                   " (" + std::to_string(removedCount) + "/" + std::to_string(keys.size()) + " segments removed)");
+            " (" + std::to_string(removedCount) + "/" + std::to_string(keys.size()) + " segments removed)");
     }
-    
+
     return allSuccess;
 #endif
 }
@@ -2605,7 +2587,7 @@ int NFServerController::GetShmIdByKey(uint32_t key)
         // Segment doesn't exist or we don't have permission
         std::ostringstream keyHex;
         keyHex << "0x" << std::hex << key;
-        
+
         if (errno == ENOENT)
         {
             LogInfo("Shared memory segment with key " + keyHex.str() + " does not exist");
@@ -2616,32 +2598,32 @@ int NFServerController::GetShmIdByKey(uint32_t key)
         }
         return -1;
     }
-    
+
     return shmid;
 }
 
 std::vector<uint32_t> NFServerController::GetServerShmKeys(const std::string& serverId)
 {
     std::vector<uint32_t> keys;
-    
+
     try
     {
         // Get BusID key
         uint32_t busIdKey = NFServerIDUtil::GetBusID(serverId);
         keys.push_back(busIdKey);
-        
+
         std::ostringstream busIdHex;
         busIdHex << "0x" << std::hex << busIdKey;
         LogInfo("Server " + serverId + " BusID key: " + busIdHex.str());
-        
+
         // Get ShmObjKey
         uint32_t shmObjKey = NFServerIDUtil::GetShmObjKey(serverId);
         keys.push_back(shmObjKey);
-        
+
         std::ostringstream shmObjHex;
         shmObjHex << "0x" << std::hex << shmObjKey;
         LogInfo("Server " + serverId + " ShmObj key: " + shmObjHex.str());
-        
+
         // Remove duplicates if BusID and ShmObjKey are the same
         if (busIdKey == shmObjKey && keys.size() > 1)
         {
@@ -2653,7 +2635,7 @@ std::vector<uint32_t> NFServerController::GetServerShmKeys(const std::string& se
     {
         LogError("Failed to get shared memory keys for server " + serverId + ": " + e.what());
     }
-    
+
     return keys;
 }
 
@@ -2668,31 +2650,31 @@ bool NFServerController::RemoveSharedMemoryByKey(uint32_t key)
         LogInfo("Shared memory segment with key " + keyHex.str() + " not found or already removed");
         return true; // Not an error if it doesn't exist
     }
-    
+
     std::ostringstream keyHex;
     keyHex << "0x" << std::hex << key;
-    
+
     // Get information about the shared memory segment
     struct shmid_ds shmInfo;
     if (shmctl(shmid, IPC_STAT, &shmInfo) == 0)
     {
-        LogInfo("Found shared memory segment: ID=" + std::to_string(shmid) + 
-                ", Key=" + keyHex.str() + 
-                ", Size=" + std::to_string(shmInfo.shm_segsz) + " bytes" +
-                ", Attachments=" + std::to_string(shmInfo.shm_nattch));
-        
+        LogInfo("Found shared memory segment: ID=" + std::to_string(shmid) +
+            ", Key=" + keyHex.str() +
+            ", Size=" + std::to_string(shmInfo.shm_segsz) + " bytes" +
+            ", Attachments=" + std::to_string(shmInfo.shm_nattch));
+
         // Check if anyone is still attached
         if (shmInfo.shm_nattch > 0)
         {
-            LogWarning("Shared memory segment " + std::to_string(shmid) + " has " + 
-                      std::to_string(shmInfo.shm_nattch) + " attachments, removing anyway");
+            LogWarning("Shared memory segment " + std::to_string(shmid) + " has " +
+                std::to_string(shmInfo.shm_nattch) + " attachments, removing anyway");
         }
     }
     else
     {
         LogWarning("Failed to get info for shared memory segment " + std::to_string(shmid) + ": " + strerror(errno));
     }
-    
+
     // Remove the shared memory segment
     if (shmctl(shmid, IPC_RMID, nullptr) == 0)
     {
@@ -2701,72 +2683,148 @@ bool NFServerController::RemoveSharedMemoryByKey(uint32_t key)
     }
     else
     {
-        LogError("Failed to remove shared memory segment " + std::to_string(shmid) + 
-                " (key " + keyHex.str() + "): " + strerror(errno));
+        LogError("Failed to remove shared memory segment " + std::to_string(shmid) +
+            " (key " + keyHex.str() + "): " + strerror(errno));
         return false;
     }
 }
 #endif
 
-void NFServerController::TestServerShmKeys(const std::string& serverId)
+std::string NFServerController::GetServerLog(const std::string& serverId)
 {
-    LogInfo("=== Testing Shared Memory Keys for Server: " + serverId + " ===");
+    // Find the server configuration
+    auto it = m_serverConfigs.find(serverId);
+    if (it == m_serverConfigs.end())
+    {
+        LogError("Server not found: " + serverId);
+        return std::string();
+    }
+
+    auto& config = it->second;
+
+    std::string logDir = NFFileUtility::GetAbsolutePathName(config->m_workingDir);
+
+    // Build log directory path
+    logDir = NFFileUtility::Join(logDir, config->m_logPath);
+    logDir = NFFileUtility::Join(logDir, config->m_gameName);
+    logDir = NFFileUtility::Join(logDir, config->m_serverName + "_" + config->m_serverId);
+    std::string logFile = NFFileUtility::Join(logDir, config->m_serverName + "_" + config->m_serverId + "_default.log");
+    return logFile;
+}
+
+// Log viewing functions implementation
+bool NFServerController::ViewServerLog(const std::string& serverId)
+{
+    LogInfo("Viewing log for server: " + serverId);
+
+    std::string logFile = GetServerLog(serverId);
+
+    return OpenLogFile(logFile);
+}
+
+bool NFServerController::ViewAllServersLog()
+{
+    LogInfo("Viewing logs for all servers");
+
+    std::string logFileStr;
+    for (const auto& pair : m_serverConfigs)
+    {
+        LogInfo("=== " + pair.first + " ===");
+        std::string logFile = GetServerLog(pair.first);
+        if (!NFFileUtility::IsFileExist(logFile))
+        {
+            LogError("Log file not found: " + logFile);
+            continue;
+        }
+
+        logFileStr += logFile + " ";
+    }
+
+    if (logFileStr.empty())
+    {
+        return false;
+    }
+
+    return OpenLogFile(logFileStr);
+}
+
+bool NFServerController::OpenLogFile(const std::string& logPath)
+{
+    LogInfo("Opening log file: " + logPath);
 
 #ifdef _WIN32
-    LogWarning("Shared memory testing on Windows is not implemented yet");
-    return;
+    return true;
 #else
-    try
+    // On Linux/Unix, use tail -f with color highlighting similar to AllServer_log.sh
+    std::string command = "tail --follow=name --retry " + logPath + " --max-unchanged-stats=3 -n 50 -q | "
+        "awk '"
+        "/INFO/ {print \"\\033[32m\" $0 \"\\033[39m\"} "
+        "/DEBUG/ {print $0} "
+        "/WARNING/ {print \"\\033[33m\" $0 \"\\033[39m\"} "
+        "/TRACE/ {print \"\\033[33m\" $0 \"\\033[39m\"} "
+        "/ERROR/ {print \"\\033[31m\" $0 \"\\033[39m\"} "
+        "/FATAL/ {print \"\\033[31m\" $0 \"\\033[39m\"} "
+        "'";
+
+    LogInfo("Executing command: " + command);
+
+    // Execute the command
+    int result = system(command.c_str());
+
+    if (result == 0)
     {
-        // Get and display the keys
-        std::vector<uint32_t> keys = GetServerShmKeys(serverId);
-        
-        if (keys.empty())
-        {
-            LogWarning("No keys generated for server: " + serverId);
-            return;
-        }
-        
-        LogInfo("Generated " + std::to_string(keys.size()) + " key(s) for server " + serverId);
-        
-        // Test each key
-        for (uint32_t key : keys)
-        {
-            std::ostringstream keyHex;
-            keyHex << "0x" << std::hex << key;
-            
-            LogInfo("Testing key: " + keyHex.str());
-            
-            int shmid = GetShmIdByKey(key);
-            if (shmid >= 0)
-            {
-                LogInfo("  -> Found existing shared memory segment: ID=" + std::to_string(shmid));
-                
-                // Get detailed information
-                struct shmid_ds shmInfo;
-                if (shmctl(shmid, IPC_STAT, &shmInfo) == 0)
-                {
-                    LogInfo("  -> Size: " + std::to_string(shmInfo.shm_segsz) + " bytes");
-                    LogInfo("  -> Attachments: " + std::to_string(shmInfo.shm_nattch));
-                    LogInfo("  -> Creator PID: " + std::to_string(shmInfo.shm_cpid));
-                    LogInfo("  -> Last attach PID: " + std::to_string(shmInfo.shm_lpid));
-                }
-                else
-                {
-                    LogWarning("  -> Failed to get segment info: " + std::string(strerror(errno)));
-                }
-            }
-            else
-            {
-                LogInfo("  -> No existing shared memory segment found (this is normal if server is not running)");
-            }
-        }
+        LogInfo("Log viewing completed");
+        return true;
     }
-    catch (const std::exception& e)
+    else
     {
-        LogError("Exception during shared memory key testing: " + std::string(e.what()));
+        LogError("Log viewing failed with exit code: " + std::to_string(result));
+        return false;
     }
-    
-    LogInfo("=== Shared Memory Key Test Complete ===");
 #endif
+}
+
+bool NFServerController::ViewServerLogByPattern(const std::string& pattern)
+{
+    LogInfo("view servers log matching pattern: " + pattern);
+
+    // Get matching servers
+    std::vector<std::string> matchingServers = GetMatchingServers(pattern);
+
+    if (matchingServers.empty())
+    {
+        LogWarning("No servers match the pattern: " + pattern);
+        return true; // Not an error, just no servers to clear
+    }
+
+    std::vector<std::string> serverIds;
+    for (const auto& serverName : matchingServers)
+    {
+        auto it = m_serverConfigs.find(serverName);
+        if (it != m_serverConfigs.end())
+        {
+            serverIds.push_back(it->second->m_serverId);
+        }
+    }
+
+    std::string logFileStr;
+    for (const auto& serverId : serverIds)
+    {
+        LogInfo("=== " + serverId + " ===");
+        std::string logFile = GetServerLog(serverId);
+        if (!NFFileUtility::IsFileExist(logFile))
+        {
+            LogError("Log file not found: " + logFile);
+            continue;
+        }
+
+        logFileStr += logFile + " ";
+    }
+
+    if (logFileStr.empty())
+    {
+        return false;
+    }
+
+    return OpenLogFile(logFileStr);
 }

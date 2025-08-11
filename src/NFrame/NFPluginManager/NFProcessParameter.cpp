@@ -105,10 +105,6 @@ void ProcessParameter(int argc, char* argv[])
 		cmdParser.Add("Kill", 0, "Kill the run server, only on linux");
 		cmdParser.Add<std::string>("Param", 0, "Temp Param, You love to use it", false, "Param");
 
-
-		// 打印命令行参数的使用说明
-		std::cout << cmdParser.Usage() << std::endl;
-
 		// 解析并检查命令行参数
 		cmdParser.ParseCheck(argc, argv);
 
@@ -217,17 +213,17 @@ void ProcessParameter(NFIPluginManager* pPluginManager, const std::vector<std::s
 		cmdParser.Add<std::string>("ID", 0, "Server ID", true, "1.1.1.1");
 		cmdParser.Add<std::string>("Config", 0, "Config Path", true, "../../Config");
 		cmdParser.Add<std::string>("Plugin", 0, "Plugin Path", true, "../../Plugin");
-		cmdParser.Add<std::string>("Log", 0, "Log Path", false, "logs");
+		cmdParser.Add<std::string>("Log", 0, "Log Path", false, "../logs");
 		cmdParser.Add<std::string>("LuaScript", 0, "Lua Script Path", false, "../../LuaScript");
 		cmdParser.Add<std::string>("Game", 0, "Game", true, "MMO");
 		cmdParser.Add("XButton", 'x', "Close the 'X' button, only on windows");
 		cmdParser.Add("Daemon", 'd', "Run it as daemon mode, only on linux");
-		cmdParser.Add("Stop", 0, "Stop the run server, only on linux");
-		cmdParser.Add("Reload", 0, "Reload the run server, only on linux");
+		cmdParser.Add("Stop", 0, "Stop the run server");
+		cmdParser.Add("Reload", 0, "Reload the run server");
 		cmdParser.Add("Quit", 0, "Quit the run server, only on linux");
-		cmdParser.Add("Restart", 0, "Close the run server, restart new proc, only on linux");
-		cmdParser.Add("Start", 0, "Start the run server, only on linux");
-		cmdParser.Add("Init", 0, "Change shm mode to init, only on linux");
+		cmdParser.Add("Restart", 0, "Close the run server, restart new proc");
+		cmdParser.Add("Start", 0, "Start the run server");
+		cmdParser.Add("Init", 0, "Change shm mode to init");
 		cmdParser.Add("Kill", 0, "Kill the run server, only on linux");
 		cmdParser.Add<std::string>("Param", 0, "Temp Param, You love to use it", false, "Param");
 

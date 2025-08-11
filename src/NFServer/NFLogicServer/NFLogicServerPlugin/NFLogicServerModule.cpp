@@ -27,10 +27,10 @@ NFCLogicServerModule::~NFCLogicServerModule()
 {
 }
 
-bool NFCLogicServerModule::Awake()
+int NFCLogicServerModule::Awake()
 {
     BindServer();
-    return true;
+    return 0;
 }
 
 int NFCLogicServerModule::OnHandleServerMessage(uint64_t unLinkId, NFDataPackage &packet)
@@ -50,20 +50,20 @@ int NFCLogicServerModule::OnHandleServerMessage(uint64_t unLinkId, NFDataPackage
     return 0;
 }
 
-bool NFCLogicServerModule::Init()
+int NFCLogicServerModule::Init()
 {
     ConnectMasterServer();
-    return true;
+    return 0;
 }
 
-bool NFCLogicServerModule::Execute()
+int NFCLogicServerModule::Tick()
 {
-    return true;
+    return 0;
 }
 
-bool NFCLogicServerModule::OnDynamicPlugin()
+int NFCLogicServerModule::OnDynamicPlugin()
 {
     FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_LOGIC_SERVER);
-    return true;
+    return 0;
 }
 

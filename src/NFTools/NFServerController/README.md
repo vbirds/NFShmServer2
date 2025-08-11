@@ -142,6 +142,37 @@ NFServerController "check 1.13.*.*"
 - **模式清理**：`clear *.*.5.*` - 清理匹配模式的服务器共享内存（基于 serverId）
 - **单个清理**：`clear 1.13.1.1` - 根据 serverId 精确清理指定服务器的共享内存
 
+## 日志查看
+
+### 功能说明
+
+`log` 命令提供服务器日志查看功能：
+- **Linux系统**：使用 `tail -f` 实时跟踪日志文件，并提供颜色高亮显示
+  - INFO 日志：绿色显示
+  - WARNING/TRACE 日志：黄色显示  
+  - ERROR/FATAL 日志：红色显示
+  - DEBUG 日志：默认颜色显示
+- **Windows系统**：自动打开记事本或默认文本编辑器查看日志文件
+
+### 查看方式
+
+- **查看所有服务器日志**：`log all` 或 `log *.*.*.*` - 优先查看合并日志文件
+- **查看单个服务器日志**：`log MasterServer` - 查看指定服务器的最新日志文件
+
+### 使用示例
+
+```bash
+# 查看所有服务器日志（合并日志）
+./NFServerController "log all"
+
+# 查看特定服务器日志
+./NFServerController "log MasterServer"
+./NFServerController "log GameServer"
+
+# Linux下会显示类似AllServer_log.sh的彩色输出
+# Windows下会用记事本打开日志文件
+```
+
 ### 工作原理
 
 1. **Key 生成**：使用 `NFServerIDUtil::GetBusID(serverId)` 和 `NFServerIDUtil::GetShmObjKey(serverId)` 获取共享内存 key

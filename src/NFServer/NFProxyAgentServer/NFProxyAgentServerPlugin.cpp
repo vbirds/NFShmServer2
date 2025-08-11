@@ -42,7 +42,7 @@ std::string NFProxyAgentServerPlugin::GetPluginName()
 void NFProxyAgentServerPlugin::Install()
 {
 	NFGlobalSystem::Instance()->AddServerType(NF_ST_PROXY_AGENT_SERVER);
-	REGISTER_MODULE(m_pObjPluginManager, NFCProxyAgentServerModule, NFCProxyAgentServerModule);
+	REGISTER_MODULE_TICK(m_pObjPluginManager, NFCProxyAgentServerModule, NFCProxyAgentServerModule);
 }
 
 void NFProxyAgentServerPlugin::Uninstall()

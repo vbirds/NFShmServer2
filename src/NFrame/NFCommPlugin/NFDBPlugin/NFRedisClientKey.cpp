@@ -1,13 +1,13 @@
 /*
             This file is part of: 
-                NoahFrame
+                NFShmXFrame
             https://github.com/ketoo/NoahGameFrame
 
-   Copyright 2009 - 2019 NoahFrame(NoahGameFrame)
+   Copyright 2009 - 2019 NFShmXFrame(NoahGameFrame)
 
    File creator: lvsheng.huang
    
-   NoahFrame is open-source software and you can redistribute it and/or modify
+   NFShmXFrame is open-source software and you can redistribute it and/or modify
    it under the terms of the License; besides, anyone who use this file/software must include this copyright announcement.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,19 @@
    limitations under the License.
 */
 
+// -------------------------------------------------------------------------
+//    @FileName         :    NFRedisClientKey.cpp
+//    @Author           :    lvsheng.huang
+//    @Date             :   2022-09-18
+//    @Module           :    NFRedisClientKey
+//    @Description      :    Redis键操作实现文件，提供Redis键管理的各种通用操作
+//
+// -------------------------------------------------------------------------
+
 #include "NFRedisDriver.h"
+
+// 实现Redis键相关操作
+// 包括：DEL, EXISTS, EXPIRE, EXPIREAT, PERSIST, TTL, TYPE等命令
 
 bool NFRedisDriver::DEL(const std::string &key)
 {

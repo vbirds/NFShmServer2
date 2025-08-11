@@ -1,9 +1,10 @@
 // -------------------------------------------------------------------------
-//    @FileName         :    NFEnetNetMessage.cpp
+//    @FileName         :    NFEnetMessage.cpp
 //    @Author           :    gaoyi
 //    @Date             :    2025-03-13
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFEnetNetMessage
+//    @Desc             :    基于ENet库的网络消息处理实现文件，提供UDP可靠传输连接管理和消息处理功能
 //
 // -------------------------------------------------------------------------
 
@@ -16,17 +17,58 @@
 #include "NFEnetServer.h"
 #include "NFEnetClient.h"
 
+/**
+ * @file NFEnetMessage.cpp
+ * @brief Enet网络消息处理实现文件
+ * 
+ * 该文件实现了基于ENet库的网络消息处理功能，包括：
+ * - 网络消息处理类的初始化和销毁
+ * - 服务器绑定和客户端连接
+ * - 网络对象的生命周期管理
+ * - 消息接收和发送处理
+ * - 连接事件回调处理
+ * - 数据包解析和路由
+ * - 定时器处理
+ * 
+ * 主要功能：
+ * - 管理多个网络连接
+ * - 处理网络事件和消息
+ * - 提供消息发送接口
+ * - 支持连接状态监控
+ * - 自动资源管理
+ * 
+ * @author gaoyi
+ * @date 2025-03-13
+ * @version 1.0
+ */
+
+/**
+ * @brief Enet网络消息处理类构造函数
+ * 
+ * 初始化网络消息处理模块，包括：
+ * - 读取服务器配置
+ * - 设置发送和接收缓冲区
+ * - 设置定时器
+ * - 初始化网络对象数组
+ * - 设置消息处理参数
+ * - 初始化空闲连接ID队列
+ * 
+ * @param p 插件管理器指针
+ * @param serverType 服务器类型
+ */
 NFEnetMessage::NFEnetMessage(NFIPluginManager* p, NF_SERVER_TYPE serverType): NFINetMessage(p, serverType)
 {
+    // 读取服务器配置
     auto pServerConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
     CHECK_EXPR_ASSERT_NOT_RET(pServerConfig, "m_serverType:{} Config Not Find", m_serverType);
 
+    // 设置发送和接收缓冲区
     m_sendBuffer.AssureSpace(MAX_SEND_BUFFER_SIZE);
     m_recvBuffer.AssureSpace(MAX_RECV_BUFFER_SIZE);
     m_sendComBuffer.AssureSpace(MAX_SEND_BUFFER_SIZE);
     m_recvCodeList.AssureSpace(MAX_RECV_BUFFER_SIZE);
 
-
+    // 设置定时器
 #ifdef NF_DEBUG_MODE
     SetTimer(ENUM_SERVER_CLIENT_TIMER_HEART, ENUM_SERVER_CLIENT_TIMER_HEART_TIME_LONGTH * 3);
     SetTimer(ENUM_SERVER_TIMER_CHECK_HEART, ENUM_SERVER_TIMER_CHECK_HEART_TIME_LONGTH);
@@ -35,30 +77,38 @@ NFEnetMessage::NFEnetMessage(NFIPluginManager* p, NF_SERVER_TYPE serverType): NF
     SetTimer(ENUM_SERVER_TIMER_CHECK_HEART, ENUM_SERVER_TIMER_CHECK_HEART_TIME_LONGTH);
 #endif
 
-    /**
-     * @brief 0作废，作为一个错误处理，从1开始
-     */
+    // 初始化网络对象数组（从1开始，0作为错误处理）
     m_netObjectArray.resize(MAX_CLIENT_INDEX);
     for (size_t i = 1; i < m_netObjectArray.size(); i++)
     {
         m_netObjectArray[i] = nullptr;
     }
 
+    // 设置消息处理参数
     m_handleMsgNumPerFrame = pServerConfig->HandleMsgNumPerFrame;
 
+    // 初始化空闲连接ID队列
     for (int i = 1; i < MAX_CLIENT_INDEX; i++)
     {
         uint64_t unlinkId = GetUnLinkId(NF_IS_ENET, m_serverType, pServerConfig->BusId, i);
         m_freeLinks.push(unlinkId);
     }
 
+    // 设置消息处理数量限制
     m_handleMsgNumPerFrame = NF_NO_FIX_FAME_HANDLE_MAX_MSG_COUNT;
 
+    // 初始化计数器
     m_curHandleMsgNum = 0;
 }
 
+/**
+ * @brief Enet网络消息处理类析构函数
+ * 
+ * 清理所有网络对象和资源
+ */
 NFEnetMessage::~NFEnetMessage()
 {
+    // 清理网络对象映射
     for (auto iter = m_netObjectMap.begin(); iter != m_netObjectMap.end(); ++iter)
     {
         auto pObject = iter->second;
@@ -68,48 +118,87 @@ NFEnetMessage::~NFEnetMessage()
         }
     }
     m_netObjectMap.clear();
+    
+    // 清理网络对象数组
     for (size_t i = 1; i < m_netObjectArray.size(); i++)
     {
         m_netObjectArray[i] = nullptr;
     }
 }
 
+/**
+ * @brief 绑定Enet服务器
+ * 
+ * 创建并初始化Enet服务器，设置回调函数
+ * 
+ * @param flag 绑定标志
+ * @return 绑定ID，0表示绑定失败
+ */
 uint64_t NFEnetMessage::BindServer(const NFMessageFlag& flag)
 {
+    // 创建Enet服务器
     auto pServer = NF_NEW NFEnetServer(m_pObjPluginManager, m_serverType, flag);
+    CHECK_NULL(0, pServer);
 
+    // 设置连接ID和回调函数
     uint64_t unLinkId = GetFreeUnLinkId();
     pServer->SetLinkId(unLinkId);
     pServer->SetConnCallback(std::bind(&NFEnetMessage::ConnectionCallback, this, std::placeholders::_1, std::placeholders::_2, unLinkId));
     pServer->SetMessageCallback(std::bind(&NFEnetMessage::MessageCallback, this, std::placeholders::_1, std::placeholders::_2, unLinkId));
-    if (pServer->Init())
+    
+    // 初始化服务器
+    int iRet = pServer->Init();
+    CHECK_ERR_RE_VAL(0, iRet, 0, "pServer Init Failed");
+    m_connectionList.push_back(pServer);
+    return unLinkId;
+}
+
+/**
+ * @brief 连接Enet服务器
+ * 
+ * 创建并初始化Enet客户端，设置回调函数
+ * 
+ * @param flag 连接标志
+ * @return 连接ID，0表示连接失败
+ */
+/**
+ * @brief 连接Enet服务器
+ * 
+ * 创建并初始化Enet客户端，设置回调函数
+ * 
+ * @param flag 连接标志
+ * @return 连接ID，0表示连接失败
+ */
+uint64_t NFEnetMessage::ConnectServer(const NFMessageFlag& flag)
+{
+    // 创建Enet客户端
+    auto pClient = NF_NEW NFEnetClient(m_pObjPluginManager, m_serverType, flag);
+
+    if (pClient)
     {
-        m_connectionList.push_back(pServer);
+        // 设置连接ID和回调函数
+        uint64_t unLinkId = GetFreeUnLinkId();
+        pClient->SetLinkId(unLinkId);
+        pClient->SetConnCallback(std::bind(&NFEnetMessage::ConnectionCallback, this, std::placeholders::_1, std::placeholders::_2, unLinkId));
+        pClient->SetMessageCallback(std::bind(&NFEnetMessage::MessageCallback, this, std::placeholders::_1, std::placeholders::_2, unLinkId));
+        int iRet = pClient->Init();
+        CHECK_ERR_RE_VAL(0, iRet, 0, "pClient Init Failed");
+        m_connectionList.push_back(pClient);
         return unLinkId;
     }
     return 0;
 }
 
-uint64_t NFEnetMessage::ConnectServer(const NFMessageFlag& flag)
-{
-    auto pClient = NF_NEW NFEnetClient(m_pObjPluginManager, m_serverType, flag);
-
-    if (pClient)
-    {
-        uint64_t unLinkId = GetFreeUnLinkId();
-        pClient->SetLinkId(unLinkId);
-        pClient->SetConnCallback(std::bind(&NFEnetMessage::ConnectionCallback, this, std::placeholders::_1, std::placeholders::_2, unLinkId));
-        pClient->SetMessageCallback(std::bind(&NFEnetMessage::MessageCallback, this, std::placeholders::_1, std::placeholders::_2, unLinkId));
-        if (pClient->Init())
-        {
-            m_connectionList.push_back(pClient);
-
-            return unLinkId;
-        }
-    }
-    return 0;
-}
-
+/**
+ * @brief 添加网络对象（自动分配连接ID）
+ * 
+ * 自动获取空闲连接ID并创建网络对象
+ * 
+ * @param pConn ENet连接对象指针
+ * @param parseType 数据包解析类型
+ * @param bSecurity 安全连接标志
+ * @return 网络对象指针，失败返回nullptr
+ */
 EnetObject* NFEnetMessage::AddNetObject(ENetPeer* pConn, uint32_t parseType, bool bSecurity)
 {
     uint64_t usLinkId = GetFreeUnLinkId();
@@ -122,6 +211,21 @@ EnetObject* NFEnetMessage::AddNetObject(ENetPeer* pConn, uint32_t parseType, boo
     return AddNetObject(usLinkId, pConn, parseType, bSecurity);
 }
 
+/**
+ * @brief 添加网络对象（指定连接ID）
+ * 
+ * 使用指定的连接ID创建网络对象，包括：
+ * - 参数验证
+ * - 从对象池分配对象
+ * - 设置连接信息
+ * - 添加到管理容器
+ * 
+ * @param unLinkId 连接ID
+ * @param pConn ENet连接对象指针
+ * @param parseType 数据包解析类型
+ * @param bSecurity 安全连接标志
+ * @return 网络对象指针，失败返回nullptr
+ */
 EnetObject* NFEnetMessage::AddNetObject(uint64_t unLinkId, ENetPeer* pConn, uint32_t parseType, bool bSecurity)
 {
     CHECK_EXPR_ASSERT(pConn != NULL, NULL, "");
@@ -156,6 +260,17 @@ EnetObject* NFEnetMessage::AddNetObject(uint64_t unLinkId, ENetPeer* pConn, uint
     return pObject;
 }
 
+/**
+ * @brief 根据连接ID获取网络对象
+ * 
+ * 通过连接ID查找对应的网络对象，包括：
+ * - 服务器类型验证
+ * - 索引计算和边界检查
+ * - 返回对应的网络对象
+ * 
+ * @param linkId 连接ID
+ * @return 网络对象指针，如果未找到则返回nullptr
+ */
 EnetObject* NFEnetMessage::GetNetObject(uint64_t linkId) const
 {
     uint32_t serverType = GetServerTypeFromUnlinkId(linkId);
@@ -459,29 +574,58 @@ void NFEnetMessage::OnHandleMsgPeer(eMsgType type, uint64_t serverLinkId, uint64
     }
 }
 
-bool NFEnetMessage::Shut()
+/**
+ * @brief 关闭网络模块
+ * 
+ * 关闭所有连接和清理资源
+ * 
+ * @return 关闭结果，0表示成功
+ */
+int NFEnetMessage::Shut()
 {
     return NFINetMessage::Shut();
 }
 
-bool NFEnetMessage::Finalize()
+/**
+ * @brief 释放网络模块资源
+ * 
+ * 清理所有占用的资源
+ * 
+ * @return 释放结果，0表示成功
+ */
+int NFEnetMessage::Finalize()
 {
     return NFINetMessage::Finalize();
 }
 
-bool NFEnetMessage::Execute()
+/**
+ * @brief 服务器每帧执行
+ * 
+ * 处理网络事件、消息队列和连接管理
+ * 
+ * @return 处理结果，0表示成功
+ */
+int NFEnetMessage::Tick()
 {
     for (size_t i = 0; i < m_connectionList.size(); ++i)
     {
         if (m_connectionList[i])
         {
-            m_connectionList[i]->Execute();
+            m_connectionList[i]->Tick();
         }
     }
     ProcessCodeQueue();
-    return true;
+    return 0;
 }
 
+/**
+ * @brief 获得连接IP地址
+ * 
+ * 根据连接ID获取对应的IP地址
+ * 
+ * @param usLinkId 连接ID
+ * @return IP地址字符串
+ */
 std::string NFEnetMessage::GetLinkIp(uint64_t usLinkId)
 {
     auto pObject = GetNetObject(usLinkId);
@@ -497,6 +641,14 @@ std::string NFEnetMessage::GetLinkIp(uint64_t usLinkId)
     return std::string("");
 }
 
+/**
+ * @brief 获取连接端口号
+ * 
+ * 根据连接ID获取对应的端口号
+ * 
+ * @param usLinkId 连接ID
+ * @return 端口号
+ */
 uint32_t NFEnetMessage::GetPort(uint64_t usLinkId)
 {
     auto pObject = GetNetObject(usLinkId);
@@ -511,6 +663,17 @@ uint32_t NFEnetMessage::GetPort(uint64_t usLinkId)
     return 0;
 }
 
+/**
+ * @brief 关闭指定连接
+ * 
+ * 关闭指定ID的连接并清理相关资源，包括：
+ * - 查找对应的网络对象
+ * - 如果是客户端连接，清理连接列表
+ * - 标记对象为需要移除
+ * - 关闭对象连接
+ * 
+ * @param usLinkId 连接ID
+ */
 void NFEnetMessage::CloseLinkId(uint64_t usLinkId)
 {
     auto pObject = GetNetObject(usLinkId);
@@ -544,6 +707,13 @@ void NFEnetMessage::CloseLinkId(uint64_t usLinkId)
     }
 }
 
+/**
+ * @brief 获取空闲连接ID
+ * 
+ * 从空闲连接ID队列中获取一个可用的连接ID
+ * 
+ * @return 空闲连接ID，如果没有可用ID则返回0
+ */
 uint64_t NFEnetMessage::GetFreeUnLinkId()
 {
     if (!m_freeLinks.empty())
@@ -557,6 +727,17 @@ uint64_t NFEnetMessage::GetFreeUnLinkId()
     return 0;
 }
 
+/**
+ * @brief 发送消息（原始数据）
+ * 
+ * 向指定连接发送原始数据消息
+ * 
+ * @param usLinkId 连接ID
+ * @param packet 数据包
+ * @param msg 消息数据
+ * @param nLen 数据长度
+ * @return true 发送成功，false 发送失败
+ */
 bool NFEnetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const char* msg, uint32_t nLen)
 {
     auto pObject = GetNetObject(usLinkId);
@@ -572,6 +753,19 @@ bool NFEnetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const char* m
     return false;
 }
 
+/**
+ * @brief 发送消息（Protobuf数据）
+ * 
+ * 向指定连接发送Protobuf格式的消息，包括：
+ * - 序列化Protobuf消息
+ * - 检查缓冲区大小
+ * - 调用底层发送接口
+ * 
+ * @param usLinkId 连接ID
+ * @param packet 数据包
+ * @param xData Protobuf消息对象
+ * @return true 发送成功，false 发送失败
+ */
 bool NFEnetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const google::protobuf::Message& xData)
 {
     auto pObject = GetNetObject(usLinkId);
@@ -596,6 +790,22 @@ bool NFEnetMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const google:
     return false;
 }
 
+/**
+ * @brief 发送消息到指定对象
+ * 
+ * 向指定的网络对象发送消息，包括：
+ * - 检查对象状态和连接状态
+ * - 设置数据包参数
+ * - 编码数据包
+ * - 创建ENet数据包
+ * - 发送到对端
+ * 
+ * @param pObject 网络对象指针
+ * @param packet 数据包
+ * @param msg 消息数据
+ * @param nLen 数据长度
+ * @return true 发送成功，false 发送失败
+ */
 bool NFEnetMessage::Send(const EnetObject* pObject, NFDataPackage& packet, const char* msg, uint32_t nLen)
 {
     if (pObject && !pObject->GetNeedRemove() && pObject->m_connPtr && pObject->IsConnect())
@@ -628,6 +838,14 @@ bool NFEnetMessage::Send(const EnetObject* pObject, NFDataPackage& packet, const
     return false;
 }
 
+/**
+ * @brief 定时器回调
+ * 
+ * 处理定时器事件，包括心跳检测等
+ * 
+ * @param timerId 定时器ID
+ * @return 处理结果，0表示成功
+ */
 int NFEnetMessage::OnTimer(uint32_t timerId)
 {
     return 0;

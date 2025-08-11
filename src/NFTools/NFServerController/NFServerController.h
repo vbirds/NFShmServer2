@@ -160,8 +160,12 @@ public:
     // Query shared memory information without removing
     std::vector<std::pair<std::string, std::string>> QuerySharedMemoryInfo(const std::string& username = "");
 
-    // Test function for shared memory key generation
-    void TestServerShmKeys(const std::string& serverId);
+    // Log viewing functions
+    bool ViewServerLogByPattern(const std::string& pattern);
+    bool ViewServerLog(const std::string& serverId);
+    bool ViewAllServersLog();
+    bool OpenLogFile(const std::string& logPath);
+    std::string GetServerLog(const std::string& serverId);
 
 private:
     // Load server configurations

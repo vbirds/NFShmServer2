@@ -7,6 +7,15 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFTimeUtil.h
+ * @brief 时间工具类
+ * 
+ * 此文件提供了时间处理的基础工具类和函数，包括时间转换、格式化、
+ * 比较操作等。特别针对游戏开发中的时间处理需求进行了优化，
+ * 提供了本地时间和UTC时间的转换支持。
+ */
+
 #pragma once
 
 #include "NFPlatform.h"
@@ -16,38 +25,88 @@
 #include "NFSocketLibFunction.h"
 
 
+/** @brief 时间值类型定义，基于标准timeval结构 */
 typedef struct timeval TTimeVal;
 
+/**
+ * @brief 时间相关常量枚举
+ * 
+ * 定义了游戏开发中常用的时间常量，包括时区偏移、
+ * 时间间隔和重置时间点等。
+ */
 enum
 {
+    /** @brief 本地时间时区偏移小时数（东八区） */
     LOCAL_TIME_CORRECTION_HOUR = 8,
-    LOCAL_TIME_CORRECTION = LOCAL_TIME_CORRECTION_HOUR * 3600, //本地时间时区偏移
-    SECONDS_ADAY = 24 * 3600, //1天的秒数
-    SECONDS_AWEEK = 24 * 3600 * 7, //1礼拜的秒数
+    /** @brief 本地时间时区偏移秒数（东八区偏移UTC+8） */
+    LOCAL_TIME_CORRECTION = LOCAL_TIME_CORRECTION_HOUR * 3600,
+    /** @brief 一天的总秒数（24小时） */
+    SECONDS_ADAY = 24 * 3600,
+    /** @brief 一周的总秒数（7天） */
+    SECONDS_AWEEK = 24 * 3600 * 7,
+    /** @brief 一小时的总秒数 */
     SECONDS_AHOUR = 3600,
+    /** @brief 半小时的总秒数 */
     SECONDS_HALF_AHOUR = 1800,
+    /** @brief 一周的总小时数 */
     HOURS_AWEEK = 24 * 7,
+    /** @brief 一个月的总秒数（按30天计算） */
     SECONDS_AMONTH = 24 * 3600 * 30,
-    GAME_RESET_HOUR_EVERYDAY = 0, //游戏里按天重置的时间，比如疲劳，日常...
+    /** @brief 游戏每日重置的小时数（凌晨0点） */
+    GAME_RESET_HOUR_EVERYDAY = 0,
+    /** @brief 游戏每日重置的分钟数 */
     GAME_RESET_MIN_EVERYDAY = 0,
+    /** @brief 游戏每日重置的秒数 */
     GAME_RESET_SEC_EVERYDAY = 0,
 };
 
+/**
+ * @brief TTimeVal小于比较操作符
+ * 
+ * 比较两个时间值的大小，考虑微秒精度。
+ * 
+ * @param lhs 左侧时间值
+ * @param rhs 右侧时间值
+ * @return bool lhs小于rhs时返回true
+ */
 inline bool operator<(const TTimeVal& lhs, const TTimeVal& rhs)
 {
     return ((lhs.tv_sec - rhs.tv_sec) * 1000000 + (lhs.tv_usec - rhs.tv_usec)) < 0;
 }
 
+/**
+ * @brief TTimeVal小于等于比较操作符
+ * 
+ * @param lhs 左侧时间值
+ * @param rhs 右侧时间值
+ * @return bool lhs小于等于rhs时返回true
+ */
 inline bool operator<=(const TTimeVal& lhs, const TTimeVal& rhs)
 {
     return !(rhs < lhs);
 }
 
+/**
+ * @brief TTimeVal相等比较操作符
+ * 
+ * @param lhs 左侧时间值
+ * @param rhs 右侧时间值
+ * @return bool lhs等于rhs时返回true
+ */
 inline bool operator==(const TTimeVal& lhs, const TTimeVal& rhs)
 {
     return (!(lhs < rhs) && !(rhs < lhs));
 }
 
+/**
+ * @brief TTimeVal减法操作符
+ * 
+ * 计算两个时间值的差值，自动处理微秒借位。
+ * 
+ * @param lhs 被减数时间值
+ * @param rhs 减数时间值
+ * @return TTimeVal 时间差值
+ */
 inline TTimeVal operator-(const TTimeVal& lhs, const TTimeVal& rhs)
 {
     TTimeVal tvGap;
@@ -63,70 +122,166 @@ inline TTimeVal operator-(const TTimeVal& lhs, const TTimeVal& rhs)
     return tvGap;
 }
 
+/**
+ * @brief 时间工具类
+ * 
+ * NFTimeUtil提供了丰富的时间处理功能，专门为游戏开发设计。
+ * 包括时间格式转换、字符串格式化、游戏时间计算等功能。
+ * 
+ * 主要功能：
+ * - 时间格式转换：time_t、tm结构、字符串之间的转换
+ * - 多语言支持：支持中文简体日期时间格式
+ * - 游戏时间：按游戏规则的时间计算和重置
+ * - 高精度时间：支持微秒级时间处理
+ * - 时区处理：本地时间和UTC时间转换
+ * 
+ * 适用场景：
+ * - 游戏服务器时间管理
+ * - 日志时间戳格式化
+ * - 定时任务调度
+ * - 游戏事件时间计算
+ * - 跨时区时间同步
+ * 
+ * 使用方法：
+ * @code
+ * // 获取当前时间字符串
+ * time_t now = time(nullptr);
+ * char* timeStr = NFTimeUtil::SecondToStr(now);
+ * 
+ * // 中文格式时间
+ * const char* cnTime = NFTimeUtil::DataTimeToStrSimCN(now);
+ * 
+ * // 时间格式转换
+ * char buffer[64];
+ * int bufSize = sizeof(buffer);
+ * NFTimeUtil::DateTimeToStr_R(&now, buffer, &bufSize);
+ * @endcode
+ * 
+ * @note 所有方法都是静态方法，不需要创建实例
+ * @note 线程安全性取决于具体方法的实现
+ * @note 部分方法使用静态缓冲区，不适合多线程并发使用
+ */
 class NFTimeUtil
 {
 public:
     /**
-     * 将时间转换为日期时间字符串
+     * @brief 将时间转换为日期时间字符串（线程安全版本）
+     * 
+     * 将time_t时间值转换为可读的日期时间字符串格式。
+     * 支持仅日期模式和完整日期时间模式。
+     * 
      * @param mytime 指向time_t类型的指针，表示需要转换的时间
      * @param s 用于存储转换后日期时间字符串的字符数组
-     * @param pio 指向整型变量的指针，用于输入输出转换过程中的信息
+     * @param pio 指向整型变量的指针，输入缓冲区大小，输出实际使用长度
      * @param bOnlyDay 可选参数，若为true，则仅转换为日期格式，默认为false
-     * @return 返回指向存储转换后日期时间字符串的字符数组的指针
+     * @return char* 返回指向存储转换后日期时间字符串的字符数组的指针
+     * 
+     * @note 线程安全，使用调用者提供的缓冲区
+     * @note 缓冲区应至少分配32字节以确保足够空间
+     * @note 当bOnlyDay为true时，仅输出年月日信息
      */
     static char* DateTimeToStr_R(time_t* mytime, char* s, int* pio, bool bOnlyDay = false);
 
     /**
-     * 将时间转换为简化中文日期时间字符串
+     * @brief 将时间转换为简化中文日期时间字符串（线程安全版本）
+     * 
+     * 将时间转换为中文简体格式的日期时间字符串，
+     * 便于中文用户界面显示。
+     * 
      * @param mytime 指向time_t类型的指针，表示需要转换的时间
      * @param s 用于存储转换后日期时间字符串的字符数组
-     * @param pio 指向整型变量的指针，用于输入输出转换过程中的信息
-     * @return 返回指向存储转换后简化中文日期时间字符串的字符数组的指针
+     * @param pio 指向整型变量的指针，输入缓冲区大小，输出实际使用长度
+     * @return const char* 返回指向存储转换后简化中文日期时间字符串的字符数组的指针
+     * 
+     * @note 输出格式类似"2023年12月25日 14:30:25"
+     * @note 线程安全，使用调用者提供的缓冲区
      */
     static const char* DateTimeToStrSimCN_R(time_t* mytime, char* s, int* pio);
 
     /**
-     * 将秒数转换为日期时间字符串
-     * @param mytime 表示需要转换的秒数
-     * @return 返回指向存储转换后日期时间字符串的字符数组的指针
+     * @brief 将秒数转换为日期时间字符串
+     * 
+     * 将time_t秒数直接转换为标准的日期时间字符串格式。
+     * 
+     * @param mytime 表示需要转换的秒数（Unix时间戳）
+     * @return char* 返回指向存储转换后日期时间字符串的字符数组的指针
+     * 
+     * @warning 此方法使用静态缓冲区，不是线程安全的
+     * @note 返回的指针指向内部静态缓冲区，下次调用会覆盖
+     * @note 输出格式为标准的"YYYY-MM-DD HH:MM:SS"格式
      */
     static char* SecondToStr(time_t mytime);
 
     /**
-     * 将时间转换为简化中文日期时间字符串
-     * @param tmytime 表示需要转换的时间
-     * @return 返回指向存储转换后简化中文日期时间字符串的字符数组的指针
+     * @brief 将时间转换为简化中文日期时间字符串
+     * 
+     * 将时间值转换为中文简体显示格式，适合用户界面展示。
+     * 
+     * @param tmytime 表示需要转换的时间（Unix时间戳）
+     * @return const char* 返回指向存储转换后简化中文日期时间字符串的字符数组的指针
+     * 
+     * @warning 此方法使用静态缓冲区，不是线程安全的
+     * @note 返回的指针指向内部静态缓冲区
+     * @note 输出格式为中文格式，包含年月日时分秒
      */
     static const char* DataTimeToStrSimCN(time_t tmytime);
 
     /**
-     * 将微秒精度的时间转换为字符串
+     * @brief 将微秒精度的时间转换为字符串
+     * 
+     * 将TTimeVal结构体表示的微秒精度时间转换为字符串格式。
+     * 
      * @param tvTime 表示需要转换的微秒精度时间
      * @param pszOut 可选参数，用于存储转换后时间字符串的字符数组，默认为NULL
      * @param iOutLen 可选参数，表示pszOut的长度，默认为128
-     * @return 返回指向存储转换后时间字符串的字符数组的指针
+     * @return char* 返回指向存储转换后时间字符串的字符数组的指针
+     * 
+     * @note 线程安全，使用调用者提供的缓冲区
+     * @note 缓冲区应至少分配128字节以确保足够空间
      */
     static char* USecondTimeToStr(const TTimeVal& tvTime, char* pszOut = NULL, int iOutLen = 128);
 
     /**
-     * 将时间转换为日期时间字符串
+     * @brief 将时间转换为日期时间字符串
+     * 
+     * 将time_t时间值转换为标准的日期时间字符串格式。
+     * 
      * @param mytime 指向time_t类型的指针，表示需要转换的时间
-     * @return 返回指向存储转换后日期时间字符串的字符数组的指针
+     * @return char* 返回指向存储转换后日期时间字符串的字符数组的指针
+     * 
+     * @warning 此方法使用静态缓冲区，不是线程安全的
+     * @note 返回的指针指向内部静态缓冲区，下次调用会覆盖
+     * @note 输出格式为标准的"YYYY-MM-DD HH:MM:SS"格式
      */
     static char* DateTimeToStr(time_t* mytime);
 
     /**
-     * 将时间转换为日期时间字符串
+     * @brief 将时间转换为日期时间字符串
+     * 
+     * 将time_t时间值转换为可读的日期时间字符串格式，
+     * 支持仅日期模式和完整日期时间模式。
+     * 
      * @param mytime 表示需要转换的时间
      * @param bOnlyDay 可选参数，若为true，则仅转换为日期格式，默认为false
-     * @return 返回指向存储转换后日期时间字符串的字符数组的指针
+     * @return char* 返回指向存储转换后日期时间字符串的字符数组的指针
+     * 
+     * @warning 此方法使用静态缓冲区，不是线程安全的
+     * @note 返回的指针指向内部静态缓冲区，下次调用会覆盖
+     * @note 当bOnlyDay为true时，仅输出年月日信息
      */
     static char* DateTimeToStr(time_t mytime, bool bOnlyDay = false);
 
     /**
-     * 将整型时间转换为日期时间字符串
+     * @brief 将整型时间转换为日期时间字符串
+     * 
+     * 将int类型的时间值转换为标准的日期时间字符串格式。
+     * 
      * @param imytime 表示需要转换的整型时间
-     * @return 返回指向存储转换后日期时间字符串的字符数组的指针
+     * @return char* 返回指向存储转换后日期时间字符串的字符数组的指针
+     * 
+     * @warning 此方法使用静态缓冲区，不是线程安全的
+     * @note 返回的指针指向内部静态缓冲区，下次调用会覆盖
+     * @note 输出格式为标准的"YYYY-MM-DD HH:MM:SS"格式
      */
     static char* DateTimeToStr(int imytime);
 
@@ -241,73 +396,109 @@ public:
     static uint64_t GetTimeOfDayMS();
 
     /**
-     * 将时间转换为字符串表示
+     * @brief 将时间转换为字符串表示
+     * 
+     * 将TTimeVal结构体表示的时间转换为可读的字符串格式。
+     * 
      * @param pstCurr 指向时间结构体的指针，用于获取时间信息
      * @param pszString 用于存储时间字符串的字符数组指针，默认为NULL
      * @param iMaxLen 字符数组的最大长度，默认为64
-     * @return 返回指向存储时间字符串的字符数组指针
+     * @return char* 返回指向存储时间字符串的字符数组指针
+     * 
+     * @note 线程安全，使用调用者提供的缓冲区
+     * @note 缓冲区应至少分配64字节以确保足够空间
      */
     static char* TimeToStr(const TTimeVal* pstCurr, char* pszString = NULL, int iMaxLen = 64);
 
     /**
-     * 获取当前时间的字符串表示
+     * @brief 获取当前时间的字符串表示
+     * 
+     * 将TTimeVal结构体表示的当前时间转换为可读的字符串格式。
+     * 
      * @param pstCurr 指向时间结构体的指针，用于获取当前时间信息
-     * @return 返回指向存储当前时间字符串的字符数组指针
+     * @return char* 返回指向存储当前时间字符串的字符数组指针
+     * 
+     * @note 线程安全，使用调用者提供的缓冲区
+     * @note 缓冲区应至少分配64字节以确保足够空间
      */
     static char* CurrTimeStr(const TTimeVal* pstCurr);
 
     /**
-     * 生成一个表示时间的短整型，其中前7位表示年份（从2000年开始），中间4位表示月份，最后5位表示日期
+     * @brief 生成一个表示时间的短整型，其中前7位表示年份（从2000年开始），中间4位表示月份，最后5位表示日期
+     * 
+     * 将time_t类型的时间值转换为短整型，用于快速存储日期信息。
+     * 
      * @param tTime 表示时间的时间_t类型变量
-     * @return 返回表示时间的短整型
+     * @return unsigned short 返回表示时间的短整型
+     * 
+     * @note 返回值包含年份（从2000年开始）、月份和日期
      */
     static unsigned short MakeShortTime(time_t tTime);
 
     /**
-     * 判断两个时间是否为游戏重置时间的同一天
+     * @brief 判断两个时间是否为游戏重置时间的同一天
+     * 
+     * 判断两个时间是否在游戏每日重置时间点（00:00:00）的同一天。
+     * 
      * @param tCur 第一个时间的时间_t类型变量
      * @param tBefore 第二个时间的时间_t类型变量
-     * @return 如果两个时间是游戏重置时间的同一天，则返回true；否则返回false
+     * @return bool 如果两个时间是游戏重置时间的同一天，则返回true；否则返回false
      */
     static bool IsSameDayByGameResetTime(time_t tCur, time_t tBefore);
 
     /**
-     * 获取给定时间的绝对周数
+     * @brief 获取给定时间的绝对周数
+     * 
+     * 计算从1970年1月1日到给定时间的总周数。
+     * 
      * @param tTime 表示时间的时间_t类型变量
-     * @return 返回给定时间的绝对周数
+     * @return uint32_t 返回给定时间的绝对周数
      */
     static uint32_t GetAbsWeek(time_t tTime);
 
     /**
-     * 获取给定时间的绝对天数
+     * @brief 获取给定时间的绝对天数
+     * 
+     * 计算从1970年1月1日到给定时间的总天数。
+     * 
      * @param tTime 表示时间的时间_t类型变量
-     * @return 返回给定时间的绝对天数
+     * @return uint32_t 返回给定时间的绝对天数
      */
     static uint32_t GetAbsDay(time_t tTime);
 
     /**
-     * 获取给定时间所在周的开始时间（以绝对时间表示）
+     * @brief 获取给定时间所在周的开始时间（以绝对时间表示）
+     * 
+     * 获取给定时间所在周的开始时间（以Unix时间戳表示），
+     * 即该周的周一00:00:00。
+     * 
      * @param tTime 表示时间的时间_t类型变量
-     * @return 返回给定时间所在周的开始时间（以绝对时间表示）
+     * @return uint32_t 返回给定时间所在周的开始时间（以绝对时间表示）
      */
     static uint32_t GetThisWeekStartTime(time_t tTime);
 
     static uint32_t GetThisWeekEndTime(time_t tTime);
 
     /**
-     * 判断两个时间是否为同一个月份（考虑时区偏移）
+     * @brief 判断两个时间是否为同一个月份（考虑时区偏移）
+     * 
+     * 判断两个时间是否在同一月份，并考虑时区偏移。
+     * 
      * @param tTimeA 第一个时间的时间_t类型变量
      * @param tTimeB 第二个时间的时间_t类型变量
      * @param iOffsetHour 时区偏移小时数
-     * @return 如果两个时间是同一个月份，则返回true；否则返回false
+     * @return bool 如果两个时间是同一个月份，则返回true；否则返回false
      */
     static bool IsSameMonthWithOffsetHour(time_t tTimeA, time_t tTimeB, int iOffsetHour);
 
     /**
-     * 判断两个时间是否为同一个月份
+     * @brief 判断两个时间是否为同一个月份
+     * 
+     * 判断两个时间是否在同一月份，不考虑时区偏移。
+     * 
      * @param tTimeA 第一个时间的时间_t类型变量
      * @param tTimeB 第二个时间的时间_t类型变量
-     * @return 如果两个时间是同一个月份，则返回true；否则返回false
+     * @return bool 如果两个时间是同一个月份，则返回true；否则返回false
      */
     static bool IsSameMonth(time_t tTimeA, time_t tTimeB);
 

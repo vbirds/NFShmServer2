@@ -4,6 +4,19 @@
 //    @Date             :    22-10-26
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFWorkServerModule
+//    @Desc             :    工作服务器模块实现文件，提供业务服务器的通用功能实现。
+//                          该文件实现了工作服务器模块类，包括服务器连接管理、
+//                          消息处理实现、服务器注册功能、网络事件处理。
+//                          主要功能包括提供业务服务器的通用功能实现、支持多种服务器类型、
+//                          支持服务器间通信、支持Lua脚本加载、提供网络事件处理。
+//                          工作服务器模块是NFShmXFrame框架的核心业务组件实现，负责：
+//                          - 业务服务器的通用功能实现
+//                          - 服务器连接管理和状态维护
+//                          - 消息处理和路由分发
+//                          - 服务器注册和发现
+//                          - Lua脚本加载和管理
+//                          - 网络事件处理和回调
+//                          - 跨服务器通信支持
 //
 // -------------------------------------------------------------------------
 
@@ -24,11 +37,26 @@
 #define SERVER_REPORT_TO_MASTER_SERVER_TIMER_ID 101
 #define SERVER_SERVER_DEAD_TIMER_ID 102
 
+/**
+ * @brief 检查是否连接主服务器
+ * 
+ * 返回当前是否连接主服务器的状态
+ * 
+ * @return 是否连接主服务器
+ */
 bool NFWorkServerModule::IsConnectMasterServer() const
 {
     return m_connectMasterServer;
 }
 
+/**
+ * @brief 设置是否连接主服务器
+ * 
+ * 设置是否连接主服务器，如果设置为连接且当前不是主服务器，
+ * 则注册连接主服务器的任务
+ * 
+ * @param connectMasterServer 是否连接主服务器
+ */
 void NFWorkServerModule::SetConnectMasterServer(bool connectMasterServer)
 {
     m_connectMasterServer = connectMasterServer;
@@ -42,11 +70,26 @@ void NFWorkServerModule::SetConnectMasterServer(bool connectMasterServer)
     }
 }
 
+/**
+ * @brief 检查是否连接路由代理服务器
+ * 
+ * 返回当前是否连接路由代理服务器的状态
+ * 
+ * @return 是否连接路由代理服务器
+ */
 bool NFWorkServerModule::IsConnectRouteAgentServer() const
 {
     return m_connectRouteAgentServer;
 }
 
+/**
+ * @brief 设置是否连接路由代理服务器
+ * 
+ * 设置是否连接路由代理服务器，如果设置为连接且当前不是路由代理服务器，
+ * 则注册连接路由代理服务器的任务
+ * 
+ * @param connectRouteAgentServer 是否连接路由代理服务器
+ */
 void NFWorkServerModule::SetConnectRouteAgentServer(bool connectRouteAgentServer)
 {
     m_connectRouteAgentServer = connectRouteAgentServer;
@@ -60,11 +103,25 @@ void NFWorkServerModule::SetConnectRouteAgentServer(bool connectRouteAgentServer
     }
 }
 
+/**
+ * @brief 检查是否连接代理代理服务器
+ * 
+ * 返回当前是否连接代理代理服务器的状态
+ * 
+ * @return 是否连接代理代理服务器
+ */
 bool NFWorkServerModule::IsConnectProxyAgentServer() const
 {
     return m_connectProxyAgentServer;
 }
 
+/**
+ * @brief 设置是否连接代理代理服务器
+ * 
+ * 设置是否连接代理代理服务器，目前此功能被注释掉
+ * 
+ * @param connectProxyAgentServer 是否连接代理代理服务器
+ */
 void NFWorkServerModule::SetConnectProxyAgentServer(bool connectProxyAgentServer)
 {
     m_connectProxyAgentServer = connectProxyAgentServer;
@@ -78,11 +135,26 @@ void NFWorkServerModule::SetConnectProxyAgentServer(bool connectProxyAgentServer
         }*/
 }
 
+/**
+ * @brief 检查是否检查存储服务器
+ * 
+ * 返回当前是否检查存储服务器的状态
+ * 
+ * @return 是否检查存储服务器
+ */
 bool NFWorkServerModule::IsCheckStoreServer() const
 {
     return m_checkStoreServer;
 }
 
+/**
+ * @brief 设置是否检查存储服务器
+ * 
+ * 设置是否检查存储服务器，如果设置为检查且当前不是存储服务器，
+ * 则注册检查存储服务器的任务
+ * 
+ * @param checkStoreServer 是否检查存储服务器
+ */
 void NFWorkServerModule::SetCheckStoreServer(bool checkStoreServer)
 {
     m_checkStoreServer = checkStoreServer;
@@ -96,11 +168,26 @@ void NFWorkServerModule::SetCheckStoreServer(bool checkStoreServer)
     }
 }
 
+/**
+ * @brief 检查是否检查世界服务器
+ * 
+ * 返回当前是否检查世界服务器的状态
+ * 
+ * @return 是否检查世界服务器
+ */
 bool NFWorkServerModule::IsCheckWorldServer() const
 {
     return m_checkWorldServer;
 }
 
+/**
+ * @brief 设置是否检查世界服务器
+ * 
+ * 设置是否检查世界服务器，如果设置为检查且当前不是世界服务器，
+ * 则注册检查世界服务器的任务
+ * 
+ * @param checkWorldServer 是否检查世界服务器
+ */
 void NFWorkServerModule::SetCheckWorldServer(bool checkWorldServer)
 {
     m_checkWorldServer = checkWorldServer;
@@ -114,11 +201,26 @@ void NFWorkServerModule::SetCheckWorldServer(bool checkWorldServer)
     }
 }
 
+/**
+ * @brief 检查是否检查中心服务器
+ * 
+ * 返回当前是否检查中心服务器的状态
+ * 
+ * @return 是否检查中心服务器
+ */
 bool NFWorkServerModule::IsCheckCenterServer() const
 {
     return m_checkCenterServer;
 }
 
+/**
+ * @brief 设置是否检查中心服务器
+ * 
+ * 设置是否检查中心服务器，如果设置为检查且当前不是中心服务器，
+ * 则注册检查中心服务器的任务
+ * 
+ * @param checkCenterServer 是否检查中心服务器
+ */
 void NFWorkServerModule::SetCheckCenterServer(bool checkCenterServer)
 {
     m_checkCenterServer = checkCenterServer;
@@ -132,16 +234,37 @@ void NFWorkServerModule::SetCheckCenterServer(bool checkCenterServer)
     }
 }
 
+/**
+ * @brief 获取服务器类型
+ * 
+ * 返回当前工作服务器模块的服务器类型
+ * 
+ * @return 服务器类型
+ */
 NF_SERVER_TYPE NFWorkServerModule::GetServerType() const
 {
     return m_serverType;
 }
 
+/**
+ * @brief 设置服务器类型
+ * 
+ * 设置工作服务器模块的服务器类型
+ * 
+ * @param serverType 服务器类型
+ */
 void NFWorkServerModule::SetServerType(NF_SERVER_TYPE serverType)
 {
     m_serverType = serverType;
 }
 
+/**
+ * @brief 绑定服务器
+ * 
+ * 绑定工作服务器到指定服务器类型，并注册消息回调、事件订阅、定时器等。
+ * 
+ * @return 绑定结果
+ */
 int NFWorkServerModule::BindServer()
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -183,11 +306,26 @@ int NFWorkServerModule::BindServer()
     return 0;
 }
 
+/**
+ * @brief 初始化加载Lua脚本
+ * 
+ * 工作服务器模块初始化时加载Lua脚本，目前为空实现。
+ * 
+ * @return 初始化结果
+ */
 int NFWorkServerModule::InitLoadLua()
 {
     return 0;
 }
 
+/**
+ * @brief 执行定时器回调
+ * 
+ * 处理定时器回调，包括向主服务器报告状态、处理服务器死亡定时器。
+ * 
+ * @param nTimerID 定时器ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnExecute(uint32_t serverType, uint32_t nEventID, uint32_t bySrcType, uint64_t nSrcID, const google::protobuf::Message* pMessage)
 {
     CHECK_EXPR(serverType == m_serverType, -1, "");
@@ -206,6 +344,14 @@ int NFWorkServerModule::OnExecute(uint32_t serverType, uint32_t nEventID, uint32
     return 0;
 }
 
+/**
+ * @brief 执行定时器回调
+ * 
+ * 处理定时器回调，包括向主服务器报告状态、处理服务器死亡定时器。
+ * 
+ * @param nTimerID 定时器ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnTimer(uint32_t nTimerID)
 {
     if (nTimerID == SERVER_REPORT_TO_MASTER_SERVER_TIMER_ID)
@@ -221,6 +367,13 @@ int NFWorkServerModule::OnTimer(uint32_t nTimerID)
     return 0;
 }
 
+/**
+ * @brief 连接主服务器
+ * 
+ * 如果当前未连接主服务器，则尝试连接主服务器。
+ * 
+ * @return 连接结果
+ */
 int NFWorkServerModule::ConnectMasterServer()
 {
     if (m_connectMasterServer == false)
@@ -247,6 +400,15 @@ int NFWorkServerModule::ConnectMasterServer()
     return 0;
 }
 
+/**
+ * @brief 处理服务器Socket事件
+ * 
+ * 处理服务器Socket的连接、断开等事件。
+ * 
+ * @param nEvent 事件类型
+ * @param unLinkId 链接ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnServerSocketEvent(eMsgType nEvent, uint64_t unLinkId)
 {
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- begin -- ");
@@ -261,12 +423,29 @@ int NFWorkServerModule::OnServerSocketEvent(eMsgType nEvent, uint64_t unLinkId)
     return 0;
 }
 
+/**
+ * @brief 处理服务器其他消息
+ * 
+ * 处理未知的或不直接处理的消息。
+ * 
+ * @param unLinkId 链接ID
+ * @param packet 消息包
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleServerOtherMessage(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFLogWarning(NF_LOG_DEFAULT, 0, "msg:{} not handled!", packet.ToString());
     return 0;
 }
 
+/**
+ * @brief 处理服务器断开连接
+ * 
+ * 当服务器断开连接时，更新服务器状态并清理链接。
+ * 
+ * @param unLinkId 链接ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleServerDisconnect(uint64_t unLinkId)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -287,6 +466,14 @@ int NFWorkServerModule::OnHandleServerDisconnect(uint64_t unLinkId)
     return 0;
 }
 
+/**
+ * @brief 连接主服务器
+ * 
+ * 尝试连接主服务器，并注册相关回调。
+ * 
+ * @param xData 服务器信息
+ * @return 连接结果
+ */
 int NFWorkServerModule::ConnectMasterServer(const NFrame::ServerInfoReport& xData)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -305,6 +492,14 @@ int NFWorkServerModule::ConnectMasterServer(const NFrame::ServerInfoReport& xDat
     return 0;
 }
 
+/**
+ * @brief 注册主服务器
+ * 
+ * 如果当前连接主服务器，则向主服务器发送注册请求。
+ * 
+ * @param serverState 服务器状态
+ * @return 注册结果
+ */
 int NFWorkServerModule::RegisterMasterServer(uint32_t serverState)
 {
     if (m_connectMasterServer == false)
@@ -340,9 +535,15 @@ int NFWorkServerModule::RegisterMasterServer(uint32_t serverState)
     return 0;
 }
 
-/*
-	处理Master服务器链接事件
-*/
+/**
+ * @brief 处理Master服务器链接事件
+ * 
+ * 当Master服务器连接或断开时，更新相关状态并注册回调。
+ * 
+ * @param nEvent 事件类型
+ * @param unLinkId 链接ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnMasterSocketEvent(eMsgType nEvent, uint64_t unLinkId)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -369,15 +570,30 @@ int NFWorkServerModule::OnMasterSocketEvent(eMsgType nEvent, uint64_t unLinkId)
     return 0;
 }
 
-/*
-	处理Master服务器未注册协议
-*/
+/**
+ * @brief 处理Master服务器未注册协议
+ * 
+ * 处理Master服务器发送的未注册协议消息。
+ * 
+ * @param unLinkId 链接ID
+ * @param packet 消息包
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleMasterOtherMessage(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFLogWarning(NF_LOG_DEFAULT, 0, "master server other message not handled:msgId:{}", packet.ToString());
     return 0;
 }
 
+/**
+ * @brief 处理从Master服务器接收到的服务器报告
+ * 
+ * 解析Master服务器发送的服务器报告，并根据服务器类型调用相应的处理函数。
+ * 
+ * @param unLinkId 链接ID
+ * @param packet 消息包
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleServerReportFromMasterServer(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFrame::ServerInfoReportList xMsg;
@@ -423,11 +639,30 @@ int NFWorkServerModule::OnHandleServerReportFromMasterServer(uint64_t unLinkId, 
     return 0;
 }
 
+/**
+ * @brief 处理其他类型的服务器报告
+ * 
+ * 处理从Master服务器接收到的未知服务器类型的报告。
+ * 
+ * @param xData 服务器信息
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleOtherServerReportFromMasterServer(const NFrame::ServerInfoReport& xData)
 {
+    NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
+    CHECK_NULL(0, pConfig);
+
+    FindModule<NFIMessageModule>()->CreateServerByServerId(m_serverType, xData.bus_id(), (NF_SERVER_TYPE)xData.server_type(), xData);
     return 0;
 }
 
+/**
+ * @brief 向Master服务器报告状态
+ * 
+ * 将当前工作服务器的状态报告给Master服务器。
+ * 
+ * @return 报告结果
+ */
 int NFWorkServerModule::ServerReportToMasterServer()
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -453,6 +688,14 @@ int NFWorkServerModule::ServerReportToMasterServer()
     return 0;
 }
 
+/**
+ * @brief 处理代理代理服务器报告
+ * 
+ * 当代理代理服务器报告其状态时，更新其链接并注册回调。
+ * 
+ * @param xData 服务器信息
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleProxyAgentServerReport(const NFrame::ServerInfoReport& xData)
 {
     if (m_connectProxyAgentServer == false)
@@ -505,6 +748,15 @@ int NFWorkServerModule::OnHandleProxyAgentServerReport(const NFrame::ServerInfoR
     return 0;
 }
 
+/**
+ * @brief 处理代理代理服务器Socket事件
+ * 
+ * 当代理代理服务器连接或断开时，更新相关状态并注册回调。
+ * 
+ * @param nEvent 事件类型
+ * @param unLinkId 链接ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnProxyAgentServerSocketEvent(eMsgType nEvent, uint64_t unLinkId)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -522,12 +774,29 @@ int NFWorkServerModule::OnProxyAgentServerSocketEvent(eMsgType nEvent, uint64_t 
     return 0;
 }
 
+/**
+ * @brief 处理代理代理服务器其他消息
+ * 
+ * 处理代理代理服务器发送的未注册协议消息。
+ * 
+ * @param unLinkId 链接ID
+ * @param packet 消息包
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleProxyAgentServerOtherMessage(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFLogWarning(NF_LOG_DEFAULT, 0, "msg:{} not handled!", packet.ToString());
     return 0;
 }
 
+/**
+ * @brief 注册代理代理服务器
+ * 
+ * 向代理代理服务器发送注册请求。
+ * 
+ * @param unLinkId 链接ID
+ * @return 注册结果
+ */
 int NFWorkServerModule::RegisterProxyAgentServer(uint64_t unLinkId)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -550,6 +819,15 @@ int NFWorkServerModule::RegisterProxyAgentServer(uint64_t unLinkId)
     return 0;
 }
 
+/**
+ * @brief 处理代理服务器注册请求
+ * 
+ * 当代理服务器发送注册请求时，更新其链接并注册回调。
+ * 
+ * @param unLinkId 链接ID
+ * @param packet 消息包
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnServerRegisterProcessFromProxyServer(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFrame::ServerInfoReportList xMsg;
@@ -571,6 +849,15 @@ int NFWorkServerModule::OnServerRegisterProcessFromProxyServer(uint64_t unLinkId
     return 0;
 }
 
+/**
+ * @brief 处理代理服务器注册
+ * 
+ * 当代理服务器注册成功时，更新其状态并完成启动任务。
+ * 
+ * @param xData 服务器信息
+ * @param unlinkId 链接ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleProxyServerRegister(const NFrame::ServerInfoReport& xData, uint64_t unlinkId)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -600,6 +887,14 @@ int NFWorkServerModule::OnHandleProxyServerRegister(const NFrame::ServerInfoRepo
     return 0;
 }
 
+/**
+ * @brief 处理存储服务器报告
+ * 
+ * 当存储服务器报告其状态时，更新其链接并注册回调。
+ * 
+ * @param xData 服务器信息
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleStoreServerReport(const NFrame::ServerInfoReport& xData)
 {
     if (m_checkStoreServer == false)
@@ -628,13 +923,19 @@ int NFWorkServerModule::OnHandleStoreServerReport(const NFrame::ServerInfoReport
         {
             FinishAppTask(m_serverType, APP_INIT_NEED_STORE_SERVER, APP_INIT_TASK_GROUP_SERVER_CONNECT);
         }
-
-        FireExecute(m_serverType, NFrame::NF_EVENT_SERVER_REPORT_EVENT, NF_ST_STORE_SERVER, pConfig->GetBusId(), xData);
     }
 
     return 0;
 }
 
+/**
+ * @brief 处理世界服务器报告
+ * 
+ * 当世界服务器报告其状态时，更新其链接并注册回调。
+ * 
+ * @param xData 服务器信息
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleWorldServerReport(const NFrame::ServerInfoReport& xData)
 {
     if (m_checkWorldServer == false)
@@ -652,10 +953,17 @@ int NFWorkServerModule::OnHandleWorldServerReport(const NFrame::ServerInfoReport
         FinishAppTask(m_serverType, APP_INIT_NEED_WORLD_SERVER, APP_INIT_TASK_GROUP_SERVER_CONNECT);
     }
 
-    FireExecute(m_serverType, NFrame::NF_EVENT_SERVER_REPORT_EVENT, NF_ST_WORLD_SERVER, pConfig->GetBusId(), xData);
     return 0;
 }
 
+/**
+ * @brief 处理中心服务器报告
+ * 
+ * 当中心服务器报告其状态时，更新其链接并注册回调。
+ * 
+ * @param xData 服务器信息
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleCenterServerReport(const NFrame::ServerInfoReport& xData)
 {
     if (m_checkCenterServer == false)
@@ -673,11 +981,17 @@ int NFWorkServerModule::OnHandleCenterServerReport(const NFrame::ServerInfoRepor
         FinishAppTask(m_serverType, APP_INIT_NEED_CENTER_SERVER, APP_INIT_TASK_GROUP_SERVER_CONNECT);
     }
 
-    FireExecute(m_serverType, NFrame::NF_EVENT_SERVER_REPORT_EVENT, NF_ST_CENTER_SERVER, pConfig->GetBusId(), xData);
-
     return 0;
 }
 
+/**
+ * @brief 处理路由代理服务器报告
+ * 
+ * 当路由代理服务器报告其状态时，更新其链接并注册回调。
+ * 
+ * @param xData 服务器信息
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleRouteAgentServerReport(const NFrame::ServerInfoReport& xData)
 {
     if (m_connectRouteAgentServer == false)
@@ -729,6 +1043,15 @@ int NFWorkServerModule::OnHandleRouteAgentServerReport(const NFrame::ServerInfoR
     return 0;
 }
 
+/**
+ * @brief 处理路由代理服务器Socket事件
+ * 
+ * 当路由代理服务器连接或断开时，更新相关状态并注册回调。
+ * 
+ * @param nEvent 事件类型
+ * @param unLinkId 链接ID
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnRouteAgentServerSocketEvent(eMsgType nEvent, uint64_t unLinkId)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -748,12 +1071,29 @@ int NFWorkServerModule::OnRouteAgentServerSocketEvent(eMsgType nEvent, uint64_t 
     return 0;
 }
 
+/**
+ * @brief 处理路由代理服务器其他消息
+ * 
+ * 处理路由代理服务器发送的未注册协议消息。
+ * 
+ * @param unLinkId 链接ID
+ * @param packet 消息包
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnHandleRouteAgentServerOtherMessage(uint64_t unLinkId, NFDataPackage& packet)
 {
     NFLogWarning(NF_LOG_DEFAULT, 0, "msg:{} not handled!", packet.ToString());
     return 0;
 }
 
+/**
+ * @brief 注册路由代理服务器
+ * 
+ * 向路由代理服务器发送注册请求。
+ * 
+ * @param unLinkId 链接ID
+ * @return 注册结果
+ */
 int NFWorkServerModule::RegisterRouteAgentServer(uint64_t unLinkId)
 {
     NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
@@ -770,6 +1110,15 @@ int NFWorkServerModule::RegisterRouteAgentServer(uint64_t unLinkId)
     return 0;
 }
 
+/**
+ * @brief 处理路由代理服务器注册响应
+ * 
+ * 当路由代理服务器注册成功时，完成启动任务。
+ * 
+ * @param unLinkId 链接ID
+ * @param packet 消息包
+ * @return 处理结果
+ */
 int NFWorkServerModule::OnRegisterRouteAgentServerRspProcess(uint64_t unLinkId, NFDataPackage& packet)
 {
     //完成服务器启动任务

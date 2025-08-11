@@ -4,6 +4,11 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFMemTimerMng.cpp
+//    @Desc             :    内存定时器管理器实现文件，提供定时器管理和调度功能。
+//                          该文件实现了NFShmXFrame框架的内存定时器管理器，负责定时器的创建和销毁、
+//                          定时器调度和执行、定时器槽位管理、各种类型的定时器支持。
+//                          主要功能包括时间轮算法实现、一次性定时器、循环定时器、
+//                          日历定时器、日/周/月循环定时器、定时器对象池管理
 //
 // -------------------------------------------------------------------------
 
@@ -411,12 +416,31 @@ int NFMemTimerMng::Delete(int objectId)
     return 0;
 }
 
+/**
+ * @brief 定时器管理器心跳处理函数
+ * 
+ * 该函数是定时器管理器的核心处理函数，负责：
+ * 1. 检查当前时间是否到达下一个时间槽
+ * 2. 处理当前时间槽中的所有超时定时器
+ * 3. 重新调度非一次性定时器
+ * 4. 清理已完成的定时器
+ * 5. 更新时间轮指针
+ * 
+ * 时间轮算法实现：
+ * - 使用固定大小的时间槽数组
+ * - 每个时间槽包含一个定时器链表
+ * - 时间轮指针按固定间隔前进
+ * - 处理超时定时器并重新调度
+ * 
+ * @param tick 当前时间戳
+ */
 void NFMemTimerMng::OnTick(int64_t tick)
 {
     int tickCount = 0;
 
     while (true)
     {
+        // 检查是否到达下一个时间槽
         if (m_beforeTick + SLOT_TICK_TIME > tick)
         {
             return;
@@ -428,6 +452,7 @@ void NFMemTimerMng::OnTick(int64_t tick)
         bool isNext = m_slots[m_currSlot].OnTick(this, m_beforeTick + SLOT_TICK_TIME, lRetsetTimer, m_timerSeq,
                                                  m_timerIdData);
 
+        // 处理超时的定时器
         list<NFMemTimer*>::iterator it;
         for (it = lRetsetTimer.begin(); it != lRetsetTimer.end(); ++it)
         {
@@ -437,6 +462,7 @@ void NFMemTimerMng::OnTick(int64_t tick)
 
             if (!(*it)->IsWaitDelete())
             {
+                // 执行定时器回调
                 if (E_TIMER_HANDLER_NULL != (*it)->OnTick(m_beforeTick + SLOT_TICK_TIME))
                 {
                     // 如果不是一次性的定时器，就又加入槽
@@ -453,6 +479,7 @@ void NFMemTimerMng::OnTick(int64_t tick)
                 }
             }
 
+            // 清理需要删除的定时器
             if (isDel && !(*it)->IsDelete())
             {
                 //				LOGSVR_TRACE("--delete timer tick : "<< tick << (*it)->GetDetailStructMsg());
@@ -464,28 +491,46 @@ void NFMemTimerMng::OnTick(int64_t tick)
         ++tickCount;
         if (isNext)
         {
+            // 更新时间轮指针
             m_beforeTick += SLOT_TICK_TIME;
             ++m_timerSeq;
             if (++m_currSlot >= static_cast<uint32_t>(SLOT_COUNT))
                 m_currSlot = 0;
         }
 
+        // 限制单次处理的时间槽数量，避免长时间阻塞
         if (tickCount >= 10000 || (tick - m_beforeTick) < 2 * SLOT_TICK_TIME)
             break;
     }
 }
 
+/**
+ * @brief 添加定时器到管理器
+ * 
+ * 该函数用于将定时器添加到定时器管理器中。
+ * 添加过程包括：
+ * 1. 验证定时器指针的有效性
+ * 2. 验证定时器的时间参数
+ * 3. 调用AttachTimer将定时器附加到时间轮
+ * 
+ * @param timer 定时器指针
+ * @param tick 当前时间戳
+ * @param isNewTimer 是否为新定时器
+ * @return 添加结果，0表示成功，-1表示失败
+ */
 int NFMemTimerMng::AddTimer(NFMemTimer* timer, int64_t tick, bool isNewTimer)
 {
     if (!timer)
         return -1;
 
+    // 验证定时器的时间参数
     if (timer->GetBeginTime() <= 0 || timer->GetNextRun() <= 0 || timer->GetNextRun() - timer->GetBeginTime() <= 0)
     {
         NFLogError(NF_LOG_DEFAULT, 0, "add timer error: {}", timer->GetDetailStructMsg());
         return -1;
     }
 
+    // 将定时器附加到时间轮
     if (!AttachTimer(timer, tick, isNewTimer))
     {
         NFLogError(NF_LOG_DEFAULT, 0, "attach timer error:{}", timer->GetDetailStructMsg());

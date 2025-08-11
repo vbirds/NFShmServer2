@@ -48,11 +48,17 @@ struct wxWorkRobotTextMore {
 /* @@protoc_insertion_point(struct:wxWorkRobotTextMore) */
 };
 
+/* Default values for struct fields */
+/* Initializer values for message structs */
+#define wxWorkRobotTextMore_init_default         {{}, {}}
+#define wxWorkRobotTextMore_init_zero            {{}, {}}
+
 /* Field tags (for use in manual encoding/decoding) */
 #define wxWorkRobotTextMore_test_map_tag         1
 #define wxWorkRobotTextMore_test_set_tag         2
 
 /* Struct field encoding specification for nanopb */
+extern const pb_field_t wxWorkRobotTextMore_fields[3];
 
 /* Maximum encoded size of messages (where known) */
 #define wxWorkRobotTextMore_size                 7040

@@ -6,141 +6,233 @@
 //    @Module           :    NFCore
 //
 // -------------------------------------------------------------------------
+
+/**
+ * @file NFMemChunk.h
+ * @brief 内存块分配器
+ * 
+ * 此文件提供了高效的固定大小内存块分配器实现。
+ * 将连续的内存分成大小相同的块，形成链表结构，
+ * 能够快速分配和释放这些固定大小的内存块。
+ */
+
 #pragma once
 
 #include <string>
 #include <vector>
 #include "NFPlatform.h"
 
-/////////////////////////////////////////////////
 /**
-* @file tc_mem_chunk.h
-* @brief 内存分配器
-*
-*/
-/////////////////////////////////////////////////
-/**
-* @brief 原始内存块, 由TC_MemChunkAllocator来负责分配和维护
-*
-* 将连续的内存分成大小相同的块,形成链表,并能够分配和释放这些大小相同的快
-*/
+ * @brief 原始内存块分配器
+ * 
+ * NFMemChunk负责管理一块连续内存，将其分割为大小相同的块。
+ * 每个块通过链表连接，支持快速的分配和释放操作。
+ * 
+ * 主要特性：
+ * - 固定块大小：所有内存块大小相同，避免内存碎片
+ * - 链表管理：使用链表连接空闲块，分配释放O(1)时间复杂度
+ * - 内存复用：释放的内存块可以重复使用
+ * - 批量分配：一次性分配大块内存，减少系统调用
+ * - 共享内存支持：可用于共享内存环境
+ * 
+ * 设计原理：
+ * - 内存布局：[头部信息][块1][块2]...[块N]
+ * - 链表结构：空闲块通过指针相互连接
+ * - 分配策略：从链表头取出一个空闲块
+ * - 释放策略：将释放的块插入链表头
+ * 
+ * 适用场景：
+ * - 对象池实现
+ * - 内存池管理
+ * - 高频分配/释放相同大小的对象
+ * - 减少内存碎片的应用
+ * - 实时系统中的确定性内存分配
+ * 
+ * 使用方法：
+ * @code
+ * // 计算所需内存大小
+ * size_t blockSize = 64;
+ * size_t blockCount = 1000;
+ * size_t memSize = NFMemChunk::calcMemSize(blockSize, blockCount);
+ * 
+ * // 分配内存并创建内存块管理器
+ * void* memory = malloc(memSize);
+ * NFMemChunk chunk;
+ * chunk.create(memory, blockSize, blockCount);
+ * 
+ * // 分配内存块
+ * void* block1 = chunk.allocate();
+ * void* block2 = chunk.allocate();
+ * 
+ * // 释放内存块
+ * chunk.deallocate(block1);
+ * chunk.deallocate(block2);
+ * 
+ * // 获取状态信息
+ * size_t allocated = chunk.getAllocatedSize();
+ * size_t available = chunk.getAvailableSize();
+ * @endcode
+ * 
+ * @note 所有块的大小必须相同
+ * @note 块大小必须足够存储指针（用于链表连接）
+ * @note 线程安全性取决于使用方式，建议加锁保护
+ */
 class _NFExport NFMemChunk
 {
 public:
 
 	/**
-	* @brief 构造函数
-	*/
+	 * @brief 默认构造函数
+	 * 
+	 * 创建一个未初始化的内存块分配器。
+	 * 需要调用create()或connect()方法进行初始化。
+	 */
 	NFMemChunk();
 
 	/**
-	* @brief 计算Chunk需要的内存块大小
-	* @param iBlockSize
-	* @param iBlockCount
-	*
-	* @return size_t
-	*/
+	 * @brief 计算所需的内存大小
+	 * 
+	 * 根据块大小和块数量计算总的内存需求。
+	 * 包含头部信息和所有数据块的大小。
+	 * 
+	 * @param iBlockSize 每个内存块的大小（字节）
+	 * @param iBlockCount 内存块的数量
+	 * @return size_t 所需的总内存大小（字节）
+	 * 
+	 * @note 返回的大小包含管理头部的开销
+	 * @note 块大小应当至少为sizeof(void*)以存储链表指针
+	 */
 	static size_t calcMemSize(size_t iBlockSize, size_t iBlockCount);
 
 	/**
-	* @brief 计算block个数
-	* @param iMemSize
-	* @param iBlockSize
-	*
-	* @return size_t
-	*/
+	 * @brief 计算可容纳的块数量
+	 * 
+	 * 根据可用内存大小和块大小计算最多能容纳多少个块。
+	 * 
+	 * @param iMemSize 可用的总内存大小（字节）
+	 * @param iBlockSize 每个内存块的大小（字节）
+	 * @return size_t 可容纳的最大块数量
+	 * 
+	 * @note 计算时会考虑头部信息的开销
+	 */
 	static size_t calcBlockCount(size_t iMemSize, size_t iBlockSize);
 
 	/**
-	* @brief tagChunkHead的大小
-	*
-	* @return size_t
-	*/
+	 * @brief 获取头部信息大小
+	 * 
+	 * 返回内存块管理器头部信息所占用的字节数。
+	 * 
+	 * @return size_t 头部信息的大小（字节）
+	 */
 	static size_t getHeadSize() { return sizeof(tagChunkHead); }
 
 	/**
-	* @brief 初始化, 要保证p指向的内存指针=getMemSize大小
-	* @param pAddr        地址, 换到应用程序的绝对地址
-	* @param iBlockSize   block大小
-	* @param iBlockCount  block个数
-	*/
+	 * @brief 初始化内存块分配器
+	 * 
+	 * 在指定的内存地址上创建新的内存块分配器。
+	 * 会清除原有数据并重新初始化所有结构。
+	 * 
+	 * @param pAddr 内存起始地址，必须足够大
+	 * @param iBlockSize 每个内存块的大小（字节）
+	 * @param iBlockCount 内存块的数量
+	 * 
+	 * @pre pAddr指向的内存大小至少为calcMemSize(iBlockSize, iBlockCount)
+	 * @pre iBlockSize >= sizeof(void*) 用于存储链表指针
+	 * @pre iBlockCount > 0
+	 * 
+	 * @note 此操作会覆盖内存中的现有数据
+	 * @note 初始化后所有块都处于可分配状态
+	 */
 	void create(void *pAddr, size_t iBlockSize, size_t iBlockCount);
 
 	/**
-	* @brief 连接上
-	* @param pAddr 地址, 换到应用程序的绝对地址
-	*/
+	 * @brief 连接到已存在的内存块分配器
+	 * 
+	 * 连接到已经初始化的内存块分配器，重用其状态。
+	 * 
+	 * @param pAddr 内存起始地址，应包含有效的头部信息
+	 * 
+	 * @pre 内存中包含有效的内存块分配器数据结构
+	 * @note 不会修改现有的分配状态
+	 * @note 适用于跨进程共享内存场景
+	 */
 	void connect(void *pAddr);
 
 	/**
-	* @brief 获取block的大小
-	* @return block的大小
-	*/
+	 * @brief 获取每个块的大小
+	 * 
+	 * @return size_t 每个内存块的大小（字节）
+	 */
 	size_t getBlockSize() const { return _pHead->_iBlockSize; }
 
 	/**
-	* @brief 获取所有的内存大小
-	*
-	* @return 所有的内存大小
-	*/
+	 * @brief 获取总内存大小
+	 * 
+	 * 返回整个内存块分配器占用的总内存大小，
+	 * 包括头部信息和所有数据块。
+	 * 
+	 * @return size_t 总内存大小（字节）
+	 */
 	size_t getMemSize() const { return _pHead->_iBlockSize * _pHead->_iBlockCount + sizeof(tagChunkHead); }
 
 	/**
-	* @brief 获取可以存放数据的总容量
-	*
-	* @return 总容量
-	*/
+	 * @brief 获取数据存储容量
+	 * 
+	 * 返回可用于存储数据的总容量，不包括头部信息。
+	 * 
+	 * @return size_t 数据存储容量（字节）
+	 */
 	size_t getCapacity() const { return _pHead->_iBlockSize * _pHead->_iBlockCount; }
 
 	/**
-	* @brief 获取block的个数
-	*
-	* @return block的个数
-	*/
+	 * @brief 获取总块数量
+	 * 
+	 * @return size_t 内存块的总数量
+	 */
 	size_t getBlockCount() const { return _pHead->_iBlockCount; }
 
 	/**
-	* @brief 是否还有可用block
-	* @return 可用返回true，否则返回false
-	*/
+	 * @brief 是否还有可用block
+	 * @return 可用返回true，否则返回false
+	 */
 	bool isBlockAvailable() const { return _pHead->_blockAvailable > 0; }
 
 	/**
-	* @brief  获取可以利用的block的个数
-	* @return 可用的block的个数
-	*/
+	 * @brief  获取可以利用的block的个数
+	 * @return 可用的block的个数
+	 */
 	size_t getBlockAvailableCount() const { return _pHead->_blockAvailable; }
 
 	/**
-	* @brief 分配一个区块
-	*
-	* @return 指向分配的区块的指针
-	*/
+	 * @brief 分配一个区块
+	 *
+	 * @return 指向分配的区块的指针
+	 */
 	void* allocate();
 
 	/**
-	* @brief 分配一个区块.
-	* 返回以1为基数的区块索引，没有可分配空间时返回 0 ,
-	* 通查索引都是比较小(即使在64位操作系统上), 4个字节以内
-	* 便于节省内存
-	*/
+	 * @brief 分配一个区块.
+	 * 返回以1为基数的区块索引，没有可分配空间时返回 0 ,
+	 * 通查索引都是比较小(即使在64位操作系统上), 4个字节以内
+	 * 便于节省内存
+	 */
 	void* allocate2(size_t &iIndex);
 
 	/**
-	* @brief 释放区块
-	* @param 指向要释放区块的指针
-	*/
+	 * @brief 释放区块
+	 * @param 指向要释放区块的指针
+	 */
 	void deallocate(void *pAddr);
 
 	/**
-	* @brief 根据索引释放区块
-	* @param 区块索引
-	*/
+	 * @brief 根据索引释放区块
+	 * @param 区块索引
+	 */
 	void deallocate2(size_t iIndex);
 
 	/**
-	* @brief 重建
-	*/
+	 * @brief 重建
+	 */
 	void rebuild();
 
 #if NF_PLATFORM == NF_PLATFORM_WIN

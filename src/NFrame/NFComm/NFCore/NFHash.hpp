@@ -7,6 +7,15 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFHash.hpp
+ * @brief 哈希函数工具集合
+ * 
+ * 此文件包含了各种高效的哈希函数实现，包括MurmurHash、FNV、CityHash等算法。
+ * 主要用于数据结构（如哈希表）、校验和计算、数据分布等场景。
+ * 程序中hash_combine函数主要摘自开源库folly，保证稳定可靠。
+ */
+
 #pragma once
 
 #include <cstdint>
@@ -23,37 +32,83 @@
 
 #include <stdlib.h>
 
+/** @brief Windows平台的32位左旋转宏 */
 #define ROTL32(x, y) _rotl(x, y)
+/** @brief Windows平台的64位左旋转宏 */
 #define ROTL64(x, y) _rotl64(x, y)
 
+/** @brief Windows平台的大端常量宏 */
 #define BIG_CONSTANT(x) (x)
 
 	// Other compilers
 
 #else // defined(_MSC_VER)
 
+/** @brief 强制内联宏定义 */
 #define FORCE_INLINE inline __attribute__((always_inline))
 
+/**
+ * @brief 32位左旋转函数
+ * @param x 要旋转的32位数值
+ * @param r 旋转的位数
+ * @return uint32_t 旋转后的结果
+ */
 inline uint32_t rotl32(uint32_t x, int8_t r) { return (x << r) | (x >> (32 - r)); }
 
+/**
+ * @brief 64位左旋转函数
+ * @param x 要旋转的64位数值
+ * @param r 旋转的位数
+ * @return uint64_t 旋转后的结果
+ */
 inline uint64_t rotl64(uint64_t x, int8_t r) { return (x << r) | (x >> (64 - r)); }
 
+/** @brief 其他平台的32位左旋转宏 */
 #define ROTL32(x, y) rotl32(x, y)
+/** @brief 其他平台的64位左旋转宏 */
 #define ROTL64(x, y) rotl64(x, y)
 
+/** @brief 其他平台的大端常量宏 */
 #define BIG_CONSTANT(x) (x##LLU)
 
 #endif // !defined(_MSC_VER)
 
 /**
- *@brief  程序中hash_combine函数主要摘自开源库folly，保证稳定可靠
+ * @brief 哈希函数工具命名空间
+ * 
+ * 包含了各种高效的哈希算法实现，主要功能包括：
+ * - MurmurHash系列算法（MurmurHash2、MurmurHash3）
+ * - FNV哈希算法
+ * - CityHash算法
+ * - 各种组合哈希函数
+ * - 字符串、数值类型的哈希计算
+ * 
+ * 这些函数设计用于高性能场景，提供良好的分布特性和较低的碰撞率。
  */
 namespace NFHash
 {
+	/**
+	 * @brief 从32位数组中获取指定位置的块
+	 * @param p 32位数组指针
+	 * @param i 块索引
+	 * @return uint32_t 指定位置的32位值
+	 */
 	inline uint32_t getblock32(const uint32_t *p, int i) { return p[i]; }
 
+	/**
+	 * @brief 从64位数组中获取指定位置的块
+	 * @param p 64位数组指针
+	 * @param i 块索引
+	 * @return uint64_t 指定位置的64位值
+	 */
 	inline uint64_t getblock64(const uint64_t *p, int i) { return p[i]; }
 
+	/**
+	 * @brief 32位最终混合函数
+	 * 对32位哈希值进行最终的混合处理，增强雪崩效应
+	 * @param h 输入的32位哈希值
+	 * @return uint32_t 混合后的32位哈希值
+	 */
 	inline uint32_t fmix32(uint32_t h) {
 		h ^= h >> 16;
 		h *= 0x85ebca6b;
@@ -64,8 +119,12 @@ namespace NFHash
 		return h;
 	}
 
-	//----------
-
+	/**
+	 * @brief 64位最终混合函数
+	 * 对64位哈希值进行最终的混合处理，增强雪崩效应
+	 * @param k 输入的64位哈希值
+	 * @return uint64_t 混合后的64位哈希值
+	 */
 	inline uint64_t fmix64(uint64_t k) {
 		k ^= k >> 33;
 		k *= BIG_CONSTANT(0xff51afd7ed558ccd);
@@ -79,6 +138,17 @@ namespace NFHash
 	// ===================== MurmurHash2 =====================
 	//-----------------------------------------------------------------------------
 
+	/**
+	 * @brief MurmurHash2算法实现
+	 * 
+	 * MurmurHash2是一个非加密哈希函数，适用于一般的哈希表查找。
+	 * 具有良好的分布特性和较高的性能。
+	 * 
+	 * @param key 要哈希的数据指针
+	 * @param len 数据长度
+	 * @param seed 哈希种子值
+	 * @return uint32_t 32位哈希值
+	 */
 	inline uint32_t murmur_hash2(const void *key, int len, uint32_t seed) {
 		// 'm' and 'r' are mixing constants generated offline.
 		// They're not really 'magic', they just happen to work well.
@@ -140,6 +210,16 @@ namespace NFHash
 
 	// 64-bit hash for 64-bit platforms
 
+	/**
+	 * @brief MurmurHash2 64位版本算法实现（适用于64位平台）
+	 * 
+	 * 注意：需要注意对齐和字节序问题，如果跨平台使用需要小心。
+	 * 
+	 * @param key 要哈希的数据指针
+	 * @param len 数据长度
+	 * @param seed 哈希种子值
+	 * @return uint64_t 64位哈希值
+	 */
 	inline uint64_t murmur_hash2_64a(const void *key, int len, uint64_t seed) {
 		const uint64_t m = BIG_CONSTANT(0xc6a4a7935bd1e995);
 		const int      r = 47;

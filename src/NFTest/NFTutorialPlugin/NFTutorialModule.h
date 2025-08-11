@@ -18,24 +18,24 @@ public:
     
     virtual ~NFTutorialModule();
 
-    virtual bool Awake();
+    virtual int Awake();
 
-    virtual bool Init();
+    virtual int Init();
 
-    virtual bool Execute();
+    virtual int Tick();
 
-    virtual bool Shut();
+    virtual int Shut();
 
-    virtual bool Finalize();
+    virtual int Finalize();
 
     /*
-     * ¶¯Ì¬ÈÈ¸üdll/soÖ®ºó£¬Ä£¿éµ÷ÓÃµÄº¯Êý
+     * ï¿½ï¿½Ì¬ï¿½È¸ï¿½dll/soÖ®ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ÃµÄºï¿½ï¿½ï¿½
      * */
-    virtual bool OnDynamicPlugin();
+    virtual int OnDynamicPlugin();
 
 	/**
 	 * \brief 
-	 * \param nTimerID ¶¨Ê±Æ÷º¯Êý
+	 * \param nTimerID ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * \return 
 	 */
 	virtual int OnTimer(uint32_t nTimerID) override;

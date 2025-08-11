@@ -31,46 +31,46 @@ NFCTaskModule::~NFCTaskModule()
     }
 }
 
-bool NFCTaskModule::Awake()
+int NFCTaskModule::Awake()
 {
-	return true;
+	return 0;
 }
 
-bool NFCTaskModule::Init()
+int NFCTaskModule::Init()
 {
-	return true;
+	return 0;
 }
 
-bool NFCTaskModule::BeforeShut()
+int NFCTaskModule::BeforeShut()
 {
-	return true;
+	return 0;
 }
 
-bool NFCTaskModule::Shut()
+int NFCTaskModule::Shut()
 {
     for(int i = 0; i < (int)m_taskGroups.size(); i++)
     {
         m_taskGroups[i]->Shut();
     }
-	return true;
+	return 0;
 }
 
-bool NFCTaskModule::Finalize()
+int NFCTaskModule::Finalize()
 {
     for(int i = 0; i < (int)m_taskGroups.size(); i++)
     {
         m_taskGroups[i]->Finalize();
     }
-    return true;
+    return 0;
 }
 
-bool NFCTaskModule::Execute()
+int NFCTaskModule::Tick()
 {
     for(int i = 0; i < (int)m_taskGroups.size(); i++)
     {
-        m_taskGroups[i]->Execute();
+        m_taskGroups[i]->Tick();
     }
-    return true;
+    return 0;
 }
 
 /**

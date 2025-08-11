@@ -7,6 +7,14 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFBase64.h
+ * @brief Base64编解码工具类
+ * 
+ * 此文件提供了标准的Base64编码和解码功能，支持字符串和二进制数据的转换。
+ * Base64是一种用64个字符来表示任意二进制数据的方法，常用于网络传输和数据存储。
+ */
+
 #pragma once
 
 #include <string>
@@ -22,8 +30,23 @@
 /////////////////////////////////////////////////
 
 /**
-* @brief 该类提供标准的Base64的编码解码
-*/
+ * @brief Base64编解码工具类
+ * 
+ * 该类提供标准的Base64编码和解码功能，支持以下特性：
+ * - 字符串和二进制数据的编解码
+ * - 可选的换行符支持（符合RFC标准）
+ * - 高效的内存操作
+ * 
+ * Base64编码将3个8位字节转换为4个6位字符，使用64个可打印字符表示。
+ * 当原始数据长度不是3的倍数时，会使用'='字符进行填充。
+ * 
+ * 使用方法：
+ * @code
+ * std::string data = "Hello World";
+ * std::string encoded = NFBase64::Encode(data);
+ * std::string decoded = NFBase64::Decode(encoded);
+ * @endcode
+ */
 class _NFExport NFBase64
 {
 public:
@@ -70,11 +93,14 @@ public:
 protected:
 
 	/**
-	* base64编码表
+	* @brief base64编码表
+	* 包含64个用于编码的字符：A-Z, a-z, 0-9, +, /
 	*/
 	static const char EnBase64Tab[];
+	
 	/**
-	* base64解码表
+	* @brief base64解码表
+	* 用于快速解码Base64字符的查找表
 	*/
 	static const char DeBase64Tab[];
 };

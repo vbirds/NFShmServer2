@@ -27,92 +27,616 @@
     <option name="reloaded" value="true" />
   </component>
   <component name="CMakeRunConfigurationManager">
-    <generated>
-      <config projectName="ShmNFrame" targetName="NFMMOCommonPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMMOProxyPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFLuaScriptPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishWorldPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFGameCommon" />
-      <config projectName="ShmNFrame" targetName="NF3rdCommon" />
-      <config projectName="ShmNFrame" targetName="NFLogicServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFSnsServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFRouteAgentServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFGameServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFProxyServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFServerController" />
-      <config projectName="ShmNFrame" targetName="NFShmPlugin" />
-      <config projectName="ShmNFrame" targetName="NFNetPlugin" />
-      <config projectName="ShmNFrame" targetName="NFNavMeshServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFGameFishPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMMOLogicPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFCore" />
-      <config projectName="ShmNFrame" targetName="NFCenterServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishLoginPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMMOCenterPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFTutorialPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishSnsPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFrameStatic" />
-      <config projectName="ShmNFrame" targetName="protobuf-nanopb" />
-      <config projectName="ShmNFrame" targetName="NFExcelProcess" />
-      <config projectName="ShmNFrame" targetName="NFProxyAgentServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishLogicPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishCommonPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMasterServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFKernelMessage" />
-      <config projectName="ShmNFrame" targetName="NFStoreServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFDescStorePlugin" />
-      <config projectName="ShmNFrame" targetName="NFTestPlugin" />
-      <config projectName="ShmNFrame" targetName="Sqlite3" />
-      <config projectName="ShmNFrame" targetName="NFFishProxyPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFLoginServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFServerCommonPlugin" />
-      <config projectName="ShmNFrame" targetName="mysqlpp" />
-      <config projectName="ShmNFrame" targetName="NFOnlineServerPlugin" />
-      <config projectName="ShmNFrame" targetName="evpp" />
-      <config projectName="ShmNFrame" targetName="NFMMOLogicCommon" />
-      <config projectName="ShmNFrame" targetName="NFServerMessage" />
-      <config projectName="ShmNFrame" targetName="NFKernelPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishLogicMessage" />
-      <config projectName="ShmNFrame" targetName="NFMMOWorldPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFPluginLoader" />
-      <config projectName="ShmNFrame" targetName="RecastNavigation" />
-      <config projectName="ShmNFrame" targetName="NFMatchServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFTest" />
-      <config projectName="ShmNFrame" targetName="NFFishLogicCommon" />
-      <config projectName="ShmNFrame" targetName="NFWorldServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFProxyClientPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMMODescStore" />
-      <config projectName="ShmNFrame" targetName="NFPluginModule" />
-      <config projectName="ShmNFrame" targetName="NFObjCommon" />
-      <config projectName="ShmNFrame" targetName="NFRouteServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFServerStatic" />
-      <config projectName="ShmNFrame" targetName="NFMMOLogicMessage" />
-      <config projectName="ShmNFrame" targetName="NFCityServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishGamePlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFDBPlugin" />
-      <config projectName="ShmNFrame" targetName="NFServerCommon" />
-      <config projectName="ShmNFrame" targetName="NFCheckServerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFLuaBind" />
-      <config projectName="ShmNFrame" targetName="NFFishLoader" />
-      <config projectName="ShmNFrame" targetName="NFFishRobotPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMMOSnsPlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMemPlugin" />
-      <config projectName="ShmNFrame" targetName="NFMMOGamePlayerPlugin" />
-      <config projectName="ShmNFrame" targetName="NFFishDescStore" />
-      <config projectName="ShmNFrame" targetName="NFPluginManager" />
-      <config projectName="ShmNFrame" targetName="NFWebServerPlugin" />
-    </generated>
+    <generated />
   </component>
   <component name="CMakeSettings">
     <configurations>
       <configuration PROFILE_NAME="Debug-Visual Studio" ENABLED="true" GENERATION_DIR="Build" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-G Ninja -DCMAKE_BUILD_TYPE=Debug" />
-      <configuration PROFILE_NAME="build_tools" ENABLED="true" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-G Ninja DCMAKE_BUILD_TYPE=Debug  -DCMAKE_BUILD_TOOLS:BOOL=True" />
+      <configuration PROFILE_NAME="build_tools" ENABLED="false" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-G Ninja DCMAKE_BUILD_TYPE=Debug  -DCMAKE_BUILD_TOOLS:BOOL=True" />
       <configuration PROFILE_NAME="Release-Visual Studio" ENABLED="false" CONFIG_NAME="Release" GENERATION_OPTIONS="-G Ninja -DCMAKE_BUILD_TYPE=Release" />
       <configuration PROFILE_NAME="tools_release" ENABLED="false" CONFIG_NAME="Release" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-G Ninja DCMAKE_BUILD_TYPE=Release  -DCMAKE_BUILD_TOOLS:BOOL=True" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b61e93bd-e129-4bf0-a7b8-fbf8bb158f0a" name="更改" comment="feat(game): 添加福利系统相关配置和消息结构&#10;&#10;- 在 excel.json 中添加 Welfare 表单配置- 在 list.txt 中添加 Welfare相关的表格引用&#10;- 在 proto_common.proto 中添加与时间相关的消息结构：&#10;  - UnixTimeOne: 表示一个时间点  - UnixTimeRange: 表示一个时间段&#10;  - ServerOpenUnixTimeRange: 表示服务器开启时间段&#10;- 更新 nanopb相关代码，添加新消息类型的处理逻辑" />
+    <list default="true" id="b61e93bd-e129-4bf0-a7b8-fbf8bb158f0a" name="更改" comment="--story=1000044 --user=gaoyi 架构完善提交单 https://www.tapd.cn/31003621/s/1000024">
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFFishLoader/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFFishLoader/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFFishRobot/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFFishRobot/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFLogicComm/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFLogicComm/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFLogicComm/DescStore/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFLogicComm/DescStore/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFLogicComm/NFLogicCommon/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFLogicComm/NFLogicCommon/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFLogicComm/NFLogicCommonPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFLogicComm/NFLogicCommonPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFLogicComm/NFServerLogicMessage/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFLogicComm/NFServerLogicMessage/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFGameServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFGameServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFGameServer/NFGameFishPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFGameServer/NFGameFishPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFGameServer/NFGameServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFGameServer/NFGameServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLogicServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLogicServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLoginServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLoginServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLoginServer/NFLoginServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFLoginServer/NFLoginServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFProxyServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFProxyServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFProxyServer/NFProxyPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFProxyServer/NFProxyPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFSnsServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFSnsServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFSnsServer/NFSnsServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFSnsServer/NFSnsServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFWorldServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFWorldServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFWorldServer/NFWorldServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/Fish/NFServerLogic/NFWorldServer/NFWorldServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFLogicComm/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFLogicComm/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFLogicComm/DescStore/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFLogicComm/DescStore/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFLogicComm/NFLogicCommon/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFLogicComm/NFLogicCommon/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFLogicComm/NFLogicCommonPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFLogicComm/NFLogicCommonPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFLogicComm/NFServerLogicMessage/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFLogicComm/NFServerLogicMessage/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFCenterServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFCenterServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFCenterServer/NFCenterServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFCenterServer/NFCenterServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFGameServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFGameServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFGameServer/NFGameServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFGameServer/NFGameServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFLogicServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFLogicServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFProxyServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFProxyServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFProxyServer/NFProxyPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFProxyServer/NFProxyPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFSnsServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFSnsServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFSnsServer/NFSnsServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFSnsServer/NFSnsServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFWorldServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFWorldServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFWorldServer/NFWorldServerPlayerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/MMO/NFServerLogic/NFWorldServer/NFWorldServerPlayerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/NFGameCommon/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/NFGameCommon/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/NFGameCommon/NFGameCommon/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/NFGameCommon/NFGameCommon/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/NFGameCommon/RecastNavigation/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/game/NFGameCommon/RecastNavigation/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCenterServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCenterServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCenterServer/NFCenterServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCenterServer/NFCenterServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCenterServer/NFCenterServerPlugin/NFCenterServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCenterServer/NFCenterServerPlugin/NFCenterServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCenterServer/NFCenterServerPlugin/NFCenterServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCenterServer/NFCenterServerPlugin/NFCenterServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCheckServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCheckServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCheckServer/NFCheckServerPlugin/NFCheckServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCityServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCityServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFCityServer/NFCityServerPlugin/NFCityServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFGameServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFGameServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFGameServer/NFGameServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFGameServer/NFGameServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFGameServer/NFGameServerPlugin/NFGameServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFGameServer/NFGameServerPlugin/NFGameServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFGameServer/NFGameServerPlugin/NFGameServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFGameServer/NFGameServerPlugin/NFGameServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLogicServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLogicServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLogicServer/NFLogicServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLogicServer/NFLogicServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLogicServer/NFLogicServerPlugin/NFLogicServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLogicServer/NFLogicServerPlugin/NFLogicServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLogicServer/NFLogicServerPlugin/NFLogicServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLogicServer/NFLogicServerPlugin/NFLogicServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLoginServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLoginServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMasterServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMasterServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMatchServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMatchServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFNavMeshServer/NFNavMeshServerPlugin/NFNavMeshServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/NFOnlineServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/NFOnlineServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/NFOnlineServerPlugin/NFOnlineServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/NFOnlineServerPlugin/NFOnlineServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/NFOnlineServerPlugin/NFOnlineServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFOnlineServer/NFOnlineServerPlugin/NFOnlineServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/NFProxyAgentServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/NFProxyAgentServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/NFProxyAgentServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/NFProxyAgentServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/NFProxyAgentServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyAgentServer/NFProxyAgentServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyClientPlugin/NFProxyClientPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFProxyServer/NFProxyServerPlugin/NFProxyServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFCRouteServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFCRouteServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFCRouteServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFCRouteServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFRouteServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFRouteServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFRouteServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFRouteServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFCDescStoreModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFCDescStoreModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFCDescStoreModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFCDescStoreModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFDescStoreDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFDescStoreDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFDescStorePlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFDescStorePlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFDescStorePlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFDescStorePlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResFileDb.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResFileDb.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResFileDb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResFileDb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResMysqlDb.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResMysqlDb.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResMysqlDb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFDescStorePlugin/NFResMysqlDb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFBaseDBObj.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFBaseDBObj.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFBaseDBObj.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFBaseDBObj.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBGlobalTemplate.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBGlobalTemplate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjMgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjMgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjMgr.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjMgr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjTrans.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjTrans.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjTrans.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFDBObjTrans.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFICenterServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFICenterServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFICheckServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFICheckServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFICityServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFICityServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStore.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStore.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStore.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStore.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreEx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreEx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreEx.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreEx.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreTemplate.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescStoreTemplate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescTemplate.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescTemplate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIGameServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIGameServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFILogicServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFILogicServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFILoginServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFILoginServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIMasterServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIMasterServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIMatchServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIMatchServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFINavMeshServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFINavMeshServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIOnlineServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIOnlineServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIProxyClientModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIProxyClientModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIProxyPlayerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIProxyPlayerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIProxyServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIProxyServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIRouteAgentServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIRouteAgentServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIRouteServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIRouteServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIServerMessageModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIServerMessageModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFISnsServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFISnsServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIStoreServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIStoreServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIWebServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIWebServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIWorldServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIWorldServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFServerBindRpcService.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFServerBindRpcService.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFServerCommonDefine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFServerCommonDefine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFServerCommonDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFServerCommonDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFTransMsgServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFTransMsgServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFTransMsgServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFTransMsgServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFWorkServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFWorkServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFWorkServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFWorkServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerCommonPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerCommonPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerCommonPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerCommonPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerMessageModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerMessageModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerMessageModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommonPlugin/NFServerMessageModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerMessage/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerMessage/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerComm/makefiles/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerComm/makefiles/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFServerStatic/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFServerStatic/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFSnsServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFSnsServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFSnsServer/NFSnsServerPlugin/NFSnsServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFStoreServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFStoreServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFCStoreServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFCStoreServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFCStoreServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFCStoreServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFStoreServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFStoreServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFStoreServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFStoreServer/NFStoreServerPlugin/NFStoreServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWebServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWebServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFCWebServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFCWebServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFCWebServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFCWebServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFWebServerPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFWebServerPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFWebServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWebServer/NFWebServerPlugin/NFWebServerPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWorldServer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWorldServer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWorldServer/NFWorldServerPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWorldServer/NFWorldServerPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWorldServer/NFWorldServerPlugin/NFWorldServerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWorldServer/NFWorldServerPlugin/NFWorldServerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFWorldServer/NFWorldServerPlugin/NFWorldServerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFWorldServer/NFWorldServerPlugin/NFWorldServerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFXPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFXPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/NFCLuaScriptModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/NFCLuaScriptModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/NFCLuaScriptModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/NFCLuaScriptModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/NFLuaScriptPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaScriptPlugin/NFLuaScriptPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaThreadScriptPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFServer/NFXPlugin/NFLuaThreadScriptPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/NFTestPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/NFTestPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/NFTestPlugin/NFCTestModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/NFTestPlugin/NFCTestModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/NFTestPlugin/NFCTestModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/NFTestPlugin/NFCTestModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/NFTutorialPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/NFTutorialPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/NFTutorialPlugin/NFTutorialModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/NFTutorialPlugin/NFTutorialModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/NFTutorialPlugin/NFTutorialModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/NFTutorialPlugin/NFTutorialModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTest/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTest/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTools/NFExcelProcess/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTools/NFExcelProcess/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTools/NFServerController/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTools/NFServerController/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTools/NFServerController/NFServerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTools/NFServerController/NFServerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTools/NFServerController/NFServerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTools/NFServerController/NFServerController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTools/NFServerController/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTools/NFServerController/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFTools/NFServerController/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFTools/NFServerController/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/Message/FrameMsg.proto" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/Message/FrameMsg.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFAtomic.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFAtomic.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFBase64.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFBase64.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFBitValue.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFBitValue.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFBuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFBuffer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCPlusPlus14.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCPlusPlus14.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCRC16.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCRC16.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCRC32.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCRC32.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCmdLine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCmdLine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommMap.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommMap.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommMapEx.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommMapEx.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommonApi.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCommonApi.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConcurrentQueue.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConcurrentQueue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConsistentHash.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConsistentHash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConsistentHash.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConsistentHash.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConsistentHashNew.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFConsistentHashNew.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFCpu.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDataStream.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDataStream.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDateTime.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDateTime.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDeclareProperty.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDeclareProperty.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDoubleList.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFDoubleList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFException.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFException.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFFileCSV.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFFileCSV.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFFileUtility.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFFileUtility.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFFileUtility.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFFileUtility.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFHash.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFHash.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFHmacSha.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFHmacSha.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFIniReader.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFIniReader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFJson.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFJson.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFLexicalCast.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFLexicalCast.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFLikely.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFLikely.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFList.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFList.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFLock.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFLock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMD5.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMD5.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMacros.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMacros.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMapList.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMapList.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMemChunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMemChunk.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMemPolicy.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMemPolicy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMemVector.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMemVector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMetaUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMetaUtils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMutex.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFMutex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFNetBuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFNetBuffer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFNonCopyable.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFNonCopyable.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFPebbleSha1.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFPebbleSha1.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFPlatform.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFPlatform.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFPlatformMacros.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFPlatformMacros.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFQueue.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFQueue.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFRandom.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFRandom.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSHA1.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSHA1.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSHA2.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSHA2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFServerIDUtil.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFServerIDUtil.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFServerStatus.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFServerStatus.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFServerTime.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFServerTime.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSha256.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSha256.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFShm.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFShm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSimpleBuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSimpleBuffer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSingleton.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSingleton.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSlice.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSlice.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSnprintf.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSnprintf.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSocketLibFunction.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSocketLibFunction.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSpinLock.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFSpinLock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFStat.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFStat.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFStringUtility.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFStringUtility.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFThreadUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFThreadUtils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFTime.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFTime.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFTimeUtil.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFTimeUtil.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFTimeUtility.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFCore/NFTimeUtility.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameBehavior.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameBehavior.nanopb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameComm.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameComm.nanopb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameEnum.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameEnum.nanopb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameEnum.pb.cc" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameEnum.pb.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameEnum.pb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameEnum.pb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.nanopb.cc" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.nanopb.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.nanopb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.pb.cc" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.pb.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.pb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameMsg.pb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameSqlData.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameSqlData.nanopb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTest.nanopb.cc" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTest.nanopb.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTest.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTest.nanopb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTestComm.nanopb.cc" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTestComm.nanopb.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTestComm.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTestComm.nanopb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFDynamicHead.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFDynamicHead.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFISaveDb.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFISaveDb.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFISaveDb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFISaveDb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFNodeList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFNodeList.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFNodeList.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFNodeList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjPtr.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjPtr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObject.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjectIterator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjectIterator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjectTemplate.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFObjectTemplate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFRawObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFRawObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFRawObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFRawObject.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFResDb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFResDb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFSeqOP.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFSeqOP.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFShmMgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFShmMgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFShmMgr.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFShmMgr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTickByRunIndexOP.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTickByRunIndexOP.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTickByRunIndexOP.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTickByRunIndexOP.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTransBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTransBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTransBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTransBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTypeDefines.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFTypeDefines.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFBaseObj.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFBaseObj.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFBufferPool.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFBufferPool.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFChunkPool.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFChunkPool.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCircularBuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCircularBuffer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCodeQueue.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCodeQueue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCommLogic.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCommLogic.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFConfigDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFConfigDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCoroutineTask.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCoroutineTask.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFError.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFError.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFEventDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFEventDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFEventObj.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFEventObj.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFEventTemplate.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFEventTemplate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFGlobalSystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFGlobalSystem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIAsyDBModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIAsyDBModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIAsyModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIAsyModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIAsyNosqlModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIAsyNosqlModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIConfigModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIConfigModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFICoroutineModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFICoroutineModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIDynamicModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIDynamicModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIEventModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIEventModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIHttpHandle.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIHttpHandle.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIKernelModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIKernelModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFILogModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFILogModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFILuaLoader.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFILuaLoader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFILuaScriptModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFILuaScriptModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIMessageModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIMessageModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIMonitorModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIMonitorModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIMysqlModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIMysqlModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFINetModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFINetModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIPluginManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIPluginManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIRpcService.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIRpcService.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITaskComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITaskComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITaskModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITaskModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITimerEventModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITimerEventModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITimerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFITimerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFLogMgr.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFLogMgr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFMemTracker.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFMemTracker.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFNaming.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFNaming.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFObjectPool.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFObjectPool.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFPair.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFPair.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFProfiler.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFProfiler.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFProtobufCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFProtobufCommon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFRawAllocator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFRawAllocator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFRoute.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFRoute.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFServerDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFServerDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStackTrace.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStackTrace.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStackTrace.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStackTrace.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStoreProtoCommon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStoreProtoCommon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStoreProtoCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFStoreProtoCommon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFSystemInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFSystemInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFSystemInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFSystemInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFTimerObj.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFTimerObj.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFComm/makefiles/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFComm/makefiles/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyDBModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyDBModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyDBModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyDBModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyMysqlModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyMysqlModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyMysqlModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyMysqlModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyNosqlModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyNosqlModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyNosqlModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCAsyNosqlModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriver.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriver.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriverManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriverManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriverManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlDriverManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCMysqlModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlDriverManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlDriverManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlDriverManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlDriverManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFCNosqlModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFDBPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFDBPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFDBPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFDBPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientHash.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientHash.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientKey.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientKey.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientList.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientPubSub.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientPubSub.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSocket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSocket.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSocket.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSocket.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSort.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientSort.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientString.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisClientString.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisCommand.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisCommand.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisCommand.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisCommand.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisDriver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisDriver.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisDriver.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisDriver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisProtocolDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFDBPlugin/NFRedisProtocolDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFBusppNaming.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFBusppNaming.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCConfigModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCConfigModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCConfigModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCConfigModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCCoroutineModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCCoroutineModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCCoroutineModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCCoroutineModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCEventModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCEventModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCEventModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCEventModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCKernelModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCKernelModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCKernelModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCKernelModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCLogModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCLogModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCLogModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCLogModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCMessageModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCMessageModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCMessageModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCMessageModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCNamingModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCNamingModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCNamingModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCNamingModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTaskModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTaskModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTaskModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTaskModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTimerModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTimerModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTimerModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCTimerModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFConsoleModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFConsoleModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFConsoleModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFConsoleModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCoroutine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCoroutine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCoroutineSchedule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCoroutineSchedule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCoroutineSchedule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFCoroutineSchedule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFKernelPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFKernelPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFKernelPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFKernelPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFMonitorModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFMonitorModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFMonitorModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFMonitorModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFRouter.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFRouter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFSchedule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFSchedule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFSchedule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFSchedule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFServerLinkData.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFServerLinkData.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTaskActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTaskActor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTaskGroup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTaskGroup.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTaskGroup.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTaskGroup.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTimerAxis.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/NFTimerAxis.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/my_date_and_hour_file_sink.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFKernelPlugin/my_date_and_hour_file_sink.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemMngModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemMngModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemMngModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemMngModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemOtherModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemOtherModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemOtherModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFCMemOtherModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventKey.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventKey.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventKey.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventKey.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventMgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventMgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventMgr.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemEventMgr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemGlobalId.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemGlobalId.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemGlobalId.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemGlobalId.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemIdx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemIdx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemIdx.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemIdx.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemObjSeg.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemObjSeg.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemObjSeg.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemObjSeg.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemSubscribeInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemSubscribeInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemSubscribeInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemSubscribeInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimerMng.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimerMng.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimerMng.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTimerMng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTransMng.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTransMng.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTransMng.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFMemPlugin/NFMemTransMng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFBusDefine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFBusDefine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFBusHash.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFBusHash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFBusShm.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFBusShm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusClient.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusClient.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusClient.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusMessage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusMessage.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusMessage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusMessage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusServer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFCBusServer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFIBusConnection.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFIBusConnection.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFIBusConnection.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Bus/NFIBusConnection.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Encrypt.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Encrypt.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Encrypt.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Encrypt.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/EnetObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/EnetObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/EnetObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/EnetObject.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetClient.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetClient.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetClient.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetMessage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetMessage.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetMessage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetMessage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetServer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFEnetServer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFIEnetConnection.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Enet/NFIEnetConnection.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpClient.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpClient.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpClient.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpServer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFCHttpServer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppClient.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppClient.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppClient.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppNetMessage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppNetMessage.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppNetMessage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppNetMessage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppServer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFEvppServer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFIConnection.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NFIConnection.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NetEvppObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NetEvppObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NetEvppObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/Evpp/NetEvppObject.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/InternalPacketParse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/InternalPacketParse.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/InternalPacketParse.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/InternalPacketParse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFCNetModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFCNetModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFCNetModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFCNetModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFEmailSender.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFEmailSender.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFEmailSender.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFEmailSender.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFINetMessage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFINetMessage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFNetPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFNetPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFNetPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFNetPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFPacketParseMgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFPacketParseMgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFPacketParseMgr.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFNetPlugin/NFPacketParseMgr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCSharedMem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCSharedMem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCSharedMem.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCSharedMem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmMngModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmMngModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmMngModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmMngModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmOtherModule.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmOtherModule.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmOtherModule.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFCShmOtherModule.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventKey.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventKey.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventKey.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventKey.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventMgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventMgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventMgr.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmEventMgr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmGlobalId.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmGlobalId.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmGlobalId.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmGlobalId.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmIdx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmIdx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmIdx.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmIdx.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmObjSeg.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmObjSeg.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmObjSeg.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmObjSeg.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmPlugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmPlugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmSubscribeInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmSubscribeInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmSubscribeInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmSubscribeInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimerMng.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimerMng.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimerMng.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTimerMng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTransMng.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTransMng.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTransMng.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFShmPlugin/NFShmTransMng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFZDBPlugin/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFCommPlugin/NFZDBPlugin/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFPluginLoader/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFPluginLoader/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFPluginManager/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFPluginManager/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFCAppInited.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFCAppInited.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFCPluginManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFCPluginManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFCPluginManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFCPluginManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFPluginLoader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFPluginLoader.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFProcessParameter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFPluginManager/NFProcessParameter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NFrame/NFrameStatic/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/NFrame/NFrameStatic/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/LuaBind/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/LuaBind/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/common/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/common/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/evpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/evpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/g3dlite/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/g3dlite/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/json/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/json/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/mysql/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/mysql/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/mysqlpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/mysqlpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/nanopb/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/nanopb/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/nanopb/win_cmake/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/nanopb/win_cmake/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/pkg/googletest-release-1.8.1/googletest-release-1.8.1/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/pkg/googletest-release-1.8.1/googletest-release-1.8.1/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/pkg/googletest-release-1.8.1/googletest-release-1.8.1/googletest/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/pkg/googletest-release-1.8.1/googletest-release-1.8.1/googletest/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/sqlite3/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/sqlite3/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/sqlite3/sqlite3.c" beforeDir="false" afterPath="$PROJECT_DIR$/thirdparty/sqlite3/sqlite3.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/NFExcelProcess" beforeDir="false" afterPath="$PROJECT_DIR$/tools/NFExcelProcess" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/NFServerController" beforeDir="false" afterPath="$PROJECT_DIR$/tools/NFServerController" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/NFServerControllerQt.exe" beforeDir="false" afterPath="$PROJECT_DIR$/tools/NFServerControllerQt.exe" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,263 +663,6 @@
     <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/ucrt/corecrt.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/ucrt/ctype.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/ucrt/stdio.h" root0="FORCE_HIGHLIGHTING" />
@@ -413,75 +680,14 @@
     <setting file="file://C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.40.33807/include/xstring" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.40.33807/include/xtr1common" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.40.33807/include/xutility" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/CustomPacketParse.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/NFItemCreator.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/NFItemDefine.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/NFItemDefine.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/NFLogicShmTypeDefines.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/NFMMODynamicModule.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/NFMMODynamicModule.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommon/NFOperatingStatistcsMgr.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFLogicCommonPlugin/NFMMOCommonPlugin.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFServerLogicMessage/proto_common.nanopb.cc" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFServerLogicMessage/proto_common.nanopb.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFServerLogicMessage/proto_common.pb.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFServerLogicMessage/proto_cs.nanopb.cc" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFServerLogicMessage/proto_cs.nanopb.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/NFServerLogicMessage/proto_cs.pb.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/DescStore/AchievementDesc.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/DescStore/EquipDesc.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/DescStore/TransferDesc.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/DescStoreEx/CityDescEx.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/DescStoreEx/EquipdataDescEx.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/DescStoreEx/QuestDescEx.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/DescStoreEx/TransferDescEx.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/ResMetaS/E_Achievement.nanopb.cc" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFLogicComm/ResStore/ResMetaS/E_Itemdata.nanopb.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Account/NFPlayerAccount.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/BagPageOp/NFBagPageOp.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/BagPageOp/NFBagPageOpDefine.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/BagPageOp/NFBagPageOpMgr.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/BagPageOp/interface/NFBagPageInterface.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/NFBagPage.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/NFPackagePart.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/NFPackagePart.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/NFPackageUtil.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/NFServicePackage.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Bag/NFServicePackage.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Base/NFPacketSendUtil.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Base/NFServerUtil.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Event/NFEventDisp.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Event/NFEventDisp.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Hero/NFHeroPart.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Hero/NFHeroUtil.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Hero/NFServiceHero.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Level/NFServiceLevel.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Login/NFLoginModule.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Map/NFMapPart.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Map/NFMapPart.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/NFLogicDynamicModule.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/NFMMOLogicPlayerPlugin.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/NoviceGuide/NFNoviceGuidePart.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Part/NFPart.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Part/NFPart.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Player/NFPlayer.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Player/NFPlayer.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Player/NFPlayerBase.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Player/NFPlayerBase.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Player/NFPlayerUtil.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Quest/NFQuestPart.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Quest/NFQuestUtil.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Quest/NFServiceQuest.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/ServerLevel/NFServerLevelMgr.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Session/NFSession.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Skill/NFServiceSkill.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Skill/NFSkillPart.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Skill/NFSkillPart.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Skill/NFSkillUtil.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFLogicServer/NFLogicServerPlayerPlugin/Trade/NFTradePart.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/LieRen/NFServerLogic/NFOnlineServer/NFOnlineServerPlayerPlugin/OnlineAcc/NFOnlineAcc.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/game/NFGameCommon/Behavior/src/common/workspace.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFServer/NFLoginServer/NFLoginServerPlugin/NFLoginServerModule.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFServer/NFMasterServer/NFMasterServerPlugin/NFMasterServerModule.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFServer/NFMatchServer/NFMatchServerPlugin/NFMatchServerModule.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFServer/NFRouteAgentServer/NFRouteAgentServerPlugin/NFRouteAgentServerModule.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFServer/NFRouteServer/NFRouteServerPlugin/NFCRouteServerModule.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFIDescTemplate.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFILoginServerModule.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFServer/NFServerComm/NFServerCommon/NFWorkServerModule.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFTest/main/dllmain.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFTest/main/main.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFTools/NFExcelProcess/ExcelJsonParse.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -497,6 +703,7 @@
     <setting file="file://$PROJECT_DIR$/src/NFrame/NFComm/NFKernelMessage/FrameTestComm.nanopb.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFrame/NFComm/NFObjCommon/NFNodeList.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFCheck.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFIMessageModule.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFLogMgr.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFProtobufCommon.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/NFrame/NFComm/NFPluginModule/NFProtobufCommon.h" root0="FORCE_HIGHLIGHTING" />
@@ -573,7 +780,7 @@
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/nfshm-xframe/Install/Bin/Debug&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/NFShmServer&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -671,76 +878,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NFFishCommonPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishCommonPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishDescStore" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishDescStore" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishGamePlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishGamePlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishLoader" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishLoader" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="ShmNFrame" RUN_TARGET_NAME="NFFishLoader">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishLogicCommon" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishLogicCommon" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishLogicMessage" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishLogicMessage" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishLogicPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishLogicPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishLoginPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishLoginPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishProxyPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishProxyPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishRobotPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishRobotPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishSnsPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishSnsPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFFishWorldPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFFishWorldPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFGameCommon" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFGameCommon" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFGameFishPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFGameFishPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="NFGameServerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFGameServerPlugin" CONFIG_NAME="Debug-Visual Studio">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -777,56 +914,6 @@
       </method>
     </configuration>
     <configuration name="NFLuaScriptPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFLuaScriptPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOCenterPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOCenterPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOCommonPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOCommonPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMODescStore" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMODescStore" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOGamePlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOGamePlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOLogicCommon" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOLogicCommon" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOLogicMessage" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOLogicMessage" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOLogicPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOLogicPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOProxyPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOProxyPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOSnsPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOSnsPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NFMMOWorldPlayerPlugin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="NFMMOWorldPlayerPlugin" CONFIG_NAME="Debug-Visual Studio">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -976,11 +1063,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RecastNavigation" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="RecastNavigation" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Sqlite3" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ShmNFrame" TARGET_NAME="Sqlite3" CONFIG_NAME="Debug-Visual Studio">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -1007,49 +1089,7 @@
       <item itemvalue="CMake 应用程序.LieRenStatic2" />
       <item itemvalue="CMake 应用程序.NFExcelProcess" />
       <item itemvalue="CMake 应用程序.NFServerController" />
-      <item itemvalue="CMake 应用程序.NF3rdCommon" />
-      <item itemvalue="CMake 应用程序.evpp" />
-      <item itemvalue="CMake 应用程序.NFLuaBind" />
-      <item itemvalue="CMake 应用程序.mysqlpp" />
-      <item itemvalue="CMake 应用程序.protobuf-nanopb" />
-      <item itemvalue="CMake 应用程序.Sqlite3" />
       <item itemvalue="CMake 应用程序.NFLieRenStatic" />
-      <item itemvalue="CMake 应用程序.NFFishLoader" />
-      <item itemvalue="CMake 应用程序.NFFishRobotPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishDescStore" />
-      <item itemvalue="CMake 应用程序.NFFishLogicCommon" />
-      <item itemvalue="CMake 应用程序.NFFishCommonPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishLogicMessage" />
-      <item itemvalue="CMake 应用程序.NFGameFishPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishGamePlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishLogicPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishLoginPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishProxyPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishSnsPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFFishWorldPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFMMODescStore" />
-      <item itemvalue="CMake 应用程序.NFMMOLogicCommon" />
-      <item itemvalue="CMake 应用程序.NFMMOCommonPlugin" />
-      <item itemvalue="CMake 应用程序.NFMMOLogicMessage" />
-      <item itemvalue="CMake 应用程序.NFMMOCenterPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFMMOGamePlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFMMOLogicPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFMMOProxyPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFMMOSnsPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFMMOWorldPlayerPlugin" />
-      <item itemvalue="CMake 应用程序.NFGameCommon" />
-      <item itemvalue="CMake 应用程序.RecastNavigation" />
-      <item itemvalue="CMake 应用程序.NFCore" />
-      <item itemvalue="CMake 应用程序.NFKernelMessage" />
-      <item itemvalue="CMake 应用程序.NFObjCommon" />
-      <item itemvalue="CMake 应用程序.NFPluginModule" />
-      <item itemvalue="CMake 应用程序.NFDBPlugin" />
-      <item itemvalue="CMake 应用程序.NFKernelPlugin" />
-      <item itemvalue="CMake 应用程序.NFMemPlugin" />
-      <item itemvalue="CMake 应用程序.NFNetPlugin" />
-      <item itemvalue="CMake 应用程序.NFShmPlugin" />
-      <item itemvalue="CMake 应用程序.NFPluginLoader" />
-      <item itemvalue="CMake 应用程序.NFPluginManager" />
       <item itemvalue="CMake 应用程序.NFLogicServerPlugin" />
       <item itemvalue="CMake 应用程序.NFLoginServerPlugin" />
       <item itemvalue="CMake 应用程序.NFMasterServerPlugin" />
@@ -1074,6 +1114,23 @@
       <item itemvalue="CMake 应用程序.NFTest" />
       <item itemvalue="CMake 应用程序.NFTestPlugin" />
       <item itemvalue="CMake 应用程序.NFTutorialPlugin" />
+      <item itemvalue="CMake 应用程序.NF3rdCommon" />
+      <item itemvalue="CMake 应用程序.evpp" />
+      <item itemvalue="CMake 应用程序.NFLuaBind" />
+      <item itemvalue="CMake 应用程序.mysqlpp" />
+      <item itemvalue="CMake 应用程序.protobuf-nanopb" />
+      <item itemvalue="CMake 应用程序.Sqlite3" />
+      <item itemvalue="CMake 应用程序.NFCore" />
+      <item itemvalue="CMake 应用程序.NFKernelMessage" />
+      <item itemvalue="CMake 应用程序.NFObjCommon" />
+      <item itemvalue="CMake 应用程序.NFPluginModule" />
+      <item itemvalue="CMake 应用程序.NFDBPlugin" />
+      <item itemvalue="CMake 应用程序.NFKernelPlugin" />
+      <item itemvalue="CMake 应用程序.NFMemPlugin" />
+      <item itemvalue="CMake 应用程序.NFNetPlugin" />
+      <item itemvalue="CMake 应用程序.NFShmPlugin" />
+      <item itemvalue="CMake 应用程序.NFPluginLoader" />
+      <item itemvalue="CMake 应用程序.NFPluginManager" />
       <item itemvalue="CMake 应用程序.NFrameStatic" />
       <item itemvalue="CMake 应用程序.NFCenterServerPlugin" />
       <item itemvalue="CMake 应用程序.NFCheckServerPlugin" />
@@ -1326,14 +1383,8 @@
       <workItem from="1749432508023" duration="37992000" />
       <workItem from="1750036954134" duration="14144000" />
       <workItem from="1750759783033" duration="261000" />
-    </task>
-    <task id="LOCAL-00453" summary="refactor(NFShmHashTable): 重构共享内存哈希表实现&#10;&#10;- 重新设计类结构，增加详细注释说明&#10;-优化迭代器实现，增强与STL兼容性&#10;- 扩展接口功能，支持更多STL标准操作&#10;- 改进内存管理，提高共享内存利用率&#10;-修复部分函数逻辑，提升代码稳定性">
-      <option name="closed" value="true" />
-      <created>1748510784369</created>
-      <option name="number" value="00453" />
-      <option name="presentableId" value="LOCAL-00453" />
-      <option name="project" value="LOCAL" />
-      <updated>1748510784369</updated>
+      <workItem from="1753407421749" duration="660000" />
+      <workItem from="1754877679146" duration="149000" />
     </task>
     <task id="LOCAL-00454" summary="refactor: 移除 CMakeLists.txt 中的冗余代码- 删除了用于检测操作系统发行版的回退方法&#10;- 该方法在现代系统中已不再需要，因为 CMake 内置方法通常能够正确检测&#10;- 移除这部分代码可以简化构建过程并提高可维护性">
       <option name="closed" value="true" />
@@ -1719,7 +1770,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750237761500</updated>
     </task>
-    <option name="localTasksCounter" value="502" />
+    <task id="LOCAL-00502" summary="--story=1000044 --user=gaoyi 架构完善提交单 https://www.tapd.cn/31003621/s/1000024">
+      <option name="closed" value="true" />
+      <created>1753408038672</created>
+      <option name="number" value="00502" />
+      <option name="presentableId" value="LOCAL-00502" />
+      <option name="project" value="LOCAL" />
+      <updated>1753408038672</updated>
+    </task>
+    <option name="localTasksCounter" value="503" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -1795,7 +1854,6 @@
     <option name="CODE_SMELLS_PROFILE" value="Project Default" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT_PROFILE" value="Project Default" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="refactor(game): 移除系统信息相关代码&#10;&#10;- 删除了 NFSystemInfo 类及相关代码&#10;-移除了与 sigar 相关的系统信息收集功能&#10;- 更新了相关模块的头文件和实现" />
     <MESSAGE value="refactor(NFIMonitorModule): 移除未使用的 NFSystemInfo 包含&#10;&#10;- 删除了 NFIMonitorModule.h 中未使用的 NFSystemInfo 包含&#10;-此更改不会影响功能，仅清理冗余代码" />
     <MESSAGE value="refactor(game): 移除未使用的系统信息相关代码&#10;&#10;- 删除了 NFIMonitorModule 中与系统信息相关的函数声明&#10;- 移除了 CMakeLists.txt 中的 sigar 相关路径&#10;- 删除了 NFIPluginManager 中对 NFSystemInfo 的引用" />
     <MESSAGE value="feat(game): 添加系统信息监控功能&#10;&#10;- 在 NFIMonitorModule 中添加了获取系统信息、用户数量、CPU 使用率和内存使用量的方法&#10;- 在 NFIPluginManager 中包含了 NFSystemInfo 头文件&#10;- 更新了 CMakeLists.txt，添加了对 sigar 库的引用" />
@@ -1820,7 +1878,8 @@
     <MESSAGE value="feat(tools): 添加 NFServerController 服务器控制器&#10;&#10;- 新增 NFServerController 项目，用于管理和控制服务器&#10;- 实现了服务器启动、停止、重启、状态查看等功能&#10;- 支持命令行参数和交互式监控模式&#10;-兼容 Windows 和 Linux 平台" />
     <MESSAGE value="feat(server-controller): 重构服务器管理逻辑&#10;&#10;- 优化服务器配置加载和管理&#10;- 改进服务器启动、停止和重启逻辑&#10;- 增加服务器状态监控功能&#10;- 完善命令行接口和交互模式&#10;- 跨平台支持Windows和Linux" />
     <MESSAGE value="feat(game): 添加福利系统相关配置和消息结构&#10;&#10;- 在 excel.json 中添加 Welfare 表单配置- 在 list.txt 中添加 Welfare相关的表格引用&#10;- 在 proto_common.proto 中添加与时间相关的消息结构：&#10;  - UnixTimeOne: 表示一个时间点  - UnixTimeRange: 表示一个时间段&#10;  - ServerOpenUnixTimeRange: 表示服务器开启时间段&#10;- 更新 nanopb相关代码，添加新消息类型的处理逻辑" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(game): 添加福利系统相关配置和消息结构&#10;&#10;- 在 excel.json 中添加 Welfare 表单配置- 在 list.txt 中添加 Welfare相关的表格引用&#10;- 在 proto_common.proto 中添加与时间相关的消息结构：&#10;  - UnixTimeOne: 表示一个时间点  - UnixTimeRange: 表示一个时间段&#10;  - ServerOpenUnixTimeRange: 表示服务器开启时间段&#10;- 更新 nanopb相关代码，添加新消息类型的处理逻辑" />
+    <MESSAGE value="--story=1000044 --user=gaoyi 架构完善提交单 https://www.tapd.cn/31003621/s/1000024" />
+    <option name="LAST_COMMIT_MESSAGE" value="--story=1000044 --user=gaoyi 架构完善提交单 https://www.tapd.cn/31003621/s/1000024" />
     <option name="NON_MODAL_COMMIT_POSTPONE_SLOW_CHECKS" value="false" />
   </component>
   <component name="XDebuggerManager">

@@ -36,157 +36,151 @@ public:
 	 * @brief 开始初始化插件管理器。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool Begin() override;
+	int Begin() override;
 
 	/**
 	 * @brief 结束插件管理器的运行。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool End() override;
+	int End() override;
 
 	/**
 	 * @brief 所有插件加载完成后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterLoadAllPlugin() override;
+	int AfterLoadAllPlugin() override;
 
 	/**
 	 * @brief 共享内存初始化后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterInitShmMem() override;
+	int LoadConfig() override;
 
 	/**
 	 * @brief 插件管理器的 Awake 阶段。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool Awake() override;
+	int Awake() override;
 
 	/**
 	 * @brief 插件管理器的 Init 阶段。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool Init() override;
-
-	/**
-	 * @brief 检查配置文件是否正确。
-	 * @return 成功返回 true，失败返回 false。
-	 */
-	bool CheckConfig() override;
+	int Init() override;
 
 	/**
 	 * @brief 准备执行阶段。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool ReadyExecute() override;
+	int ReadyTick() override;
 
 	/**
 	 * @brief 执行阶段。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool Execute() override;
+	int Tick() override;
 
 	/**
 	 * @brief 关闭前的准备工作。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool BeforeShut() override;
+	int BeforeShut() override;
 
 	/**
 	 * @brief 关闭插件管理器。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool Shut() override;
+	int Shut() override;
 
 	/**
 	 * @brief 最终化阶段。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool Finalize() override;
+	int Finalize() override;
 
 	/**
 	 * @brief 重新加载配置文件时调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool OnReloadConfig() override;
+	int OnReloadConfig() override;
 
 	/**
 	 * @brief 重新加载配置文件后的处理。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterOnReloadConfig() override;
+	int AfterOnReloadConfig() override;
 
 	/**
 	 * @brief 服务器连接完成后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterAllConnectFinish() override;
+	int AfterAllConnectFinish() override;
 
 	/**
 	 * @brief 加载完服务器数据（如 Excel 和数据库数据）后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterAllDescStoreLoaded() override;
+	int AfterAllDescStoreLoaded() override;
 
 	/**
 	 * @brief
 	 * @return AfterAllConnectFinish 和 AfterAllDescStoreLoaded 都完成后
 	 */
-	bool AfterAllConnectAndAllDescStore() override;
+	int AfterAllConnectAndAllDescStore() override;
 
 	/**
 	 * @brief 从数据库加载全局数据后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterObjFromDBLoaded() override;
+	int AfterObjFromDBLoaded() override;
 
 	/**
 	 * @brief 完成服务器之间的注册后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterServerRegisterFinish() override;
+	int AfterServerSyncData() override;
 
 	/**
 	 * @brief 服务器完成初始化后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterAppInitFinish() override;
+	int AfterAppInitFinish() override;
 
 	/**
 	 * @brief 服务器连接完成后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterAllConnectFinish(NF_SERVER_TYPE serverType) override;
+	int AfterAllConnectFinish(NF_SERVER_TYPE serverType) override;
 
 	/**
 	 * @brief 加载完服务器数据（如 Excel 和数据库数据）后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType) override;
+	int AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType) override;
 
 	/**
 	 * @brief
 	 * @return AfterAllConnectFinish 和 AfterAllDescStoreLoaded 都完成后
 	 */
-	bool AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType) override;
+	int AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType) override;
 
 	/**
 	 * @brief 从数据库加载全局数据后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterObjFromDBLoaded(NF_SERVER_TYPE serverType) override;
+	int AfterObjFromDBLoaded(NF_SERVER_TYPE serverType) override;
 
 	/**
 	 * @brief 完成服务器之间的注册后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterServerRegisterFinish(NF_SERVER_TYPE serverType) override;
+	int AfterServerSyncData(NF_SERVER_TYPE serverType) override;
 
 	/**
 	 * @brief 服务器完成初始化后调用。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool AfterAppInitFinish(NF_SERVER_TYPE serverType) override;
+	int AfterAppInitFinish(NF_SERVER_TYPE serverType) override;
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -243,28 +237,28 @@ public:
 	 * @brief 加载所有插件。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool LoadAllPlugin() override;
+	int LoadAllPlugin() override;
 
 	/**
 	 * @brief 加载指定的插件库。
 	 * @param strPluginDLLName 插件库名称。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool LoadPluginLibrary(const std::string& strPluginDLLName) override;
+	int LoadPluginLibrary(const std::string& strPluginDLLName) override;
 
 	/**
 	 * @brief 卸载指定的插件库。
 	 * @param strPluginDLLName 插件库名称。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool UnLoadPluginLibrary(const std::string& strPluginDLLName) override;
+	int UnLoadPluginLibrary(const std::string& strPluginDLLName) override;
 
 	/**
 	 * @brief 动态加载指定的插件库。
 	 * @param strPluginDLLName 插件库名称。
 	 * @return 成功返回 true，失败返回 false。
 	 */
-	bool DynamicLoadPluginLibrary(const std::string& strPluginDLLName) override;
+	int DynamicLoadPluginLibrary(const std::string& strPluginDLLName) override;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
@@ -771,22 +765,22 @@ public:
 	/*
 	 * 停服之前，检查服务器是否满足停服条件
 	 * */
-	bool CheckStopServer() override;
+	int CheckStopServer() override;
 
 	/*
 	 * 停服之前，做一些操作，满足停服条件
 	 * */
-	bool OnStopServer() override;
+	int OnStopServer() override;
 
 	/*
 	 * stop server，停服，意味着需要保存该保存的数据，共享内存可能后面会被清理，服务器会走正常停服流程
 	 * */
-	bool StopServer() override;
+	int StopServer() override;
 
 	/*
 	 * 停服之前保存需要的数据
 	 * */
-	bool OnServerKilling() override;
+	int OnServerKilling() override;
 
 	/*
 	 * reload server 重新加载服务器的配置数据
@@ -819,7 +813,7 @@ public:
 	/*
 	 * 热更退出app, 用于服务器需要热更app代码的情况，这时候会杀掉正在运行的的的app,重启新的服务器app
 	 * */
-	bool HotfixServer() override;
+	int HotfixServer() override;
 
 private:
 	//通过console控制服务器变量

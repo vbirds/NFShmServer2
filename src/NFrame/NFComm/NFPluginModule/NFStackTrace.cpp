@@ -4,6 +4,7 @@
 //    @Date             :    24-8-23
 //    @Email            :    445267987@qq.com
 //    @Module           :    NFStackTrace
+//    @Desc             :    堆栈跟踪工具类实现，提供程序运行时堆栈信息获取功能
 //
 // -------------------------------------------------------------------------
 
@@ -28,10 +29,15 @@ static HANDLE g_hProcess = 0;
 
 #endif
 
-
+/**
+ * @brief 构造函数
+ * 
+ * 初始化堆栈跟踪工具，根据平台进行不同的初始化
+ */
 NFStackTrace::NFStackTrace()
 {
 #if NF_PLATFORM == NF_PLATFORM_WIN
+    // Windows平台初始化
     m_hProcess = GetCurrentProcess();
     g_hProcess = m_hProcess;
     DWORD dwOpts = SymGetOptions();
@@ -39,11 +45,17 @@ NFStackTrace::NFStackTrace()
     SymSetOptions(dwOpts);
     ::SymInitialize(m_hProcess, 0, true);
 #else
+    // Linux平台初始化
     m_iExecCnt = 0;
     m_tLastReportTime = 0;
 #endif
 }
 
+/**
+ * @brief 析构函数
+ * 
+ * 清理资源，释放系统句柄
+ */
 NFStackTrace::~NFStackTrace()
 {
 #if NF_PLATFORM == NF_PLATFORM_WIN
@@ -52,6 +64,15 @@ NFStackTrace::~NFStackTrace()
 #endif
 }
 
+/**
+ * @brief 获取堆栈跟踪信息
+ * 
+ * 根据平台调用相应的堆栈跟踪实现
+ * 
+ * @param bNeedExec 是否执行tracestack，为false直接返回
+ * @param bFullParse 是否完全解析堆栈信息
+ * @return 堆栈跟踪信息字符串
+ */
 const char *NFStackTrace::TraceStack(bool bNeedExec/* = false*/, bool bFullParse/* = false*/)
 {
 #if NF_PLATFORM == NF_PLATFORM_WIN
@@ -63,6 +84,11 @@ const char *NFStackTrace::TraceStack(bool bNeedExec/* = false*/, bool bFullParse
 
 #if NF_PLATFORM == NF_PLATFORM_WIN
 /////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief 基本数据类型枚举
+ * 
+ * 用于Windows平台符号解析
+ */
 enum BasicType
 {
     btNoType = 0,
@@ -85,12 +111,22 @@ enum BasicType
     btHresult = 31
 };
 
+/**
+ * @brief 将地址转换为字符串
+ * 
+ * 将堆栈地址转换为可读的字符串，包含函数名和行号信息
+ * 
+ * @param pVoid 地址指针
+ * @return 格式化的地址字符串
+ */
 std::string NFStackTrace::addressToString(PVOID pVoid)
 {
     std::ostringstream oss;
     STACKFRAME *pStackFrame = (STACKFRAME *) pVoid;
     DWORD dwAddress = pStackFrame->AddrPC.Offset;
     oss << "0x" << pVoid;
+    
+    // 获取符号信息
     struct tagSymInfo
     {
         IMAGEHLP_SYMBOL symInfo;
@@ -99,6 +135,7 @@ std::string NFStackTrace::addressToString(PVOID pVoid)
     IMAGEHLP_SYMBOL *pSym = &SymInfo.symInfo;
     pSym->MaxNameLength = sizeof(SymInfo) - offsetof(tagSymInfo, symInfo.Name);
     DWORD dwDisplacement;
+    
 #ifdef _MSC_VER
     if (SymGetSymFromAddr(m_hProcess, dwAddress, (PDWORD64) &dwDisplacement, pSym))
 #else
@@ -110,7 +147,7 @@ std::string NFStackTrace::addressToString(PVOID pVoid)
         //	oss << "+0x" << std::hex << dwDisplacement << std::dec;
     }
 
-    // Finally any file/line number
+    // 获取文件和行号信息
     IMAGEHLP_LINE lineInfo = {sizeof(IMAGEHLP_LINE)};
     if (SymGetLineFromAddr(m_hProcess, dwAddress, &dwDisplacement, &lineInfo))
     {
@@ -120,12 +157,22 @@ std::string NFStackTrace::addressToString(PVOID pVoid)
     return oss.str();
 }
 
+/**
+ * @brief Windows平台堆栈跟踪
+ * 
+ * 使用Windows API获取当前线程的堆栈信息
+ * 
+ * @param bNeedExec 是否执行
+ * @param bFullParse 是否完全解析
+ * @return 堆栈信息字符串
+ */
 const char *NFStackTrace::TraceWindowsStack(bool bNeedExec, bool bFullParse)
 {
     m_szStackInfoString[0] = 0;
     char *szOut = m_szStackInfoString;
     int iOutLen = 0;
 #ifndef _WIN64
+    // 获取当前线程上下文
     CONTEXT context = {CONTEXT_FULL};
     ::GetThreadContext( GetCurrentThread(), &context );
     _asm call $+5
@@ -137,6 +184,8 @@ const char *NFStackTrace::TraceWindowsStack(bool bNeedExec, bool bFullParse)
 
 PCONTEXT pContext = &context;
     iOutLen += _snprintf(szOut, sizeof(m_szStackInfoString), "%s", "TrackStack begin \n");
+    
+    // 初始化堆栈帧
     STACKFRAME stackFrame = {0};
     stackFrame.AddrPC.Offset = pContext->Eip;
     stackFrame.AddrPC.Mode = AddrModeFlat;
@@ -144,7 +193,9 @@ PCONTEXT pContext = &context;
     stackFrame.AddrFrame.Mode = AddrModeFlat;
     stackFrame.AddrStack.Offset = pContext->Esp;
     stackFrame.AddrStack.Mode = AddrModeFlat;
+    
     int i=0;
+    // 遍历堆栈帧
     while ( ::StackWalk(IMAGE_FILE_MACHINE_I386,m_hProcess,	GetCurrentThread(),
         &stackFrame,pContext,NULL,::SymFunctionTableAccess,::SymGetModuleBase,NULL))
     {
@@ -176,26 +227,51 @@ PCONTEXT pContext = &context;
 
 #define MAX_BACK_TRACE_SIZE (11)//以前是11,减少到6,看看性能开销
 
+/**
+ * @brief 获取执行次数
+ * @return 执行次数
+ */
 int NFStackTrace::GetExecCnt()
 {
     return m_iExecCnt;
 }
 
+/**
+ * @brief 获取最后报告时间
+ * @return 最后报告时间
+ */
 time_t NFStackTrace::GetLastReportTime()
 {
     return m_tLastReportTime;
 }
 
+/**
+ * @brief 设置执行次数
+ * @param iExecCnt 执行次数
+ */
 void NFStackTrace::SetExecCnt(int iExecCnt)
 {
     m_iExecCnt = iExecCnt;
 }
 
+/**
+ * @brief 更新报告时间
+ * @param tCur 当前时间
+ */
 void NFStackTrace::UpdateReportTime(time_t tCur)
 {
     m_tLastReportTime = tCur;
 }
 
+/**
+ * @brief Linux平台堆栈跟踪
+ * 
+ * 使用backtrace库获取当前线程的堆栈信息
+ * 
+ * @param bNeedExec 是否执行
+ * @param bFullParse 是否完全解析
+ * @return 堆栈信息字符串
+ */
 const char* NFStackTrace::TraceLinuxStack(bool bNeedExec, bool bFullParse)
 {
     if (false == bNeedExec)
@@ -203,6 +279,7 @@ const char* NFStackTrace::TraceLinuxStack(bool bNeedExec, bool bFullParse)
         return " ";
     }
 
+    // 记录开始时间
     struct timeval stBegin;
     gettimeofday( &stBegin, NULL );
 
@@ -213,6 +290,8 @@ const char* NFStackTrace::TraceLinuxStack(bool bNeedExec, bool bFullParse)
     void *bt[MAX_BACK_TRACE_SIZE];
     int iOff = 0;
     iOff += snprintf(pCurBuff, sizeof(m_szStackInfoString), "%s", "TrackStack begin \n");
+    
+    // 获取堆栈信息
     size_t sz = backtrace(bt, MAX_BACK_TRACE_SIZE);
     char **strings = backtrace_symbols(bt, sz);
     if (NULL == strings)
@@ -220,6 +299,7 @@ const char* NFStackTrace::TraceLinuxStack(bool bNeedExec, bool bFullParse)
         return " ";
     }
 
+    // 根据参数选择解析方式
     if (bFullParse)
     {
         TraceLinuxStackFullParse(strings, pCurBuff, iOff, sz);
@@ -233,6 +313,7 @@ const char* NFStackTrace::TraceLinuxStack(bool bNeedExec, bool bFullParse)
 
     iOff += snprintf(pCurBuff+iOff, sizeof(m_szStackInfoString)-iOff, "%s", "TrackStack end\n");
 
+    // 计算耗时
     struct timeval stEnd;
     gettimeofday( &stEnd, NULL );
     int64_t llCost = (int64_t)( stEnd.tv_sec - stBegin.tv_sec )*1000000 + stEnd.tv_usec - stBegin.tv_usec;
@@ -242,7 +323,16 @@ const char* NFStackTrace::TraceLinuxStack(bool bNeedExec, bool bFullParse)
     return m_szStackInfoString;
 }
 
-//会把符号demangle，解析成可读性强的形式,但是性能太差，外网勿用
+/**
+ * @brief Linux平台完整解析堆栈
+ * 
+ * 会把符号demangle，解析成可读性强的形式,但是性能太差，外网勿用
+ * 
+ * @param strings 符号字符串数组
+ * @param pCurBuff 输出缓冲区
+ * @param iOff 偏移量
+ * @param sz 大小
+ */
 void NFStackTrace::TraceLinuxStackFullParse(char **strings, char* pCurBuff, int & iOff, size_t sz)
 {
     for(size_t i = 3; i < sz; ++i)
@@ -263,7 +353,16 @@ void NFStackTrace::TraceLinuxStackFullParse(char **strings, char* pCurBuff, int 
     }
 }
 
-//不执行demangle, 查看日志后，需要手动使用c++filt来解析成可读性强的格式，看看对比下性能如何
+/**
+ * @brief Linux平台半解析堆栈
+ * 
+ * 不执行demangle, 查看日志后，需要手动使用c++filt来解析成可读性强的格式，看看对比下性能如何
+ * 
+ * @param strings 符号字符串数组
+ * @param pCurBuff 输出缓冲区
+ * @param iOff 偏移量
+ * @param sz 大小
+ */
 void NFStackTrace::TraceLinuxStackHalfParse(char **strings, char* pCurBuff, int & iOff, size_t sz)
 {
     for(size_t i = 3; i < sz; ++i)
@@ -273,6 +372,15 @@ void NFStackTrace::TraceLinuxStackHalfParse(char **strings, char* pCurBuff, int 
 }
 
 #define MAX_DEMANGLED_NAME_LEN	(2048)
+
+/**
+ * @brief 替换符号名称
+ * 
+ * 将C++符号名称转换为可读的函数名
+ * 
+ * @param dump_sym_str 符号字符串
+ * @return 处理后的符号字符串
+ */
 char* NFStackTrace::ReplaceDumpSymname(char* dump_sym_str)
 {
     static char mangled_str[MAX_DEMANGLED_NAME_LEN];

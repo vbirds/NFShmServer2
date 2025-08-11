@@ -4,6 +4,12 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFKernelPlugin
+//    @Desc             :    内存管理模块头文件，提供共享内存对象、定时器、事件、事务等统一管理功能。
+//                          该文件定义了NFShmXFrame框架的内存管理模块，负责共享内存对象段的分配与管理、
+//                          全局ID分配、定时器管理、事件管理、事务管理、对象生命周期管理、
+//                          内存分配与释放、对象查找与遍历、定时器调度、事件处理、事务管理等。
+//                          主要功能包括高效的内存管理、对象生命周期管理、定时器与事件统一调度、
+//                          支持多种对象类型的注册与管理、自动资源回收、跨进程共享内存支持
 //
 // -------------------------------------------------------------------------
 
@@ -20,16 +26,29 @@ class NFCMemMngModule;
 
 class NFMemObjSeg;
 
+/**
+ * @brief 内存对象段交换计数器类，用于管理对象段的统计信息
+ * 
+ * 该类用于跟踪和管理内存对象段的统计信息，包括对象大小、数量、类型等。
+ * 在对象类型反注册时用于释放相关资源，并提供对象段的生命周期管理。
+ */
 class NFMemObjSegSwapCounter
 {
     friend class NFCMemMngModule;
 
 public:
+    /**
+     * @brief 构造函数，初始化计数器对象
+     */
     NFMemObjSegSwapCounter()
     {
         clear();
     }
 
+    /**
+     * @brief 设置对象段指针
+     * @param pObjSeg 对象段指针
+     */
     void SetObjSeg(NFMemObjSeg* pObjSeg);
 
     /**
@@ -50,39 +69,189 @@ public:
         m_pParent = nullptr;
     }
 public:
-    std::string m_szClassName;
-    size_t m_nObjSize;
-    int m_iItemCount;
-    int m_iObjType;
-    bool m_iUseHash;
-    bool m_singleton;
-    NFMemObjSeg* m_pObjSeg;
+    std::string m_szClassName;        ///< 类名称
+    size_t m_nObjSize;                ///< 对象大小
+    int m_iItemCount;                 ///< 对象数量
+    int m_iObjType;                   ///< 对象类型
+    bool m_iUseHash;                  ///< 是否使用哈希表
+    bool m_singleton;                 ///< 是否为单例对象
+    NFMemObjSeg* m_pObjSeg;           ///< 对象段指针
 
-    NFObject*(*m_pResumeFn)(void*);
-    NFObject*(*m_pCreateFn)();
-    void (*m_pDestroyFn)(NFObject*);
+    NFObject*(*m_pResumeFn)(void*);   ///< 恢复对象函数指针
+    NFObject*(*m_pCreateFn)();        ///< 创建对象函数指针
+    void (*m_pDestroyFn)(NFObject*);  ///< 销毁对象函数指针
 
-    NFMemObjSegSwapCounter* m_pParent;
-    std::unordered_set<int> m_childrenObjType;
-    std::unordered_set<int> m_parentObjType;
+    NFMemObjSegSwapCounter* m_pParent; ///< 父对象段计数器指针
+    std::unordered_set<int> m_childrenObjType; ///< 子对象类型集合
+    std::unordered_set<int> m_parentObjType;   ///< 父对象类型集合
 };
 
+/**
+ * @brief 内存管理模块类，提供共享内存对象的统一管理功能
+ * 
+ * 该类是NFShmXFrame框架的核心内存管理模块，负责管理所有共享内存对象，
+ * 包括对象段的分配与管理、全局ID分配、定时器管理、事件管理、事务管理等。
+ * 提供高效的内存管理、对象生命周期管理、定时器与事件统一调度等功能。
+ */
 class NFCMemMngModule final : public NFIMemMngModule
 {
 public:
+    /**
+     * @brief 构造函数
+     * @param p 插件管理器指针
+     */
     explicit NFCMemMngModule(NFIPluginManager* p);
 
+    /**
+     * @brief 析构函数
+     */
     ~NFCMemMngModule() override;
 
 public:
-    bool AfterLoadAllPlugin() override;
-
-    bool Execute() override;
+    /**
+     * @brief 在所有插件加载完成后调用
+     * @return 执行结果
+     */
+    int AfterLoadAllPlugin() override;
 
     /**
-    * 创建共享内存
-    */
-    bool Finalize() override;
+     * @brief 模块唤醒函数
+     * @return 执行结果
+     */
+    int Awake() override;
+
+    /**
+     * @brief 模块初始化函数
+     * @return 执行结果
+     */
+    int Init() override;
+
+    /**
+     * @brief 模块心跳函数，处理定时器和事务
+     * @return 执行结果
+     */
+    int Tick() override;
+
+    /**
+     * @brief 模块关闭函数
+     * @return 执行结果
+     */
+    int Shut() override;
+
+    /**
+     * @brief 模块最终化函数
+     * @return 执行结果
+     */
+    int Finalize() override;
+
+    /**
+     * @brief 配置重载后调用
+     * @return 执行结果
+     */
+    int AfterOnReloadConfig() override;
+
+    /**
+     * @brief 热修复服务器
+     * @return 执行结果
+     */
+    int HotfixServer() override;
+
+    /**
+     * @brief 检查服务器停止状态
+     * @return 执行结果
+     */
+    int CheckStopServer() override;
+
+    /**
+     * @brief 停止服务器
+     * @return 执行结果
+     */
+    int StopServer() override;
+
+    /**
+     * @brief 服务器被杀死时调用
+     * @return 执行结果
+     */
+    int OnServerKilling() override;
+
+    /**
+     * @brief 所有连接完成时调用
+     * @return 执行结果
+     */
+    int AfterAllConnectFinish() override;
+
+    /**
+     * @brief 所有描述存储加载完成时调用
+     * @return 执行结果
+     */
+    int AfterAllDescStoreLoaded() override;
+
+    /**
+     * @brief 所有连接和描述存储加载完成时调用
+     * @return 执行结果
+     */
+    int AfterAllConnectAndAllDescStore() override;
+
+    /**
+     * @brief 从数据库加载对象后调用
+     * @return 执行结果
+     */
+    int AfterObjFromDBLoaded() override;
+
+    /**
+     * @brief 服务器同步数据后调用
+     * @return 执行结果
+     */
+    int AfterServerSyncData() override;
+
+    /**
+     * @brief 应用初始化完成后调用
+     * @return 执行结果
+     */
+    int AfterAppInitFinish() override;
+
+    /**
+     * @brief 服务器类型初始化完成后调用
+     * @param serverType 服务器类型
+     * @return 执行结果
+     */
+    int AfterAllConnectFinish(NF_SERVER_TYPE serverType) override;
+
+    /**
+     * @brief 服务器类型描述存储加载完成后调用
+     * @param serverType 服务器类型
+     * @return 执行结果
+     */
+    int AfterAllDescStoreLoaded(NF_SERVER_TYPE serverType) override;
+
+    /**
+     * @brief 服务器类型连接和描述存储加载完成后调用
+     * @param serverType 服务器类型
+     * @return 执行结果
+     */
+    int AfterAllConnectAndAllDescStore(NF_SERVER_TYPE serverType) override;
+
+    /**
+     * @brief 服务器类型从数据库加载对象后调用
+     * @param serverType 服务器类型
+     * @return 执行结果
+     */
+    int AfterObjFromDBLoaded(NF_SERVER_TYPE serverType) override;
+
+    /**
+     * @brief 服务器类型同步数据后调用
+     * @param serverType 服务器类型
+     * @return 执行结果
+     */
+    int AfterServerSyncData(NF_SERVER_TYPE serverType) override;
+
+    /**
+     * @brief 服务器类型应用初始化完成后调用
+     * @param serverType 服务器类型
+     * @return 执行结果
+     */
+    int AfterAppInitFinish(NF_SERVER_TYPE serverType) override;
+public:
 
     /**
     * 共享内存模式

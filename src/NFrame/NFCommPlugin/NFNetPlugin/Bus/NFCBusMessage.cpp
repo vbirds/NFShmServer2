@@ -3,7 +3,8 @@
 //    @Author           :    Yi.Gao
 //    @Date             :   2022-09-18
 //    @Module           :    NFBusPlugin
-//    @Desc             :
+//    @Desc             :    Bus消息管理实现文件，负责Bus通信系统的消息路由和处理
+//
 // -------------------------------------------------------------------------
 
 #include "NFCBusMessage.h"
@@ -18,6 +19,40 @@
 #include "NFComm/NFPluginModule/NFLogMgr.h"
 #include "NFComm/NFPluginModule/NFNetPackagePool.h"
 
+/**
+ * @file NFCBusMessage.cpp
+ * @brief Bus消息管理实现文件
+ * 
+ * 该文件实现了Bus通信系统的消息管理功能，包括：
+ * - Bus消息管理类的初始化和生命周期管理
+ * - 服务器和客户端连接的管理
+ * - 消息路由和分发处理
+ * - 心跳机制和连接状态监控
+ * - 消息发送和接收的统一接口
+ * 
+ * 主要功能：
+ * - 统一的消息管理接口
+ * - 支持服务器和客户端模式
+ * - 自动心跳检测
+ * - 连接状态监控
+ * - 消息路由分发
+ * 
+ * @author Yi.Gao
+ * @date 2022-09-18
+ * @version 1.0
+ */
+
+/**
+ * @brief Bus消息管理构造函数
+ * 
+ * 初始化Bus消息管理系统，包括：
+ * - 设置绑定连接为空
+ * - 初始化心跳定时器
+ * - 设置心跳检查定时器
+ * 
+ * @param p 插件管理器指针
+ * @param serverType 服务器类型
+ */
 NFCBusMessage::NFCBusMessage(NFIPluginManager* p, NF_SERVER_TYPE serverType) : NFINetMessage(p, serverType)
 {
     m_bindConnect = nullptr;
@@ -30,20 +65,39 @@ NFCBusMessage::NFCBusMessage(NFIPluginManager* p, NF_SERVER_TYPE serverType) : N
 #endif
 }
 
+/**
+ * @brief Bus消息管理析构函数
+ * 
+ * 清理消息管理资源
+ */
 NFCBusMessage::~NFCBusMessage()
 {
 }
 
-bool NFCBusMessage::Execute()
+/**
+ * @brief 定时器更新函数
+ * 
+ * 处理绑定连接的定时更新
+ * 
+ * @return 处理结果，0表示成功
+ */
+int NFCBusMessage::Tick()
 {
     if (m_bindConnect)
     {
-        m_bindConnect->Execute();
+        m_bindConnect->Tick();
     }
-    return true;
+    return 0;
 }
 
-bool NFCBusMessage::Shut()
+/**
+ * @brief 关闭消息管理
+ * 
+ * 关闭所有Bus连接
+ * 
+ * @return 关闭结果，0表示成功
+ */
+int NFCBusMessage::Shut()
 {
     auto pConn = m_busConnectMap.First();
     while (pConn)
@@ -52,10 +106,17 @@ bool NFCBusMessage::Shut()
         pConn = m_busConnectMap.Next();
     }
 
-    return true;
+    return 0;
 }
 
-bool NFCBusMessage::Finalize()
+/**
+ * @brief 最终化消息管理
+ * 
+ * 清理所有Bus连接资源
+ * 
+ * @return 最终化结果，0表示成功
+ */
+int NFCBusMessage::Finalize()
 {
     auto pConn = m_busConnectMap.First();
     while (pConn)
@@ -66,64 +127,87 @@ bool NFCBusMessage::Finalize()
     m_bindConnect = nullptr;
     m_busConnectMap.ClearAll();
 
-    return true;
-}
-
-bool NFCBusMessage::ReadyExecute()
-{
-    return true;
+    return 0;
 }
 
 /**
-* @brief	初始化
-*
-* @return 是否成功
-*/
+ * @brief 准备就绪更新函数
+ * 
+ * @return 处理结果，0表示成功
+ */
+int NFCBusMessage::ReadyTick()
+{
+    return 0;
+}
+
+/**
+ * @brief 绑定服务器
+ * 
+ * 创建并初始化Bus服务器，包括：
+ * - 创建Bus服务器实例
+ * - 设置消息对等回调函数
+ * - 初始化服务器连接
+ * - 添加到连接映射表
+ * 
+ * @param flag 消息标志，包含服务器配置信息
+ * @return 绑定结果，成功返回服务器ID，失败返回0
+ */
 uint64_t NFCBusMessage::BindServer(const NFMessageFlag& flag)
 {
     CHECK_EXPR(m_bindConnect == NULL, 0, "BindServer Failed!");
     NF_SHARE_PTR<NFCBusServer> pServer = std::make_shared<NFCBusServer>(m_pObjPluginManager, m_serverType, flag);
-    NF_ASSERT(pServer);
+    CHECK_NULL(0, pServer);
 
     pServer->SetMsgPeerCallback(std::bind(&NFCBusMessage::OnHandleMsgPeer, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3,
                                           std::placeholders::_4));
 
 
-    if (pServer->Init())
-    {
-        m_busConnectMap.AddElement(pServer->GetLinkId(), pServer);
-    }
-    else
-    {
-        NFLogError(NF_LOG_DEFAULT, 0, "NFCBusServer Init Failed!");
-        return 0;
-    }
+    int iRet = pServer->Init();
+    CHECK_ERR(0, iRet, "NFCBusServer Init Failed!");
+    m_busConnectMap.AddElement(pServer->GetLinkId(), pServer);
 
     m_bindConnect = pServer;
     ResumeConnect();
     return pServer->GetLinkId();
 }
 
+/**
+ * @brief 连接服务器
+ * 
+ * 创建并初始化Bus客户端连接，包括：
+ * - 创建Bus客户端实例
+ * - 设置消息对等回调函数
+ * - 初始化客户端连接
+ * - 添加到连接映射表
+ * 
+ * @param flag 消息标志，包含服务器配置信息
+ * @return 连接结果，成功返回连接ID，失败返回0
+ */
 uint64_t NFCBusMessage::ConnectServer(const NFMessageFlag& flag)
 {
     CHECK_EXPR(m_bindConnect, 0, "ConnectServer Failed, muset bindserver");
 
     NF_SHARE_PTR<NFCBusClient> pConn = std::make_shared<NFCBusClient>(m_pObjPluginManager, m_serverType, flag, m_bindConnect->GetBindFlag());
-    NF_ASSERT(pConn);
+    CHECK_NULL(0, pConn);
 
-    if (pConn->Init())
-    {
-        m_busConnectMap.AddElement(pConn->GetLinkId(), pConn);
-    }
-    else
-    {
-        NFLogError(NF_LOG_DEFAULT, 0, "NFCBusClient Init Failed")
-        return 0;
-    }
+    int iRet = pConn->Init();
+    CHECK_ERR(0, iRet, "NFCBusClient Init Failed");
+    m_busConnectMap.AddElement(pConn->GetLinkId(), pConn);
 
     return pConn->GetLinkId();
 }
 
+/**
+ * @brief 发送原始数据
+ * 
+ * 向指定连接发送原始数据
+ * 
+ * @param usLinkId 连接ID
+ * @param packet 数据包
+ * @param msg 消息数据
+ * @param nLen 数据长度
+ * @return 发送结果
+ */
 bool NFCBusMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const char* msg, uint32_t nLen)
 {
     auto pConn = m_busConnectMap.GetElement(usLinkId);
@@ -137,6 +221,16 @@ bool NFCBusMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const char* m
     return false;
 }
 
+/**
+ * @brief 发送Protobuf消息
+ * 
+ * 向指定连接发送Protobuf格式的消息
+ * 
+ * @param usLinkId 连接ID
+ * @param packet 数据包
+ * @param xData Protobuf消息对象
+ * @return 发送结果
+ */
 bool NFCBusMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const google::protobuf::Message& xData)
 {
     auto pConn = m_busConnectMap.GetElement(usLinkId);
@@ -151,10 +245,12 @@ bool NFCBusMessage::Send(uint64_t usLinkId, NFDataPackage& packet, const google:
 }
 
 /**
- * @brief 获得连接IP
- *
- * @param  usLinkId
- * @return std::string
+ * @brief 获得连接IP地址
+ * 
+ * 获取指定连接的IP地址信息
+ * 
+ * @param usLinkId 连接ID
+ * @return IP地址字符串
  */
 std::string NFCBusMessage::GetLinkIp(uint64_t usLinkId)
 {
@@ -164,17 +260,26 @@ std::string NFCBusMessage::GetLinkIp(uint64_t usLinkId)
     return pConn->GetLinkIp();
 }
 
+/**
+ * @brief 获取连接端口
+ * 
+ * Bus连接不使用端口，返回0
+ * 
+ * @param usLinkId 连接ID
+ * @return 端口号，Bus连接返回0
+ */
 uint32_t NFCBusMessage::GetPort(uint64_t usLinkId)
 {
     return 0;
 }
 
 /**
-* @brief 关闭连接
-*
-* @param  usLinkId
-* @return
-*/
+ * @brief 关闭连接
+ * 
+ * 关闭指定的连接
+ * 
+ * @param usLinkId 连接ID
+ */
 void NFCBusMessage::CloseLinkId(uint64_t usLinkId)
 {
     auto pConn = m_busConnectMap.GetElement(usLinkId);
@@ -183,6 +288,19 @@ void NFCBusMessage::CloseLinkId(uint64_t usLinkId)
     return pConn->CloseLinkId();
 }
 
+/**
+ * @brief 处理对等消息
+ * 
+ * 处理来自其他Bus连接的消息，包括：
+ * - 心跳消息处理
+ * - 连接状态管理
+ * - 消息路由分发
+ * 
+ * @param type 消息类型
+ * @param serverLinkId 服务器连接ID
+ * @param objectLinkId 对象连接ID
+ * @param package 数据包
+ */
 void NFCBusMessage::OnHandleMsgPeer(eMsgType type, uint64_t serverLinkId, uint64_t objectLinkId, NFDataPackage& package)
 {
     if (!NFGlobalSystem::Instance()->IsSpecialMsg(package.mModuleId, package.nMsgId))
@@ -310,6 +428,16 @@ void NFCBusMessage::OnHandleMsgPeer(eMsgType type, uint64_t serverLinkId, uint64
     }
 }
 
+/**
+ * @brief 恢复连接
+ * 
+ * 恢复所有断开的连接，包括：
+ * - 检查共享内存中的连接信息
+ * - 重新建立断开的连接
+ * - 更新连接状态
+ * 
+ * @return 恢复结果，0表示成功
+ */
 int NFCBusMessage::ResumeConnect()
 {
     CHECK_NULL(0, m_bindConnect);
@@ -375,6 +503,16 @@ int NFCBusMessage::ResumeConnect()
     return 0;
 }
 
+/**
+ * @brief 定时器回调函数
+ * 
+ * 处理各种定时器事件，包括：
+ * - 心跳消息发送
+ * - 服务器心跳检查
+ * 
+ * @param nTimerId 定时器ID
+ * @return 处理结果，0表示成功
+ */
 int NFCBusMessage::OnTimer(uint32_t nTimerId)
 {
     if (nTimerId == ENUM_SERVER_CLIENT_TIMER_HEART)
@@ -388,6 +526,12 @@ int NFCBusMessage::OnTimer(uint32_t nTimerId)
     return 0;
 }
 
+/**
+ * @brief 发送心跳消息
+ * 
+ * 向所有活跃的客户端连接发送心跳消息
+ * 保持连接活跃状态
+ */
 void NFCBusMessage::SendHeartMsg()
 {
     auto pConn = m_busConnectMap.First();
@@ -401,6 +545,12 @@ void NFCBusMessage::SendHeartMsg()
     }
 }
 
+/**
+ * @brief 检查服务器心跳
+ * 
+ * 检查所有服务器连接的心跳状态
+ * 清理超时的连接
+ */
 void NFCBusMessage::CheckServerHeartBeat()
 {
     uint64_t nowTime = NFGetTime();

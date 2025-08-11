@@ -3,6 +3,13 @@
 //    @Author           :    Yi.Gao
 //    @Date             :   2022-09-18
 //    @Module           :    NFPluginModule
+//    @Desc             :    共享内存全局ID管理器实现文件，提供全局唯一ID的分配和回收功能。
+//                          该文件实现了全局ID管理器的核心功能，包括全局ID的分配和回收、
+//                          ID与对象的映射管理、轮次管理和文件持久化、统计信息收集、
+//                          版本兼容性检查。主要功能包括全局ID分配和释放、对象ID映射表管理、
+//                          轮次统计和文件更新、性能监控和统计、内存池管理。
+//                          设计特点包括基于共享内存支持跨进程、队列管理高效分配、
+//                          轮次机制防止ID溢出、文件持久化支持恢复、统计信息收集
 //
 // -------------------------------------------------------------------------
 
@@ -19,13 +26,22 @@
 #include "NFComm/NFCore/NFServerIDUtil.h"
 #include "NFComm/NFPluginModule/NFIMemMngModule.h"
 
+/**
+ * @brief 构造函数
+ * 
+ * 初始化全局ID管理器，设置文件名和基本参数
+ * 根据共享内存模式选择初始化方式
+ */
 NFShmGlobalId::NFShmGlobalId() : m_iThisRoundCountMax(0), m_iThisRoundCount(0),
                                  m_iGlobalIdAppendNum(0)
 {
+    // 设置文件名，基于服务器ID生成
     NF_FORMAT_EXPR(m_szFileName, "{}_globalid", NFServerIDUtil::GetBusNameFromBusID(NFGlobalSystem::Instance()->GetGlobalPluginManager()->GetAppID()));
-    //校验
+    
+    // 编译时校验，确保ID不会溢出
     COMPILE_TIME_ASSERT(static_cast<int64_t>(MAX_GLOBALID_NUM * GLOBALID_LOOP_BACK) < INT_MAX);
 
+    // 根据创建模式选择初始化方式
     if (NFShmMgr::Instance()->GetCreateMode() == EN_OBJ_MODE_INIT)
     {
         CreateInit();

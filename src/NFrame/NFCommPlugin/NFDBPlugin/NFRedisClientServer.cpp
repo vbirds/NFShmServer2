@@ -1,13 +1,13 @@
 /*
             This file is part of: 
-                NoahFrame
+                NFShmXFrame
             https://github.com/ketoo/NoahGameFrame
 
-   Copyright 2009 - 2019 NoahFrame(NoahGameFrame)
+   Copyright 2009 - 2019 NFShmXFrame(NoahGameFrame)
 
    File creator: lvsheng.huang
    
-   NoahFrame is open-source software and you can redistribute it and/or modify
+   NFShmXFrame is open-source software and you can redistribute it and/or modify
    it under the terms of the License; besides, anyone who use this file/software must include this copyright announcement.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,19 @@
    limitations under the License.
 */
 
+// -------------------------------------------------------------------------
+//    @FileName         :    NFRedisClientServer.cpp
+//    @Author           :    lvsheng.huang
+//    @Date             :   2022-09-18
+//    @Module           :    NFRedisClientServer
+//    @Description      :    Redis服务器管理操作实现文件，提供Redis服务器级别的管理命令
+//
+// -------------------------------------------------------------------------
+
 #include "NFRedisDriver.h"
+
+// 实现Redis服务器管理相关操作
+// 包括：FLUSHALL, FLUSHDB, INFO, CONFIG等服务器管理命令
 
 void NFRedisDriver::FLUSHALL()
 {

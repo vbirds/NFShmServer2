@@ -23,27 +23,27 @@ NFOnlineServerModule::~NFOnlineServerModule()
 {
 }
 
-bool NFOnlineServerModule::Awake()
+int NFOnlineServerModule::Awake()
 {
     BindServer();
-    return true;
+    return 0;
 }
 
-bool NFOnlineServerModule::Init()
+int NFOnlineServerModule::Init()
 {
     ConnectMasterServer();
-    return true;
+    return 0;
 }
 
-bool NFOnlineServerModule::Execute()
+int NFOnlineServerModule::Tick()
 {
-    return true;
+    return 0;
 }
 
-bool NFOnlineServerModule::OnDynamicPlugin()
+int NFOnlineServerModule::OnDynamicPlugin()
 {
     FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_ONLINE_SERVER);
-    return true;
+    return 0;
 }
 
 int NFOnlineServerModule::OnHandleServerMessage(uint64_t unLinkId, NFDataPackage& packet)

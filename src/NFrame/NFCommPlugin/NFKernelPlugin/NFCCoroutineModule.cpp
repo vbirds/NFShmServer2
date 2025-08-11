@@ -37,10 +37,10 @@ NFCCoroutineModule::~NFCCoroutineModule()
 
 }
 
-bool NFCCoroutineModule::Awake()
+int NFCCoroutineModule::Awake()
 {
     SetTimer(COROUTINE_USER_TIMER, 1000);
-    return true;
+    return 0;
 }
 
 int NFCCoroutineModule::OnTimer(uint32_t nTimerID)
@@ -82,28 +82,28 @@ void NFCCoroutineModule::UpdateUser()
     }
 }
 
-bool NFCCoroutineModule::CheckStopServer()
+int NFCCoroutineModule::CheckStopServer()
 {
     if (m_pCorSched)
     {
         return m_pCorSched->CheckStopServer();
     }
 
-    return true;
+    return 0;
 }
 
-bool NFCCoroutineModule::Shut()
+int NFCCoroutineModule::Shut()
 {
-    return true;
+    return 0;
 }
 
-bool NFCCoroutineModule::Finalize()
+int NFCCoroutineModule::Finalize()
 {
     NF_SAFE_DELETE(m_pCorSched);
-    return true;
+    return 0;
 }
 
-bool NFCCoroutineModule::Execute()
+int NFCCoroutineModule::Tick()
 {
     if (m_pCorSched)
     {
@@ -115,7 +115,7 @@ bool NFCCoroutineModule::Execute()
             }
         }
     }
-    return true;
+    return 0;
 }
 
 int64_t NFCCoroutineModule::Start(NFCoroutineTask *pTask, bool is_immediately)

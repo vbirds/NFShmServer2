@@ -20,13 +20,13 @@ public:
 
     virtual ~NFOnlineServerModule();
 
-    virtual bool Awake() override;
+    virtual int Awake() override;
 
-    virtual bool Init() override;
+    virtual int Init() override;
 
-    virtual bool Execute() override;
+    virtual int Tick() override;
 
-    virtual bool OnDynamicPlugin() override;
+    virtual int OnDynamicPlugin() override;
 
     /**
      * @brief 处理来自服务器的信息

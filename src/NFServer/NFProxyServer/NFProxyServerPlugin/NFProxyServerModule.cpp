@@ -30,7 +30,7 @@ NFCProxyServerModule::~NFCProxyServerModule()
 {
 }
 
-bool NFCProxyServerModule::Awake()
+int NFCProxyServerModule::Awake()
 {
     FindModule<NFIMessageModule>()->AddMessageCallBack(NF_ST_PROXY_SERVER, NF_MODULE_FRAME, NFrame::NF_SERVER_TO_SERVER_REGISTER, this,
                                                        &NFCProxyServerModule::OnHandleServerRegisterFromProxyAgentServer);
@@ -40,14 +40,14 @@ bool NFCProxyServerModule::Awake()
                                                        &NFCProxyServerModule::OnHandleTestOtherSendMsg);
 
     BindServer();
-	return true;
+	return 0;
 }
 
-bool NFCProxyServerModule::Init()
+int NFCProxyServerModule::Init()
 {
     ConnectMasterServer();
 
-    return true;
+    return 0;
 }
 
 int NFCProxyServerModule::OnHandleOtherWorkServerRegister(const NFrame::ServerInfoReport& xData, uint64_t unLinkId)
@@ -105,16 +105,17 @@ int NFCProxyServerModule::OnHandleProxyAgentServerRegister(const NFrame::ServerI
     NFLogTrace(NF_LOG_DEFAULT, 0, "--- end -- ");
     return 0;
 }
-bool NFCProxyServerModule::Execute()
+
+int NFCProxyServerModule::Tick()
 {
-	return true;
+	return 0;
 }
 
-bool NFCProxyServerModule::OnDynamicPlugin()
+int NFCProxyServerModule::OnDynamicPlugin()
 {
 	FindModule<NFIMessageModule>()->CloseAllLink(NF_ST_PROXY_SERVER);
 
-	return true;
+	return 0;
 }
 
 int NFCProxyServerModule::OnHandleServerRegisterFromProxyAgentServer(uint64_t unLinkId, NFDataPackage& packet)

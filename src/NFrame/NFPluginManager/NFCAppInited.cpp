@@ -173,10 +173,10 @@ int NFCAppInited::CheckTaskFinished()
                             NFLogInfo(NF_LOG_DEFAULT, 0, "App Finish {} Server Load Obj Task ..............", NF_SERVER_TYPE_name(static_cast<NF_SERVER_TYPE>(serverType)));
                             m_pObjPluginManager->AfterObjFromDBLoaded(static_cast<NF_SERVER_TYPE>(serverType));
                         }
-                        else if (taskGroupType == APP_INIT_TASK_GROUP_SERVER_REGISTER)
+                        else if (taskGroupType == APP_INIT_TASK_GROUP_SERVER_SYNC_GLOBAL_DATA)
                         {
                             NFLogInfo(NF_LOG_DEFAULT, 0, "App Finish {} Server Register Task ..............", NF_SERVER_TYPE_name(static_cast<NF_SERVER_TYPE>(serverType)));
-                            m_pObjPluginManager->AfterServerRegisterFinish(static_cast<NF_SERVER_TYPE>(serverType));
+                            m_pObjPluginManager->AfterServerSyncData(static_cast<NF_SERVER_TYPE>(serverType));
                         }
                     }
                 }
@@ -212,10 +212,10 @@ int NFCAppInited::CheckTaskFinished()
                     NFLogInfo(NF_LOG_DEFAULT, 0, "App Finish All Server Load Obj Task ..............");
                     m_pObjPluginManager->AfterObjFromDBLoaded();
                 }
-                else if (taskGroupType == APP_INIT_TASK_GROUP_SERVER_REGISTER)
+                else if (taskGroupType == APP_INIT_TASK_GROUP_SERVER_SYNC_GLOBAL_DATA)
                 {
                     NFLogInfo(NF_LOG_DEFAULT, 0, "App Finish All Server Register Task ..............");
-                    m_pObjPluginManager->AfterServerRegisterFinish();
+                    m_pObjPluginManager->AfterServerSyncData();
                 }
             }
         }

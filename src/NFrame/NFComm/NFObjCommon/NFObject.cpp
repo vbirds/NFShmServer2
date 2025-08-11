@@ -7,6 +7,32 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFObject.cpp
+ * @brief NFrame框架基础对象类实现文件
+ * @details 实现了NFrame框架中基础对象类NFObject的所有功能，包括对象生命周期管理、
+ *          定时器服务、模块查找、事件处理、对象回收等核心功能。这是框架中所有
+ *          对象的基础实现，提供了对象系统的核心服务。
+ * 
+ * @author Gao.Yi
+ * @date 2022-09-18
+ * @email 445267987@qq.com
+ * 
+ * @note 实现的主要功能：
+ *       - 对象构造和析构处理
+ *       - 共享内存模式的初始化和恢复
+ *       - 定时器注册和管理
+ *       - 对象回收状态管理
+ *       - 内存完整性检查（调试模式）
+ *       - 对象ID和哈希键管理
+ * 
+ * @warning 使用注意事项：
+ *          - 对象构造时会根据共享内存模式选择初始化方式
+ *          - 析构时会自动清理所有相关资源
+ *          - 定时器使用需要确保对象生命周期
+ *          - 回收对象不应该被继续使用
+ */
+
 #include "NFDynamicHead.h"
 #include "NFObject.h"
 #include "NFShmMgr.h"
@@ -320,3 +346,4 @@ int NFObject::SetMonthCalender(int callcount, int day, int hour, int minutes, in
 {
     return FindModule<NFIMemMngModule>()->SetMonthCalender(this, callcount, day, hour, minutes, second, pRawShmObj);
 }
+

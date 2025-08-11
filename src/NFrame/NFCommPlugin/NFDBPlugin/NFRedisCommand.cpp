@@ -1,13 +1,13 @@
 /*
             This file is part of: 
-                NoahFrame
+                NFShmXFrame
             https://github.com/ketoo/NoahGameFrame
 
-   Copyright 2009 - 2019 NoahFrame(NoahGameFrame)
+   Copyright 2009 - 2019 NFShmXFrame(NoahGameFrame)
 
    File creator: lvsheng.huang
    
-   NoahFrame is open-source software and you can redistribute it and/or modify
+   NFShmXFrame is open-source software and you can redistribute it and/or modify
    it under the terms of the License; besides, anyone who use this file/software must include this copyright announcement.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,4 +23,16 @@
    limitations under the License.
 */
 
+// -------------------------------------------------------------------------
+//    @FileName         :    NFRedisCommand.cpp
+//    @Author           :    lvsheng.huang
+//    @Date             :   2022-09-18
+//    @Module           :    NFRedisCommand
+//    @Description      :    Redis命令构建器实现文件
+//
+// -------------------------------------------------------------------------
+
 #include "NFRedisCommand.h"
+
+// 注意：NFRedisCommand类的所有实现都在头文件中以模板和内联函数的形式提供
+// 此文件仅用于包含头文件，确保编译链接的完整性

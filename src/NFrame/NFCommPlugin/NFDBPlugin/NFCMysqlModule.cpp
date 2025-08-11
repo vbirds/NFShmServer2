@@ -3,7 +3,8 @@
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
-//    @Module           :    NFMysqlPlugin
+//    @Module           :    NFCMysqlModule
+//    @Description      :    MySQL模块实现文件，提供同步MySQL数据库操作的核心实现
 //
 // -------------------------------------------------------------------------
 
@@ -14,28 +15,56 @@
 #include "NFComm/NFPluginModule/NFLogMgr.h"
 #include "NFComm/NFPluginModule/NFCheck.h"
 
+/**
+ * @brief NFCMysqlModule构造函数
+ * @param p 插件管理器指针，用于管理模块的生命周期和依赖关系
+ * 
+ * 初始化MySQL模块，创建MySQL驱动管理器实例
+ */
 NFCMysqlModule::NFCMysqlModule(NFIPluginManager* p): NFIMysqlModule(p)
 {
 	mnLastCheckTime = 0;
 	m_pMysqlDriverManager = NF_NEW NFCMysqlDriverManager();
 }
 
+/**
+ * @brief NFCMysqlModule析构函数
+ * 释放MySQL驱动管理器等资源
+ */
 NFCMysqlModule::~NFCMysqlModule()
 {
 	NF_SAFE_DELETE(m_pMysqlDriverManager);
 }
 
-bool NFCMysqlModule::Init()
+/**
+ * @brief 初始化MySQL模块
+ * @return 返回0表示初始化成功
+ * 
+ * 设置定时器，用于定期检查MySQL连接状态
+ */
+int NFCMysqlModule::Init()
 {
 	this->SetTimer(0, 10000, INFINITY_CALL);
-	return true;
+	return 0;
 }
 
-bool NFCMysqlModule::Shut()
+/**
+ * @brief 关闭MySQL模块
+ * @return 返回0表示关闭成功
+ */
+int NFCMysqlModule::Shut()
 {
-	return true;
+	return 0;
 }
 
+/**
+ * @brief 执行MySQL查询并返回多行结果
+ * @param nServerID 服务器ID标识
+ * @param qstr 要执行的SQL查询语句
+ * @param keyvalueMap 查询结果的键值对映射
+ * @param errormsg 错误信息输出
+ * @return 返回0表示成功，非0表示失败
+ */
 int NFCMysqlModule::ExecuteMore(const std::string& nServerID, const std::string &qstr,
                                 std::vector<std::map<std::string, std::string>> &keyvalueMap, std::string &errormsg) {
     NFCMysqlDriver *pDriver = m_pMysqlDriverManager->GetMysqlDriver(nServerID);
@@ -214,9 +243,9 @@ NFCMysqlModule::QueryMore(const std::string& nServerID, const std::string &strTa
     return pDriver->QueryMore(strTableName, keyMap, fieldVec, valueVec, errormsg);
 }
 
-bool NFCMysqlModule::Execute()
+int NFCMysqlModule::Tick()
 {
-	return true;
+	return 0;
 }
 
 int NFCMysqlModule::OnTimer(uint32_t nTimerID)

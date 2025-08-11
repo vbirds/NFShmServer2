@@ -648,6 +648,65 @@ struct storesvr_update {
 /* @@protoc_insertion_point(struct:storesvr_update) */
 };
 
+/* Default values for struct fields */
+/* Initializer values for message structs */
+#define storesvr_vk_init_default                 {"", "", _storesvr_cmp_operator_MIN, _storesvr_column_type_MIN, _storesvr_logic_operator_MIN}
+#define storesvr_wherecond_init_default          {0, {}, "", {}}
+#define storesvr_baseinfo_init_default           {"", "", "", {}, 0, ""}
+#define storesvr_opres_init_default              {0, 0, ""}
+#define storesvr_sel_init_default                {storesvr_baseinfo_init_default, storesvr_wherecond_init_default}
+#define storesvr_sel_res_init_default            {storesvr_baseinfo_init_default, storesvr_opres_init_default, 0, 0, {}}
+#define storesvr_selobj_init_default             {storesvr_baseinfo_init_default, 0, {0, {0}}}
+#define storesvr_selobj_res_init_default         {storesvr_baseinfo_init_default, storesvr_opres_init_default, {0, {0}}}
+#define storesvr_insertobj_init_default          {storesvr_baseinfo_init_default, 0, {0, {0}}}
+#define storesvr_insertobj_res_init_default      {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_insert_init_default             {storesvr_baseinfo_init_default, 0, {}}
+#define storesvr_insert_res_init_default         {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_del_init_default                {storesvr_baseinfo_init_default, storesvr_wherecond_init_default}
+#define storesvr_del_res_init_default            {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_delobj_init_default             {storesvr_baseinfo_init_default, 0, {0, {0}}}
+#define storesvr_delobj_res_init_default         {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_mod_init_default                {storesvr_baseinfo_init_default, storesvr_wherecond_init_default, {0, {0}}}
+#define storesvr_mod_res_init_default            {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_modobj_init_default             {storesvr_baseinfo_init_default, 0, {0, {0}}}
+#define storesvr_modobj_res_init_default         {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_update_init_default             {storesvr_baseinfo_init_default, storesvr_wherecond_init_default, {0, {0}}}
+#define storesvr_update_res_init_default         {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_updateobj_init_default          {storesvr_baseinfo_init_default, 0, {0, {0}}}
+#define storesvr_updateobj_res_init_default      {storesvr_baseinfo_init_default, storesvr_opres_init_default}
+#define storesvr_execute_init_default            {storesvr_baseinfo_init_default, 0, {0, {0}}}
+#define storesvr_execute_res_init_default        {storesvr_baseinfo_init_default, storesvr_opres_init_default, {0, {0}}}
+#define storesvr_execute_more_init_default       {storesvr_baseinfo_init_default, 0, {0, {0}}}
+#define storesvr_execute_more_res_init_default   {storesvr_baseinfo_init_default, storesvr_opres_init_default, 0, 0, {}}
+#define storesvr_vk_init_zero                    {"", "", _storesvr_cmp_operator_MIN, _storesvr_column_type_MIN, _storesvr_logic_operator_MIN}
+#define storesvr_wherecond_init_zero             {0, {}, "", {}}
+#define storesvr_baseinfo_init_zero              {"", "", "", {}, 0, ""}
+#define storesvr_opres_init_zero                 {0, 0, ""}
+#define storesvr_sel_init_zero                   {storesvr_baseinfo_init_zero, storesvr_wherecond_init_zero}
+#define storesvr_sel_res_init_zero               {storesvr_baseinfo_init_zero, storesvr_opres_init_zero, 0, 0, {}}
+#define storesvr_selobj_init_zero                {storesvr_baseinfo_init_zero, 0, {0, {0}}}
+#define storesvr_selobj_res_init_zero            {storesvr_baseinfo_init_zero, storesvr_opres_init_zero, {0, {0}}}
+#define storesvr_insertobj_init_zero             {storesvr_baseinfo_init_zero, 0, {0, {0}}}
+#define storesvr_insertobj_res_init_zero         {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_insert_init_zero                {storesvr_baseinfo_init_zero, 0, {}}
+#define storesvr_insert_res_init_zero            {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_del_init_zero                   {storesvr_baseinfo_init_zero, storesvr_wherecond_init_zero}
+#define storesvr_del_res_init_zero               {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_delobj_init_zero                {storesvr_baseinfo_init_zero, 0, {0, {0}}}
+#define storesvr_delobj_res_init_zero            {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_mod_init_zero                   {storesvr_baseinfo_init_zero, storesvr_wherecond_init_zero, {0, {0}}}
+#define storesvr_mod_res_init_zero               {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_modobj_init_zero                {storesvr_baseinfo_init_zero, 0, {0, {0}}}
+#define storesvr_modobj_res_init_zero            {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_update_init_zero                {storesvr_baseinfo_init_zero, storesvr_wherecond_init_zero, {0, {0}}}
+#define storesvr_update_res_init_zero            {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_updateobj_init_zero             {storesvr_baseinfo_init_zero, 0, {0, {0}}}
+#define storesvr_updateobj_res_init_zero         {storesvr_baseinfo_init_zero, storesvr_opres_init_zero}
+#define storesvr_execute_init_zero               {storesvr_baseinfo_init_zero, 0, {0, {0}}}
+#define storesvr_execute_res_init_zero           {storesvr_baseinfo_init_zero, storesvr_opres_init_zero, {0, {0}}}
+#define storesvr_execute_more_init_zero          {storesvr_baseinfo_init_zero, 0, {0, {0}}}
+#define storesvr_execute_more_res_init_zero      {storesvr_baseinfo_init_zero, storesvr_opres_init_zero, 0, 0, {}}
+
 /* Field tags (for use in manual encoding/decoding) */
 #define storesvr_baseinfo_dbname_tag             1
 #define storesvr_baseinfo_tbname_tag             2
@@ -735,6 +794,34 @@ struct storesvr_update {
 #define storesvr_update_record_tag               3
 
 /* Struct field encoding specification for nanopb */
+extern const pb_field_t storesvr_vk_fields[6];
+extern const pb_field_t storesvr_wherecond_fields[5];
+extern const pb_field_t storesvr_baseinfo_fields[7];
+extern const pb_field_t storesvr_opres_fields[4];
+extern const pb_field_t storesvr_sel_fields[3];
+extern const pb_field_t storesvr_sel_res_fields[6];
+extern const pb_field_t storesvr_selobj_fields[4];
+extern const pb_field_t storesvr_selobj_res_fields[4];
+extern const pb_field_t storesvr_insertobj_fields[4];
+extern const pb_field_t storesvr_insertobj_res_fields[3];
+extern const pb_field_t storesvr_insert_fields[4];
+extern const pb_field_t storesvr_insert_res_fields[3];
+extern const pb_field_t storesvr_del_fields[3];
+extern const pb_field_t storesvr_del_res_fields[3];
+extern const pb_field_t storesvr_delobj_fields[4];
+extern const pb_field_t storesvr_delobj_res_fields[3];
+extern const pb_field_t storesvr_mod_fields[4];
+extern const pb_field_t storesvr_mod_res_fields[3];
+extern const pb_field_t storesvr_modobj_fields[4];
+extern const pb_field_t storesvr_modobj_res_fields[3];
+extern const pb_field_t storesvr_update_fields[4];
+extern const pb_field_t storesvr_update_res_fields[3];
+extern const pb_field_t storesvr_updateobj_fields[4];
+extern const pb_field_t storesvr_updateobj_res_fields[3];
+extern const pb_field_t storesvr_execute_fields[4];
+extern const pb_field_t storesvr_execute_res_fields[4];
+extern const pb_field_t storesvr_execute_more_fields[4];
+extern const pb_field_t storesvr_execute_more_res_fields[6];
 
 /* Maximum encoded size of messages (where known) */
 #define storesvr_vk_size                         74

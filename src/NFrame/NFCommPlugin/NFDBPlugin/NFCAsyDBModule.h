@@ -1,8 +1,16 @@
 // -------------------------------------------------------------------------
-//    @FileName         :    NFCAsyMysqlModule.h
+//    @FileName         :    NFCAsyDBModule.h
 //    @Author           :    Gao.Yi
 //    @Date             :   2022-09-18
-//    @Module           :    NFCAsyMysqlModule
+//    @Module           :    NFCAsyDBModule
+//    @Desc             :    异步数据库模块头文件，提供异步数据库操作接口。
+//                          该文件定义了NFShmXFrame框架的异步数据库模块，继承自NFIAsyDbModule接口，
+//                          提供异步的数据库操作功能，包括查询、插入、更新、删除等操作，
+//                          采用Actor模式实现高并发的数据库访问。
+//                          主要功能包括异步数据库操作避免阻塞主线程、Actor池管理并发任务执行、
+//                          缓存支持提供数据缓存机制、回调处理支持操作完成后的回调函数、
+//                          多服务器支持可连接多个数据库服务器
+//    @Description      :    异步数据库模块头文件，提供异步数据库操作接口
 //
 // -------------------------------------------------------------------------
 
@@ -14,7 +22,19 @@
 
 
 /**
- * @brief 异步mysql
+ * @class NFCAsyDbModule
+ * @brief 异步数据库模块实现类
+ * 
+ * 继承自NFIAsyDbModule接口，提供异步的数据库操作功能。
+ * 支持多种异步数据库操作，包括查询、插入、更新、删除等，
+ * 采用Actor模式实现高并发的数据库访问。
+ * 
+ * 主要功能：
+ * - 异步数据库操作：避免阻塞主线程
+ * - Actor池管理：管理并发任务执行
+ * - 缓存支持：提供数据缓存机制
+ * - 回调处理：支持操作完成后的回调函数
+ * - 多服务器支持：可连接多个数据库服务器
  */
 class NFCAsyDbModule final : public NFIAsyDbModule
 {
@@ -36,7 +56,7 @@ public:
 	 * @return 返回执行结果，true 表示成功，false 表示失败
 	 * 该函数通常用于处理模块的核心业务逻辑，如数据库操作、网络通信等
 	 */
-	bool Execute() override;
+	int Tick() override;
 
 	/**
 	 * @brief 初始化Actor池

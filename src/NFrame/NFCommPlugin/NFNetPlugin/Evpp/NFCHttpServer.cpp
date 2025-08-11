@@ -16,6 +16,35 @@
 #include "evpp/libevent.h"
 #include "NFComm/NFCore/NFTime.h"
 
+/**
+ * @file NFCHttpServer.cpp
+ * @brief Evpp HTTP服务器实现文件
+ * 
+ * 该文件实现了基于evpp库的HTTP服务器，包括：
+ * - HTTP服务器的初始化和销毁
+ * - HTTP请求处理句柄的实现
+ * - HTTP消息处理类的实现
+ * - 服务器监听和连接管理
+ * - HTTP请求和响应处理
+ * - SSL/TLS安全连接支持
+ * 
+ * 主要功能：
+ * - 创建和管理evpp HTTP服务器
+ * - 处理HTTP请求和响应
+ * - 支持多线程并发处理
+ * - 提供SSL/TLS安全连接
+ * - 对象池优化性能
+ * 
+ * @author Gao.Yi
+ * @date 2022-09-18
+ * @version 1.0
+ */
+
+/**
+ * @brief HTTP请求处理句柄构造函数
+ * 
+ * 初始化HTTP请求处理句柄，设置默认值
+ */
 NFServerHttpHandle::NFServerHttpHandle()
 {
     m_type = NF_HTTP_REQ_GET;
@@ -23,6 +52,11 @@ NFServerHttpHandle::NFServerHttpHandle()
     m_timeOut = 0;
 }
 
+/**
+ * @brief 重置HTTP请求处理句柄
+ * 
+ * 清空句柄的所有状态，准备重新使用
+ */
 void NFServerHttpHandle::Reset()
 {
     m_requestId = 0;
@@ -31,6 +65,14 @@ void NFServerHttpHandle::Reset()
     m_responseCb = nullptr;
 }
 
+/**
+ * @brief 添加响应头
+ * 
+ * 向HTTP响应中添加自定义头字段
+ * 
+ * @param key 头字段名
+ * @param value 头字段值
+ */
 void NFServerHttpHandle::AddResponseHeader(const std::string& key, const std::string& value) const
 {
     if (m_ctx)
@@ -39,6 +81,19 @@ void NFServerHttpHandle::AddResponseHeader(const std::string& key, const std::st
     }
 }
 
+/**
+ * @brief 发送响应消息
+ * 
+ * 向客户端发送HTTP响应消息，包括：
+ * - 设置响应头
+ * - 设置HTTP状态码
+ * - 发送响应内容
+ * 
+ * @param strMsg 响应消息内容
+ * @param code HTTP状态码
+ * @param strReason 状态原因
+ * @return true 发送成功，false 发送失败
+ */
 bool NFServerHttpHandle::ResponseMsg(const std::string& strMsg, NFWebStatus code, const std::string& strReason) const
 {
     AddResponseHeader("Content-Type", "application/json");
@@ -56,6 +111,14 @@ bool NFServerHttpHandle::ResponseMsg(const std::string& strMsg, NFWebStatus code
     return true;
 }
 
+/**
+ * @brief 获取查询参数
+ * 
+ * 从HTTP请求中获取指定的查询参数
+ * 
+ * @param queryKey 查询参数名
+ * @return 查询参数值
+ */
 std::string NFServerHttpHandle::GetQuery(const std::string& queryKey) const
 {
     if (m_ctx)
@@ -65,16 +128,31 @@ std::string NFServerHttpHandle::GetQuery(const std::string& queryKey) const
     return std::string();
 }
 
+/**
+ * @brief HTTP消息构造函数
+ * 
+ * 初始化HTTP消息对象
+ */
 NFEvppHttMsg::NFEvppHttMsg()
 {
     Clear();
 }
 
+/**
+ * @brief HTTP消息析构函数
+ * 
+ * 清理HTTP消息对象资源
+ */
 NFEvppHttMsg::~NFEvppHttMsg()
 {
     Clear();
 }
 
+/**
+ * @brief HTTP消息拷贝构造函数
+ * 
+ * @param msg 要拷贝的HTTP消息对象
+ */
 NFEvppHttMsg::NFEvppHttMsg(const NFEvppHttMsg& msg)
 {
     if (this != &msg)
@@ -84,6 +162,12 @@ NFEvppHttMsg::NFEvppHttMsg(const NFEvppHttMsg& msg)
     }
 }
 
+/**
+ * @brief HTTP消息赋值操作符
+ * 
+ * @param msg 要赋值的HTTP消息对象
+ * @return 当前对象引用
+ */
 NFEvppHttMsg& NFEvppHttMsg::operator=(const NFEvppHttMsg& msg)
 {
     if (this != &msg)
@@ -94,6 +178,11 @@ NFEvppHttMsg& NFEvppHttMsg::operator=(const NFEvppHttMsg& msg)
     return *this;
 }
 
+/**
+ * @brief 清空HTTP消息内容
+ * 
+ * 重置所有成员变量为默认值
+ */
 void NFEvppHttMsg::Clear()
 {
     m_ctx = nullptr;

@@ -59,7 +59,7 @@ NFCoroutineSchedule::~NFCoroutineSchedule() {
     }
 }
 
-bool NFCoroutineSchedule::CheckStopServer()
+int NFCoroutineSchedule::CheckStopServer()
 {
     NFLogInfo(NF_LOG_DEFAULT, 0, "NFCoroutineSchedule StopServer.................");
     if (schedule_)
@@ -69,9 +69,9 @@ bool NFCoroutineSchedule::CheckStopServer()
 
     if (!m_taskTimer.empty())
     {
-        return false;
+        return -1;
     }
-    return true;
+    return 0;
 }
 
 int NFCoroutineSchedule::OnTimer(uint32_t nTimerID)

@@ -234,11 +234,26 @@ bool IsWildcardPattern(const std::string& target)
 // Execute command with target
 bool ExecuteCommand(NFServerController& controller, const std::string& action, const std::string& target)
 {
+#ifdef _WIN32
+    std::string pidFile = "NFServerController.pid";
+#else
+    std::string pidFile = "/tmp/NFServerController.pid";
+#endif
+
     std::string cmd = action;
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
     if (cmd == "start")
     {
+        // Initialize PID management first
+        if (!InitializePidManagement(pidFile))
+        {
+            return 1;
+        }
+
+        // Setup cleanup handler to remove PID file on exit
+        std::atexit(CleanupPidFile);
+
         if (target.empty() || target == "*.*.*.*")
         {
             std::cout << "Starting all servers..." << std::endl;
@@ -263,6 +278,15 @@ bool ExecuteCommand(NFServerController& controller, const std::string& action, c
     }
     else if (cmd == "stop")
     {
+        // Initialize PID management first
+        if (!InitializePidManagement(pidFile))
+        {
+            return 1;
+        }
+
+        // Setup cleanup handler to remove PID file on exit
+        std::atexit(CleanupPidFile);
+
         if (target.empty() || target == "*.*.*.*")
         {
             std::cout << "Stopping all servers..." << std::endl;
@@ -287,6 +311,15 @@ bool ExecuteCommand(NFServerController& controller, const std::string& action, c
     }
     else if (cmd == "restart")
     {
+        // Initialize PID management first
+        if (!InitializePidManagement(pidFile))
+        {
+            return 1;
+        }
+
+        // Setup cleanup handler to remove PID file on exit
+        std::atexit(CleanupPidFile);
+
         if (target.empty() || target == "*.*.*.*")
         {
             std::cout << "Restarting all servers..." << std::endl;
@@ -410,6 +443,15 @@ bool ExecuteCommand(NFServerController& controller, const std::string& action, c
     }
     else if (cmd == "reload")
     {
+        // Initialize PID management first
+        if (!InitializePidManagement(pidFile))
+        {
+            return 1;
+        }
+
+        // Setup cleanup handler to remove PID file on exit
+        std::atexit(CleanupPidFile);
+
         if (target.empty() || target == "*.*.*.*")
         {
             std::cout << "Reloading all servers..." << std::endl;
@@ -434,6 +476,15 @@ bool ExecuteCommand(NFServerController& controller, const std::string& action, c
     }
     else if (cmd == "clear")
     {
+        // Initialize PID management first
+        if (!InitializePidManagement(pidFile))
+        {
+            return 1;
+        }
+
+        // Setup cleanup handler to remove PID file on exit
+        std::atexit(CleanupPidFile);
+
         if (target.empty() || target == "*.*.*.*")
         {
             std::cout << "Clear all servers shm..." << std::endl;
@@ -456,6 +507,62 @@ bool ExecuteCommand(NFServerController& controller, const std::string& action, c
             return success;
         }
     }
+    else if (cmd == "init")
+    {
+        // Initialize PID management first
+        if (!InitializePidManagement(pidFile))
+        {
+            return 1;
+        }
+
+        // Setup cleanup handler to remove PID file on exit
+        std::atexit(CleanupPidFile);
+
+        bool stopSuccess = controller.StopAllServers();
+        if (!stopSuccess)
+        {
+            std::cerr << "Failed to stop all servers" << std::endl;
+            return false;
+        }
+
+        bool clearSuccess = controller.ClearShmAllServers();
+        if (!clearSuccess)
+        {
+            std::cerr << "Failed to clear shared memory" << std::endl;
+            return false;
+        }
+
+        bool startSuccess = controller.StartAllServers();
+        if (!startSuccess)
+        {
+            std::cerr << "Failed to start all servers" << std::endl;
+            return false;
+        }
+    }
+    else if (cmd == "log" || cmd == "logs")
+    {
+        if (target.empty() || target == "*.*.*.*" || target == "all")
+        {
+            std::cout << "Viewing logs for all servers..." << std::endl;
+            bool success = controller.ViewAllServersLog();
+            std::cout << (success ? "Log viewing completed" : "Failed to view logs") << std::endl;
+            return success;
+        }
+        else if (IsWildcardPattern(target))
+        {
+            std::cout << "Viewing server logs for matching pattern: " << target << std::endl;
+            bool success = controller.ViewServerLogByPattern(target);
+            std::cout << (success ? "View Servers log successfully" : "Failed to view some servers log") << std::endl;
+            return success;
+        }
+        else
+        {
+            std::cout << "Viewing log for server: " << target << std::endl;
+            bool success = controller.ViewServerLog(target);
+            std::cout << (success ? "Log viewing completed" : "Failed to view server log") << std::endl;
+            return success;
+        }
+    }
     else
     {
         std::cerr << "Unknown command: " << cmd << std::endl;
@@ -472,23 +579,14 @@ int main(int argc, char* argv[])
     // Default config file path
 #ifdef _WIN32
     std::string configFile = "win_servers.conf";
-    std::string pidFile = "NFServerController.pid";
 #else
     std::string configFile = "linux_servers.conf";
-    std::string pidFile = "/tmp/NFServerController.pid";
 #endif
     bool verbose = false;
     bool quiet = false;
     std::string commandString;
 
-    // Initialize PID management first
-    if (!InitializePidManagement(pidFile))
-    {
-        return 1;
-    }
 
-    // Setup cleanup handler to remove PID file on exit
-    std::atexit(CleanupPidFile);
 
     NFServerController controller;
 
@@ -569,6 +667,8 @@ int main(int argc, char* argv[])
         std::cout << "  NFServerController \"check *.*.*.*\"              # Show all server status" << std::endl;
         std::cout << "  NFServerController \"clear *.*.*.*\"              # Clear all server Shm (server-specific)" << std::endl;
         std::cout << "  NFServerController \"clear 1.13.1.1\"            # Clear specific server Shm by serverId" << std::endl;
+        std::cout << "  NFServerController \"log all\"                   # View all servers log (combined)" << std::endl;
+        std::cout << "  NFServerController \"log MasterServer\"          # View specific server log" << std::endl;
         return 0;
     }
 

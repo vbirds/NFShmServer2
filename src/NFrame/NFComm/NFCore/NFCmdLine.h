@@ -7,6 +7,15 @@
 //
 // -------------------------------------------------------------------------
 
+/**
+ * @file NFCmdLine.h
+ * @brief 命令行参数解析器
+ * 
+ * 此文件提供了一个功能强大的命令行参数解析库。
+ * 支持多种数据类型的参数解析，包括必选参数、可选参数、标志参数等。
+ * 提供类型安全的参数转换和友好的错误处理机制。
+ */
+
 #pragma once
 
 #include <iostream>
@@ -22,14 +31,70 @@
 #include "NFPlatform.h"
 #include "NFStringUtility.h"
 
+/**
+ * @brief 命令行解析命名空间
+ * 
+ * NFCmdLine命名空间包含了命令行参数解析的所有功能。
+ * 提供了类型安全的参数解析、验证和转换机制。
+ * 
+ * 主要功能：
+ * - 支持多种参数类型：字符串、整数、浮点数、布尔值等
+ * - 支持必选参数和可选参数
+ * - 支持参数验证和约束
+ * - 支持帮助信息自动生成
+ * - 提供友好的错误处理
+ * 
+ * 使用方法：
+ * @code
+ * // 创建解析器
+ * NFCmdLine::parser parser("MyProgram", "1.0");
+ * 
+ * // 添加参数定义
+ * parser.add<std::string>("input", 'i', "input file", true);
+ * parser.add<int>("port", 'p', "server port", false, 8080);
+ * parser.add("verbose", 'v', "verbose mode");
+ * 
+ * // 解析命令行
+ * parser.parse(argc, argv);
+ * 
+ * // 获取参数值
+ * std::string input = parser.get<std::string>("input");
+ * int port = parser.get<int>("port");
+ * bool verbose = parser.exist("verbose");
+ * @endcode
+ */
 namespace NFCmdLine
 {
+	/**
+	 * @brief 内部实现命名空间
+	 * 
+	 * NFDetail包含了命令行解析器的内部实现细节，
+	 * 包括类型转换、类型萃取等辅助功能。
+	 */
 	namespace NFDetail
 	{
+		/**
+		 * @brief 词法转换模板类
+		 * 
+		 * 提供类型安全的字符串与其他类型之间的转换功能。
+		 * 
+		 * @tparam Target 目标类型
+		 * @tparam Source 源类型
+		 * @tparam Same 是否为相同类型
+		 */
 		template <typename Target, typename Source, bool Same>
 		class lexical_cast_t
 		{
 		public:
+			/**
+			 * @brief 类型转换函数
+			 * 
+			 * 将源类型转换为目标类型。
+			 * 
+			 * @param arg 源值
+			 * @return Target 转换后的目标值
+			 * @throws std::bad_cast 转换失败时抛出异常
+			 */
 			static Target cast(const Source& arg)
 			{
 				Target ret;
@@ -41,20 +106,47 @@ namespace NFCmdLine
 			}
 		};
 
+		/**
+		 * @brief 相同类型的词法转换特化
+		 * 
+		 * 当源类型和目标类型相同时，直接返回原值。
+		 * 
+		 * @tparam Target 目标类型
+		 * @tparam Source 源类型
+		 */
 		template <typename Target, typename Source>
 		class lexical_cast_t<Target, Source, true>
 		{
 		public:
+			/**
+			 * @brief 相同类型转换
+			 * 
+			 * @param arg 源值
+			 * @return Target 直接返回源值
+			 */
 			static Target cast(const Source& arg)
 			{
 				return arg;
 			}
 		};
 
+		/**
+		 * @brief 转换为字符串的特化
+		 * 
+		 * 将任意类型转换为字符串。
+		 * 
+		 * @tparam Source 源类型
+		 */
 		template <typename Source>
 		class lexical_cast_t<std::string, Source, false>
 		{
 		public:
+			/**
+			 * @brief 转换为字符串
+			 * 
+			 * @param arg 源值
+			 * @return std::string 转换后的字符串
+			 */
 			static std::string cast(const Source& arg)
 			{
 				std::ostringstream ss;
@@ -63,10 +155,24 @@ namespace NFCmdLine
 			}
 		};
 
+		/**
+		 * @brief 从字符串转换的特化
+		 * 
+		 * 将字符串转换为指定类型。
+		 * 
+		 * @tparam Target 目标类型
+		 */
 		template <typename Target>
 		class lexical_cast_t<Target, std::string, false>
 		{
 		public:
+			/**
+			 * @brief 从字符串转换
+			 * 
+			 * @param arg 源字符串
+			 * @return Target 转换后的目标值
+			 * @throws std::bad_cast 转换失败时抛出异常
+			 */
 			static Target cast(const std::string& arg)
 			{
 				Target ret;
@@ -77,24 +183,57 @@ namespace NFCmdLine
 			}
 		};
 
+		/**
+		 * @brief 类型相同性检测模板
+		 * 
+		 * 用于在编译时检测两个类型是否相同。
+		 * 
+		 * @tparam T1 第一个类型
+		 * @tparam T2 第二个类型
+		 */
 		template <typename T1, typename T2>
 		struct is_same
 		{
+			/** @brief 类型不同时为false */
 			static const bool value = false;
 		};
 
+		/**
+		 * @brief 相同类型的特化
+		 * 
+		 * @tparam T 类型
+		 */
 		template <typename T>
 		struct is_same<T, T>
 		{
+			/** @brief 相同类型时为true */
 			static const bool value = true;
 		};
 
+		/**
+		 * @brief 词法转换包装函数
+		 * 
+		 * 根据类型是否相同选择合适的转换策略。
+		 * 
+		 * @tparam Target 目标类型
+		 * @tparam Source 源类型
+		 * @param arg 源值
+		 * @return Target 转换后的目标值
+		 */
 		template <typename Target, typename Source>
 		Target lexical_cast_x(const Source& arg)
 		{
 			return lexical_cast_t<Target, Source, NFDetail::is_same<Target, Source>::value>::cast(arg);
 		}
 
+		/**
+		 * @brief 类型名称解析函数
+		 * 
+		 * 获取类型的可读名称。
+		 * 
+		 * @param name 类型名称字符串
+		 * @return std::string 解析后的类型名称
+		 */
 		static inline std::string demangle(const std::string& name)
 		{
 			return name;

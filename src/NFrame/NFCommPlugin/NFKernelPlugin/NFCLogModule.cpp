@@ -65,15 +65,15 @@ NFCLogModule::~NFCLogModule()
 	spdlog::drop_all();
 }
 
-bool NFCLogModule::Shut()
+int NFCLogModule::Shut()
 {
-	return true;
+	return 0;
 }
 
-bool NFCLogModule::OnReloadConfig()
+int NFCLogModule::OnReloadConfig()
 {
 	SetDefaultLogConfig();
-	return true;
+	return 0;
 }
 
 void NFCLogModule::LogDefault(NF_LOG_LEVEL log_level, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, const std::string& log)

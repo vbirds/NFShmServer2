@@ -12,12 +12,45 @@
 #include "evpp/httpc/response.h"
 #include "NFComm/NFCore/NFCommon.h"
 
+/**
+ * @file NFCHttpClient.cpp
+ * @brief Evpp HTTP客户端实现文件
+ * 
+ * 该文件实现了基于evpp库的HTTP客户端，包括：
+ * - HTTP客户端的初始化和销毁
+ * - HTTP客户端消息类的实现
+ * - HTTP客户端参数类的实现
+ * - HTTP请求发送和响应处理
+ * - 异步请求管理和超时处理
+ * 
+ * 主要功能：
+ * - 创建和管理evpp HTTP客户端
+ * - 发送HTTP GET/POST请求
+ * - 处理异步响应
+ * - 支持请求超时管理
+ * - 对象池优化性能
+ * 
+ * @author Gao.Yi
+ * @date 2022-09-18
+ * @version 1.0
+ */
+
+/**
+ * @brief HTTP客户端消息构造函数
+ * 
+ * 初始化HTTP客户端消息对象，设置默认值
+ */
 NFHttpClientMsg::NFHttpClientMsg()
 {
     m_code = 0;
     m_reqId = 0;
 }
 
+/**
+ * @brief 清空HTTP客户端消息内容
+ * 
+ * 重置所有成员变量为默认值
+ */
 void NFHttpClientMsg::Clear()
 {
     m_body.clear();
@@ -25,6 +58,11 @@ void NFHttpClientMsg::Clear()
     m_reqId = 0;
 }
 
+/**
+ * @brief HTTP客户端消息拷贝构造函数
+ * 
+ * @param msg 要拷贝的HTTP客户端消息对象
+ */
 NFHttpClientMsg::NFHttpClientMsg(const NFHttpClientMsg& msg)
 {
     if (this != &msg)
@@ -35,6 +73,12 @@ NFHttpClientMsg::NFHttpClientMsg(const NFHttpClientMsg& msg)
     }
 }
 
+/**
+ * @brief HTTP客户端消息赋值操作符
+ * 
+ * @param msg 要赋值的HTTP客户端消息对象
+ * @return 当前对象引用
+ */
 NFHttpClientMsg& NFHttpClientMsg::operator=(const NFHttpClientMsg& msg)
 {
     if (this != &msg)
@@ -46,20 +90,52 @@ NFHttpClientMsg& NFHttpClientMsg::operator=(const NFHttpClientMsg& msg)
     return *this;
 }
 
+/**
+ * @brief HTTP客户端参数构造函数
+ * 
+ * 初始化HTTP客户端参数对象，包括：
+ * - 设置请求ID
+ * - 设置响应回调函数
+ * - 计算超时时间
+ * 
+ * @param id 请求ID
+ * @param func 响应回调函数
+ * @param timeout 超时时间（秒）
+ */
 NFCHttpClientParam::NFCHttpClientParam(int id, const HTTP_CLIENT_RESPONE& func, uint32_t timeout): m_id(id), m_resp(func)
 {
     m_timeout = NF_ADJUST_TIMENOW() + timeout * 10;
 }
 
+/**
+ * @brief HTTP客户端参数析构函数
+ * 
+ * 清理HTTP客户端参数对象资源
+ */
 NFCHttpClientParam::~NFCHttpClientParam()
 {
 }
 
+/**
+ * @brief 检查是否超时
+ * 
+ * 检查当前时间是否超过设置的超时时间
+ * 
+ * @return true 已超时，false 未超时
+ */
 bool NFCHttpClientParam::IsTimeOut() const
 {
     return NF_ADJUST_TIMENOW() > m_timeout;
 }
 
+/**
+ * @brief HTTP客户端构造函数
+ * 
+ * 初始化HTTP客户端，包括：
+ * - 启动事件循环线程
+ * - 初始化请求ID
+ * - 创建对象池
+ */
 NFCHttpClient::NFCHttpClient()
 {
     m_threadLoop.Start();
@@ -67,6 +143,13 @@ NFCHttpClient::NFCHttpClient()
     m_pHttpClientParamPool = NF_NEW NFObjectPool<NFCHttpClientParam>(1000, false);
 }
 
+/**
+ * @brief HTTP客户端析构函数
+ * 
+ * 清理HTTP客户端资源，包括：
+ * - 停止事件循环线程
+ * - 释放对象池
+ */
 NFCHttpClient::~NFCHttpClient()
 {
     m_threadLoop.Stop(true);
@@ -76,6 +159,18 @@ NFCHttpClient::~NFCHttpClient()
     }
 }
 
+/**
+ * @brief 处理HTTP GET请求响应
+ * 
+ * 处理HTTP GET请求的响应，包括：
+ * - 记录响应日志
+ * - 创建响应消息
+ * - 将消息加入队列
+ * - 清理请求对象
+ * 
+ * @param response HTTP响应对象
+ * @param request HTTP GET请求对象
+ */
 void NFCHttpClient::HandleHttpGetResponse(const std::shared_ptr<evpp::httpc::Response>& response,
                                           const evpp::httpc::GetRequest* request)
 {
@@ -94,6 +189,21 @@ void NFCHttpClient::HandleHttpGetResponse(const std::shared_ptr<evpp::httpc::Res
     NF_SAFE_DELETE(request); // The request MUST BE deleted in EventLoop thread.
 }
 
+/**
+ * @brief 发送HTTP GET请求
+ * 
+ * 发送HTTP GET请求，包括：
+ * - 记录请求日志
+ * - 创建请求对象
+ * - 设置请求头
+ * - 发送请求
+ * 
+ * @param strUri 请求URI
+ * @param respone 响应回调函数
+ * @param xHeaders 请求头
+ * @param timeout 超时时间
+ * @return 请求结果
+ */
 int NFCHttpClient::HttpGet(const string& strUri, const HTTP_CLIENT_RESPONE& respone,
                            const map<std::string, std::string>& xHeaders, int timeout)
 {

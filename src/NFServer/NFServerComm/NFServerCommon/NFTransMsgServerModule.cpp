@@ -4,6 +4,18 @@
 //    @Date             :    22-10-28
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFTransMsgServerModule
+//    @Desc             :    事务消息服务器模块实现文件，提供事务消息服务器的通用功能实现。
+//                          该文件实现了事务消息服务器模块类的方法，包括服务器连接管理、
+//                          消息处理接口、服务器注册功能、网络事件处理。
+//                          主要功能包括提供事务消息服务器的通用功能实现、支持服务器连接管理、
+//                          支持消息处理和路由分发、提供网络事件处理。
+//                          事务消息服务器模块实现是NFShmXFrame框架的事务处理组件实现，负责：
+//                          - 事务消息服务器的通用功能实现
+//                          - 服务器连接管理和状态维护实现
+//                          - 事务处理和状态管理实现
+//                          - 消息处理和路由分发实现
+//                          - 网络事件处理和回调实现
+//                          - 跨服务器事务通信支持实现
 //
 // -------------------------------------------------------------------------
 #include "NFTransMsgServerModule.h"
@@ -18,86 +30,125 @@
 #define SERVER_REPORT_TO_MASTER_SERVER_TIMER_ID 101
 #define SERVER_SERVER_DEAD_TIMER_ID 102
 
+/**
+ * @brief 检查是否连接主服务器
+ * 
+ * @return true表示连接主服务器，false表示不连接
+ */
 bool NFTransMsgServerModule::IsConnectMasterServer() const
 {
     return m_connectMasterServer;
 }
 
+/**
+ * @brief 设置是否连接主服务器
+ * 
+ * @param connectMasterServer 是否连接主服务器
+ */
 void NFTransMsgServerModule::SetConnectMasterServer(bool connectMasterServer)
 {
     m_connectMasterServer = connectMasterServer;
 }
 
+/**
+ * @brief 绑定服务器
+ * 
+ * 初始化服务器配置，绑定网络端口，注册消息回调
+ * 
+ * @return 0表示成功
+ */
 int NFTransMsgServerModule::BindServer()
 {
-    NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType);
-    CHECK_EXPR_ASSERT(pConfig, -1, "GetAppConfig Failed, server type:{}", m_serverType);
+    NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(m_serverType); ///< 获取服务器配置
+    CHECK_EXPR_ASSERT(pConfig, -1, "GetAppConfig Failed, server type:{}", m_serverType); ///< 检查配置获取是否成功
 
     //////////////////////master msg//////////////////////////
+    // 注册主服务器消息回调
     FindModule<NFIMessageModule>()->AddMessageCallBack(m_serverType, NF_MODULE_FRAME, NFrame::NF_MASTER_SERVER_SEND_OTHERS_TO_SERVER, this,
                                                        &NFTransMsgServerModule::OnHandleServerReportFromMasterServer);
 
     if (!m_pObjPluginManager->IsLoadAllServer())
     {
-        CHECK_EXPR_ASSERT(pConfig->ServerType == m_serverType, -1, "server config error, server id not match the server type!:{}", m_serverType);
+        CHECK_EXPR_ASSERT(pConfig->ServerType == m_serverType, -1, "server config error, server id not match the server type!:{}", m_serverType); ///< 检查服务器类型匹配
     }
 
     //注册要完成的服务器启动任务
     if (m_connectMasterServer)
     {
         RegisterAppTask(m_serverType, APP_INIT_CONNECT_MASTER,
-                                             NF_FORMAT("{}_{}", pConfig->ServerName, SERVER_CONNECT_MASTER_SERVER), APP_INIT_TASK_GROUP_SERVER_CONNECT);
+                                             NF_FORMAT("{}_{}", pConfig->ServerName, SERVER_CONNECT_MASTER_SERVER), APP_INIT_TASK_GROUP_SERVER_CONNECT); ///< 注册连接主服务器任务
     }
 
+    // 绑定服务器端口
     uint64_t serverLinkId = FindModule<NFIMessageModule>()->BindServer(m_serverType, pConfig->Url, pConfig->NetThreadNum, pConfig->MaxConnectNum,
                                                                        PACKET_PARSE_TYPE_INTERNAL);
     CHECK_EXPR_ASSERT(serverLinkId > 0, -1, "Server:{} Listen Failed, ServerId:{}, Ip:{}, Port:{}", pConfig->ServerName, pConfig->ServerId,
-                      pConfig->ServerIp, pConfig->ServerPort);
+                      pConfig->ServerIp, pConfig->ServerPort); ///< 检查服务器绑定是否成功
 
-    FindModule<NFIMessageModule>()->SetServerLinkId(m_serverType, serverLinkId);
-    FindModule<NFIMessageModule>()->AddEventCallBack(m_serverType, serverLinkId, this, &NFTransMsgServerModule::OnServerSocketEvent);
+    FindModule<NFIMessageModule>()->SetServerLinkId(m_serverType, serverLinkId); ///< 设置服务器链接ID
+    FindModule<NFIMessageModule>()->AddEventCallBack(m_serverType, serverLinkId, this, &NFTransMsgServerModule::OnServerSocketEvent); ///< 添加事件回调
     FindModule<NFIMessageModule>()->AddOtherCallBack(m_serverType, serverLinkId, this,
-                                                     &NFTransMsgServerModule::OnHandleServerOtherMessage);
+                                                     &NFTransMsgServerModule::OnHandleServerOtherMessage); ///< 添加其他消息回调
     NFLogInfo(NF_LOG_DEFAULT, 0, "Server:{} Listen Success, ServerId:{}, Ip:{}, Port:{}", pConfig->ServerName, pConfig->ServerId, pConfig->ServerIp,
-              pConfig->ServerPort);
+              pConfig->ServerPort); ///< 记录服务器启动成功日志
 
-    Subscribe(m_serverType, NFrame::NF_EVENT_SERVER_DEAD_EVENT, NFrame::NF_EVENT_SERVER_TYPE, 0, __FUNCTION__);
-    Subscribe(m_serverType, NFrame::NF_EVENT_SERVER_APP_FINISH_INITED, NFrame::NF_EVENT_SERVER_TYPE, 0, __FUNCTION__);
+    Subscribe(m_serverType, NFrame::NF_EVENT_SERVER_DEAD_EVENT, NFrame::NF_EVENT_SERVER_TYPE, 0, __FUNCTION__); ///< 订阅服务器死亡事件
+    Subscribe(m_serverType, NFrame::NF_EVENT_SERVER_APP_FINISH_INITED, NFrame::NF_EVENT_SERVER_TYPE, 0, __FUNCTION__); ///< 订阅服务器初始化完成事件
 
-    SetTimer(SERVER_REPORT_TO_MASTER_SERVER_TIMER_ID, 10000);
+    SetTimer(SERVER_REPORT_TO_MASTER_SERVER_TIMER_ID, 10000); ///< 设置向主服务器报告定时器
     return 0;
 }
 
+/**
+ * @brief 执行事件处理
+ * 
+ * 处理服务器事件，包括服务器死亡和初始化完成事件
+ * 
+ * @param serverType 服务器类型
+ * @param nEventID 事件ID
+ * @param bySrcType 源类型
+ * @param nSrcID 源ID
+ * @param pMessage 消息数据
+ * @return 0表示成功
+ */
 int NFTransMsgServerModule::OnExecute(uint32_t serverType, uint32_t nEventID, uint32_t bySrcType, uint64_t nSrcID,
                                       const google::protobuf::Message *pMessage)
 {
-    CHECK_EXPR(serverType == m_serverType, 0, "");
+    CHECK_EXPR(serverType == m_serverType, 0, ""); ///< 检查服务器类型匹配
     if (bySrcType == NFrame::NF_EVENT_SERVER_TYPE)
     {
         if (nEventID == NFrame::NF_EVENT_SERVER_DEAD_EVENT)
         {
-            SetTimer(SERVER_SERVER_DEAD_TIMER_ID, 10000, 0);
+            SetTimer(SERVER_SERVER_DEAD_TIMER_ID, 10000, 0); ///< 设置服务器死亡定时器
         }
         else if (nEventID == NFrame::NF_EVENT_SERVER_APP_FINISH_INITED)
         {
-            RegisterMasterServer(NFrame::EST_NARMAL);
+            RegisterMasterServer(NFrame::EST_NARMAL); ///< 注册主服务器
         }
     }
 
     return 0;
 }
 
+/**
+ * @brief 定时器回调
+ * 
+ * 处理各种定时器事件
+ * 
+ * @param nTimerID 定时器ID
+ * @return 0表示成功
+ */
 int NFTransMsgServerModule::OnTimer(uint32_t nTimerID)
 {
     if (nTimerID == SERVER_REPORT_TO_MASTER_SERVER_TIMER_ID)
     {
-        ServerReportToMasterServer();
+        ServerReportToMasterServer(); ///< 向主服务器报告状态
     }
     else if (nTimerID == SERVER_SERVER_DEAD_TIMER_ID)
     {
-        NFLogError(NF_LOG_DEFAULT, 0, "kill the exe..................");
-        NFSLEEP(1000);
-        exit(0);
+        NFLogError(NF_LOG_DEFAULT, 0, "kill the exe.................."); ///< 记录错误日志
+        NFSLEEP(1000); ///< 等待1秒
+        exit(0); ///< 退出程序
     }
     return 0;
 }

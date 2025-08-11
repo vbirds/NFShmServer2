@@ -3,7 +3,14 @@
 //    @Author           :    eliteYang
 //    @Date             :   2022-09-18
 //    @Module           :    NFCMysqlDriver
-//    @Desc             :
+//    @Desc             :    MySQL数据库驱动核心头文件，提供MySQL数据库的底层操作接口。
+//                          该文件定义了NFShmXFrame框架的MySQL数据库驱动核心类，提供MySQL数据库的底层操作功能，
+//                          包括数据库连接管理、SQL查询执行、数据增删改查、事务处理、表结构管理、
+//                          Protobuf对象映射、异常处理等功能。
+//                          主要功能包括MySQL连接建立和维护、SQL语句执行和结果处理、
+//                          支持Protobuf对象的数据库映射、表结构自动创建和管理、连接池管理
+//    @Description      :    MySQL数据库驱动核心头文件，提供MySQL数据库的底层操作接口
+//
 // -------------------------------------------------------------------------
 
 #pragma once
@@ -48,8 +55,25 @@
 #include "NFComm/NFPluginModule/NFLogMgr.h"
 #include "NFComm/NFPluginModule/NFProtobufCommon.h"
 
+/**
+ * @def NFMYSQLTRYBEGIN
+ * @brief MySQL操作异常处理开始宏
+ * 
+ * 与NFMYSQLTRYEND配合使用，提供统一的MySQL异常处理机制
+ */
 #define  NFMYSQLTRYBEGIN try {
 
+/**
+ * @def NFMYSQLTRYEND(msg)
+ * @brief MySQL操作异常处理结束宏
+ * @param msg 错误日志消息
+ * 
+ * 捕获各种MySQL++异常类型并统一处理：
+ * - BadQuery: SQL语法错误
+ * - BadConversion: 数据类型转换错误  
+ * - Exception: 一般MySQL异常
+ * - 其他未知异常
+ */
 #define  NFMYSQLTRYEND(msg) }\
     catch (mysqlpp::BadQuery er) \
     { \
@@ -80,9 +104,33 @@
 //////////////////////////////////////////////////////////////////////////
 
 /**
-* @brief mysql驱动， 里面有一个myql连接
-** 实现了通过protobuf的反射来存取数据，使用方法如下：
-*****************************保存数据到db方案*******************************/
+ * @class NFCMysqlDriver
+ * @brief MySQL数据库驱动核心类
+ * 
+ * 基于MySQL++库实现的MySQL数据库驱动程序，提供完整的数据库操作功能。
+ * 支持通过Protobuf反射机制进行数据的存取操作，简化了数据库编程。
+ * 
+ * 主要功能：
+ * - 数据库连接管理：支持连接、重连、状态检查
+ * - CRUD操作：提供增删改查的完整接口
+ * - Protobuf集成：支持Protobuf对象与数据库记录的自动映射
+ * - 事务支持：提供事务管理功能
+ * - 异常处理：统一的异常处理和错误报告机制
+ * - 连接池友好：支持与连接池管理器集成
+ * - 表结构管理：支持动态创建表和添加列
+ * 
+ * 使用示例：
+ * @code
+ * NFCMysqlDriver driver;
+ * driver.Connect("test_db", "localhost", 3306, "user", "password");
+ * 
+ * // 使用Protobuf反射保存数据
+ * MyProtoMessage msg;
+ * driver.SaveObj("my_table", "primary_key", msg);
+ * @endcode
+ * 
+ * @note 该类是线程安全的，但建议每个线程使用独立的驱动实例
+ */
 class NFCMysqlDriver final
 {
 public:

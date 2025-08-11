@@ -25,7 +25,7 @@
 #include "NFComm/NFPluginModule/NFNetPackagePool.h"
 #include "NFComm/NFPluginModule/NFIEventModule.h"
 
-NFCMessageModule::NFCMessageModule(NFIPluginManager *p) : NFIMessageModule(p)
+NFCMessageModule::NFCMessageModule(NFIPluginManager* p) : NFIMessageModule(p)
 {
     m_pObjPluginManager = p;
     m_netModule = NULL;
@@ -33,7 +33,7 @@ NFCMessageModule::NFCMessageModule(NFIPluginManager *p) : NFIMessageModule(p)
     mServerLinkData.resize(NF_ST_MAX);
     for (size_t i = 0; i < mServerLinkData.size(); i++)
     {
-        mServerLinkData[i].mServerType = (NF_SERVER_TYPE) i;
+        mServerLinkData[i].mServerType = (NF_SERVER_TYPE)i;
     }
 }
 
@@ -42,39 +42,39 @@ NFCMessageModule::~NFCMessageModule()
     mxCallBack.clear();
 }
 
-bool NFCMessageModule::Awake()
+int NFCMessageModule::Awake()
 {
     if (m_netModule != NULL)
     {
-        return true;
+        return 0;
     }
 
-    NFINetModule *pDriver = FindModule<NFINetModule>();
+    NFINetModule* pDriver = FindModule<NFINetModule>();
     if (pDriver)
     {
         SetNetModule(pDriver);
     }
 
-    return true;
+    return 0;
 }
 
-bool NFCMessageModule::Finalize()
+int NFCMessageModule::Finalize()
 {
     mxCallBack.clear();
-    return true;
+    return 0;
 }
 
-bool NFCMessageModule::Execute()
+int NFCMessageModule::Tick()
 {
-    return true;
+    return 0;
 }
 
-bool NFCMessageModule::OnReloadConfig()
+int NFCMessageModule::OnReloadConfig()
 {
-    return true;
+    return 0;
 }
 
-void NFCMessageModule::SetNetModule(NFINetModule *driver)
+void NFCMessageModule::SetNetModule(NFINetModule* driver)
 {
     m_netModule = driver;
     m_netModule->SetRecvCB(this, &NFCMessageModule::OnReceiveNetPack);
@@ -83,7 +83,7 @@ void NFCMessageModule::SetNetModule(NFINetModule *driver)
     m_netModule->SetHttpFilterCB(this, &NFCMessageModule::OnHttpFilterPack);
 }
 
-uint64_t NFCMessageModule::BindServer(NF_SERVER_TYPE eServerType, const std::string &url, uint32_t nNetThreadNum, uint32_t nMaxConnectNum,
+uint64_t NFCMessageModule::BindServer(NF_SERVER_TYPE eServerType, const std::string& url, uint32_t nNetThreadNum, uint32_t nMaxConnectNum,
                                       uint32_t nPacketParseType, bool bSecurity)
 {
     if (m_netModule)
@@ -93,7 +93,7 @@ uint64_t NFCMessageModule::BindServer(NF_SERVER_TYPE eServerType, const std::str
     return 0;
 }
 
-int NFCMessageModule::ResetPacketParse(uint32_t parseType, NFIPacketParse *pPacketParse)
+int NFCMessageModule::ResetPacketParse(uint32_t parseType, NFIPacketParse* pPacketParse)
 {
     if (m_netModule)
     {
@@ -102,7 +102,7 @@ int NFCMessageModule::ResetPacketParse(uint32_t parseType, NFIPacketParse *pPack
     return 0;
 }
 
-uint64_t NFCMessageModule::ConnectServer(NF_SERVER_TYPE eServerType, const std::string &url, uint32_t nPacketParseType, bool bSecurity)
+uint64_t NFCMessageModule::ConnectServer(NF_SERVER_TYPE eServerType, const std::string& url, uint32_t nPacketParseType, bool bSecurity)
 {
     if (m_netModule)
     {
@@ -149,12 +149,12 @@ void NFCMessageModule::CloseLinkId(uint64_t usLinkId)
 
     if (serverType > NF_ST_NONE && serverType < NF_ST_MAX)
     {
-        DelAllCallBack((NF_SERVER_TYPE) serverType, usLinkId);
-        DelServerLink((NF_SERVER_TYPE) serverType, usLinkId);
+        DelAllCallBack((NF_SERVER_TYPE)serverType, usLinkId);
+        DelServerLink((NF_SERVER_TYPE)serverType, usLinkId);
     }
 }
 
-void NFCMessageModule::TransPackage(uint64_t usLinkId, NFDataPackage &packet)
+void NFCMessageModule::TransPackage(uint64_t usLinkId, NFDataPackage& packet)
 {
     if (m_netModule)
     {
@@ -162,12 +162,12 @@ void NFCMessageModule::TransPackage(uint64_t usLinkId, NFDataPackage &packet)
     }
 }
 
-void NFCMessageModule::OnHandleMessage(NFDataPackage &packet)
+void NFCMessageModule::OnHandleMessage(NFDataPackage& packet)
 {
     OnReceiveNetPack(packet.nServerLinkId, packet.nObjectLinkId, packet);
 }
 
-void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const std::string &strData, uint64_t nParam1, uint64_t nParam2,
+void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const std::string& strData, uint64_t nParam1, uint64_t nParam2,
                             uint64_t srcId, uint64_t dstId)
 {
     if (m_netModule)
@@ -176,7 +176,7 @@ void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsg
     }
 }
 
-void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const char *msg, uint32_t nLen, uint64_t nParam1, uint64_t nParam2,
+void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const char* msg, uint32_t nLen, uint64_t nParam1, uint64_t nParam2,
                             uint64_t srcId, uint64_t dstId)
 {
     if (m_netModule)
@@ -185,7 +185,7 @@ void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsg
     }
 }
 
-void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const google::protobuf::Message &xData, uint64_t nParam1,
+void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const google::protobuf::Message& xData, uint64_t nParam1,
                             uint64_t nParam2, uint64_t srcId, uint64_t dstId)
 {
     if (m_netModule)
@@ -194,7 +194,7 @@ void NFCMessageModule::Send(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsg
     }
 }
 
-void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const std::string &strData, uint64_t nParam1, uint64_t nParam2,
+void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const std::string& strData, uint64_t nParam1, uint64_t nParam2,
                                   uint64_t nSrcID, uint64_t nDstId)
 {
     if (m_netModule)
@@ -203,7 +203,7 @@ void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_
     }
 }
 
-void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const char *msg, uint32_t nLen, uint64_t nParam1,
+void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const char* msg, uint32_t nLen, uint64_t nParam1,
                                   uint64_t nParam2, uint64_t nSrcID, uint64_t nDstId)
 {
     if (m_netModule)
@@ -212,7 +212,7 @@ void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_
     }
 }
 
-void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const google::protobuf::Message &xData, uint64_t nParam1,
+void NFCMessageModule::SendServer(uint64_t usLinkId, uint32_t nModuleId, uint32_t nMsgID, const google::protobuf::Message& xData, uint64_t nParam1,
                                   uint64_t nParam2, uint64_t nSrcID, uint64_t nDstId)
 {
     if (m_netModule)
@@ -233,29 +233,32 @@ bool NFCMessageModule::DelAllCallBack(NF_SERVER_TYPE eType, uint64_t unLinkId)
     return true;
 }
 
-bool NFCMessageModule::DelAllCallBack(NFIDynamicModule *pTarget)
+bool NFCMessageModule::DelAllCallBack(NFIDynamicModule* pTarget)
 {
     for (size_t i = 0; i < mxCallBack.size(); i++)
     {
-        CallBack &callBack = mxCallBack[i];
-        for (int i = 0; i < (int) callBack.mxReceiveCallBack.size(); i++)
+        CallBack& callBack = mxCallBack[i];
+        for (int i = 0; i < (int)callBack.mxReceiveCallBack.size(); i++)
         {
-            for (int j = 0; j < (int) callBack.mxReceiveCallBack[i].size(); j++)
+            for (int j = 0; j < (int)callBack.mxReceiveCallBack[i].size(); j++)
             {
-                if (callBack.mxReceiveCallBack[i][j].m_pTarget != NULL)
+                if (callBack.mxReceiveCallBack[i][j].m_pTarget == pTarget)
                 {
                     callBack.mxReceiveCallBack[i][j] = NetReceiveFunctor();
                 }
             }
         }
 
-        for (int i = 0; i < (int) callBack.mxRpcCallBack.size(); i++)
+        for (int i = 0; i < (int)callBack.mxRpcCallBack.size(); i++)
         {
-            for (int j = 0; j < (int) callBack.mxRpcCallBack[i].size(); j++)
+            for (int j = 0; j < (int)callBack.mxRpcCallBack[i].size(); j++)
             {
-                if (callBack.mxRpcCallBack[i][j].m_pTarget != NULL)
+                if (callBack.mxRpcCallBack[i][j].m_pTarget != pTarget)
                 {
-                    NF_SAFE_DELETE(callBack.mxRpcCallBack[i][j].m_pRpcService);
+                    if (callBack.mxRpcCallBack[i][j].m_pRpcService)
+                    {
+                        NF_SAFE_DELETE(callBack.mxRpcCallBack[i][j].m_pRpcService);
+                    }
                     callBack.mxRpcCallBack[i][j] = NetRpcService();
                 }
             }
@@ -269,7 +272,7 @@ bool NFCMessageModule::DelAllCallBack(NFIDynamicModule *pTarget)
             }
             else
             {
-                iter++;
+                ++iter;
             }
         }
 
@@ -281,7 +284,7 @@ bool NFCMessageModule::DelAllCallBack(NFIDynamicModule *pTarget)
             }
             else
             {
-                iter++;
+                ++iter;
             }
         }
 
@@ -293,22 +296,20 @@ bool NFCMessageModule::DelAllCallBack(NFIDynamicModule *pTarget)
     return true;
 }
 
-bool NFCMessageModule::AddMessageCallBack(NF_SERVER_TYPE eType, uint32_t nMsgID, NFIDynamicModule *pTarget,
-                                          const NET_RECEIVE_FUNCTOR &cb, bool createCo)
+bool NFCMessageModule::AddMessageCallBack(NF_SERVER_TYPE eType, uint32_t nMsgID, NFIDynamicModule* pTarget, const NET_RECEIVE_FUNCTOR& cb, bool createCo)
 {
     if (eType < mxCallBack.size())
     {
         CHECK_EXPR_ASSERT(nMsgID < NF_NET_MAX_MSG_ID, false, "nMsgID:{} >= NF_NET_MAX_MSG_ID", nMsgID);
-        CHECK_EXPR(!mxCallBack[eType].mxReceiveCallBack[0][nMsgID].m_pFunctor, false,
-                   "eType:{} nModuleId:{} nMsgID:{} Exist, RegisterClientMessage Failed..........", eType, 0, nMsgID);
-        mxCallBack[eType].mxReceiveCallBack[0][nMsgID] = NetReceiveFunctor(pTarget, cb, createCo);
+        CHECK_EXPR(!mxCallBack[eType].mxReceiveCallBack[NF_MODULE_SERVER][nMsgID].m_pFunctor, false,
+                   "eType:{} nModuleId:{} nMsgID:{} Exist, RegisterClientMessage Failed..........", eType, NF_MODULE_SERVER, nMsgID);
+        mxCallBack[eType].mxReceiveCallBack[NF_MODULE_SERVER][nMsgID] = NetReceiveFunctor(pTarget, cb, createCo);
         return true;
     }
     return false;
 }
 
-bool NFCMessageModule::AddMessageCallBack(NF_SERVER_TYPE eType, uint32_t nModuleId, uint32_t nMsgID, NFIDynamicModule *pTarget,
-                                          const NET_RECEIVE_FUNCTOR &cb, bool createCo)
+bool NFCMessageModule::AddMessageCallBack(NF_SERVER_TYPE eType, uint32_t nModuleId, uint32_t nMsgID, NFIDynamicModule* pTarget, const NET_RECEIVE_FUNCTOR& cb, bool createCo)
 {
     if (eType < mxCallBack.size())
     {
@@ -322,13 +323,39 @@ bool NFCMessageModule::AddMessageCallBack(NF_SERVER_TYPE eType, uint32_t nModule
     return false;
 }
 
+bool NFCMessageModule::AddMessageCallBack(NF_SERVER_TYPE eType, uint32_t nMsgID, const NET_RECEIVE_FUNCTOR& cb, bool createCo)
+{
+    if (eType < mxCallBack.size())
+    {
+        CHECK_EXPR_ASSERT(nMsgID < NF_NET_MAX_MSG_ID, false, "nMsgID:{} >= NF_NET_MAX_MSG_ID", nMsgID);
+        CHECK_EXPR(!mxCallBack[eType].mxReceiveCallBack[NF_MODULE_SERVER][nMsgID].m_pFunctor, false,
+                   "eType:{} nModuleId:{} nMsgID:{} Exist, RegisterClientMessage Failed..........", eType, NF_MODULE_SERVER, nMsgID);
+        mxCallBack[eType].mxReceiveCallBack[NF_MODULE_SERVER][nMsgID] = NetReceiveFunctor(cb, createCo);
+        return true;
+    }
+    return false;
+}
+
+bool NFCMessageModule::AddMessageCallBack(NF_SERVER_TYPE eType, uint32_t nModuleId, uint32_t nMsgID, const NET_RECEIVE_FUNCTOR& cb, bool createCo)
+{
+    if (eType < mxCallBack.size())
+    {
+        CHECK_EXPR_ASSERT(nMsgID < NF_NET_MAX_MSG_ID, false, "nMsgID:{} >= NF_NET_MAX_MSG_ID", nMsgID);
+        CHECK_EXPR(!mxCallBack[eType].mxReceiveCallBack[nModuleId][nMsgID].m_pFunctor, false,
+                   "eType:{} nModuleId:{} nMsgID:{} Exist, RegisterClientMessage Failed..........", eType, nModuleId, nMsgID);
+        mxCallBack[eType].mxReceiveCallBack[nModuleId][nMsgID] = NetReceiveFunctor(cb, createCo);
+        return true;
+    }
+    return false;
+}
+
 std::set<uint32_t> NFCMessageModule::GetAllMsg(NF_SERVER_TYPE eType, uint32_t nModuleId)
 {
     std::set<uint32_t> vec;
     if (eType < mxCallBack.size())
     {
         CHECK_EXPR_ASSERT(nModuleId < NF_MODULE_MAX, vec, "nModuleId:{} >= NF_MODULE_MAX", nModuleId);
-        for (int i = 0; i < (int) mxCallBack[eType].mxReceiveCallBack[nModuleId].size(); i++)
+        for (int i = 0; i < (int)mxCallBack[eType].mxReceiveCallBack[nModuleId].size(); i++)
         {
             if (mxCallBack[eType].mxReceiveCallBack[nModuleId][i].m_pTarget != NULL)
             {
@@ -339,32 +366,32 @@ std::set<uint32_t> NFCMessageModule::GetAllMsg(NF_SERVER_TYPE eType, uint32_t nM
     return vec;
 }
 
-std::shared_ptr<NFServerData> NFCMessageModule::GetFirstDbServer(NF_SERVER_TYPE eSendType, const std::string &dbName)
+std::shared_ptr<NFServerData> NFCMessageModule::GetFirstDbServer(NF_SERVER_TYPE eSendType, const std::string& dbName)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetFirstDbServer(dbName);
 }
 
-std::shared_ptr<NFServerData> NFCMessageModule::GeRandomDbServer(NF_SERVER_TYPE eSendType, const std::string &dbName)
+std::shared_ptr<NFServerData> NFCMessageModule::GeRandomDbServer(NF_SERVER_TYPE eSendType, const std::string& dbName)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GeRandomDbServer(dbName);
 }
 
-std::shared_ptr<NFServerData> NFCMessageModule::GetSuitDbServer(NF_SERVER_TYPE eSendType, const std::string &dbName, uint64_t value)
+std::shared_ptr<NFServerData> NFCMessageModule::GetSuitDbServer(NF_SERVER_TYPE eSendType, const std::string& dbName, uint64_t value)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetSuitDbServer(dbName, value);
 }
 
-std::shared_ptr<NFServerData> NFCMessageModule::GetSuitDbServer(NF_SERVER_TYPE eSendType, const std::string &dbName, const std::string &value)
+std::shared_ptr<NFServerData> NFCMessageModule::GetSuitDbServer(NF_SERVER_TYPE eSendType, const std::string& dbName, const std::string& value)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetSuitDbServer(dbName, value);
 }
 
-bool NFCMessageModule::AddOtherCallBack(NF_SERVER_TYPE eType, uint64_t linkId, NFIDynamicModule *pTarget,
-                                        const NET_RECEIVE_FUNCTOR &cb, bool createCo)
+bool NFCMessageModule::AddOtherCallBack(NF_SERVER_TYPE eType, uint64_t linkId, NFIDynamicModule* pTarget,
+                                        const NET_RECEIVE_FUNCTOR& cb, bool createCo)
 {
     if (eType < mxCallBack.size())
     {
@@ -376,7 +403,7 @@ bool NFCMessageModule::AddOtherCallBack(NF_SERVER_TYPE eType, uint64_t linkId, N
     return false;
 }
 
-bool NFCMessageModule::AddAllMsgCallBack(NF_SERVER_TYPE eType, NFIDynamicModule *pTarget, const NET_RECEIVE_FUNCTOR &cb, bool createCo)
+bool NFCMessageModule::AddAllMsgCallBack(NF_SERVER_TYPE eType, NFIDynamicModule* pTarget, const NET_RECEIVE_FUNCTOR& cb, bool createCo)
 {
     if (eType < mxCallBack.size())
     {
@@ -388,7 +415,7 @@ bool NFCMessageModule::AddAllMsgCallBack(NF_SERVER_TYPE eType, NFIDynamicModule 
     return false;
 }
 
-bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nMsgID, NFIDynamicModule *pTarget, NFIRpcService *pRpcService,
+bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nMsgID, NFIDynamicModule* pTarget, NFIRpcService* pRpcService,
                                      bool createCo/* = false*/)
 {
     if (serverType < mxCallBack.size())
@@ -402,7 +429,7 @@ bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nMsgID,
     return false;
 }
 
-bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nModuleID, uint32_t nMsgID, NFIDynamicModule *pTarget, NFIRpcService *pRpcService, bool createCo)
+bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nModuleID, uint32_t nMsgID, NFIDynamicModule* pTarget, NFIRpcService* pRpcService, bool createCo)
 {
     if (serverType < mxCallBack.size())
     {
@@ -416,7 +443,34 @@ bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nModule
     return false;
 }
 
-bool NFCMessageModule::AddEventCallBack(NF_SERVER_TYPE eType, uint64_t linkId, NFIDynamicModule *pTarget, const NET_EVENT_FUNCTOR &cb, bool createCo)
+bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nMsgID, NFIRpcService* pRpcService, bool createCo)
+{
+    if (serverType < mxCallBack.size())
+    {
+        CHECK_EXPR(nMsgID < NF_NET_MAX_MSG_ID, false, "nMsgID:{} >= NF_NET_MAX_MSG_ID", nMsgID);
+        CHECK_EXPR(!mxCallBack[serverType].mxRpcCallBack[NF_MODULE_SERVER][nMsgID].m_pRpcService, false,
+                   "serverType:{} nMsgID:{} Exist, AddRpcService Failed..........", serverType, nMsgID);
+        mxCallBack[serverType].mxRpcCallBack[NF_MODULE_SERVER][nMsgID] = NetRpcService(pRpcService, createCo);
+        return true;
+    }
+    return false;
+}
+
+bool NFCMessageModule::AddRpcService(NF_SERVER_TYPE serverType, uint32_t nModuleID, uint32_t nMsgID, NFIRpcService* pRpcService, bool createCo)
+{
+    if (serverType < mxCallBack.size())
+    {
+        CHECK_EXPR(nModuleID < NF_MODULE_MAX, false, "nModuleID:{} >= NF_MODULE_MAX", nModuleID);
+        CHECK_EXPR((nModuleID <= NF_MODULE_CLIENT && nMsgID < NF_NET_MAX_MSG_ID) || (nModuleID > NF_MODULE_CLIENT && nMsgID < NF_NET_OTHER_MAX_MSG_ID), false, "nModuleID:{} nMsgID:{} than max", nModuleID, nMsgID);
+        CHECK_EXPR(!mxCallBack[serverType].mxRpcCallBack[nModuleID][nMsgID].m_pRpcService, false,
+                   "serverType:{} nModuleID:{} nMsgID:{} Exist, AddRpcService Failed..........", serverType, nModuleID, nMsgID);
+        mxCallBack[serverType].mxRpcCallBack[nModuleID][nMsgID] = NetRpcService(pRpcService, createCo);
+        return true;
+    }
+    return false;
+}
+
+bool NFCMessageModule::AddEventCallBack(NF_SERVER_TYPE eType, uint64_t linkId, NFIDynamicModule* pTarget, const NET_EVENT_FUNCTOR& cb, bool createCo)
 {
     if (eType < mxCallBack.size())
     {
@@ -428,27 +482,27 @@ bool NFCMessageModule::AddEventCallBack(NF_SERVER_TYPE eType, uint64_t linkId, N
     return false;
 }
 
-int NFCMessageModule::OnHandleReceiveNetPack(uint64_t connectionLink, uint64_t objectLinkId, NFDataPackage &packet)
+int NFCMessageModule::OnHandleReceiveNetPack(uint64_t connectionLink, uint64_t objectLinkId, NFDataPackage& packet)
 {
     uint32_t eServerType = GetServerTypeFromUnlinkId(objectLinkId);
     if (eServerType < mxCallBack.size())
     {
         uint64_t startTime = NFGetMicroSecondTime();
-        CallBack &callBack = mxCallBack[eServerType];
+        CallBack& callBack = mxCallBack[eServerType];
         if (callBack.mxAllMsgCallBackList.m_pFunctor)
         {
             if (callBack.mxAllMsgCallBackList.m_createCo)
             {
-                NET_RECEIVE_FUNCTOR &pFun = callBack.mxAllMsgCallBackList.m_pFunctor;
+                NET_RECEIVE_FUNCTOR& pFun = callBack.mxAllMsgCallBackList.m_pFunctor;
                 int64_t coId = FindModule<NFICoroutineModule>()->MakeCoroutine(
-                        [pFun, objectLinkId, packet]
-                        {
-                            //从消息层传过来的包中的数据，会在处理函数执行完后销毁掉，所以携程必须复制一份，以防万一yield后又用到。
-                            std::string tempCopyBuffer(packet.GetBuffer(), packet.GetSize());
-                            NFDataPackage tempPackage = packet;
-                            tempPackage.nBuffer = (char *) tempCopyBuffer.data();
-                            pFun(objectLinkId, tempPackage);
-                        });
+                    [pFun, objectLinkId, packet]
+                    {
+                        //从消息层传过来的包中的数据，会在处理函数执行完后销毁掉，所以携程必须复制一份，以防万一yield后又用到。
+                        std::string tempCopyBuffer(packet.GetBuffer(), packet.GetSize());
+                        NFDataPackage tempPackage = packet;
+                        tempPackage.nBuffer = (char*)tempCopyBuffer.data();
+                        pFun(objectLinkId, tempPackage);
+                    });
 
                 if (coId == INVALID_ID)
                 {
@@ -468,63 +522,56 @@ int NFCMessageModule::OnHandleReceiveNetPack(uint64_t connectionLink, uint64_t o
         CHECK_EXPR(packet.mModuleId < NF_MODULE_MAX, -1, "nModuleId:{} >= NF_MODULE_MAX", packet.mModuleId);
         if ((packet.mModuleId <= NF_MODULE_CLIENT && packet.nMsgId < NF_NET_MAX_MSG_ID) || (packet.mModuleId > NF_MODULE_CLIENT && packet.nMsgId < NF_NET_OTHER_MAX_MSG_ID))
         {
-            NetReceiveFunctor &netFunctor = callBack.mxReceiveCallBack[packet.mModuleId][packet.nMsgId];
-            if (netFunctor.m_pTarget != NULL)
+            NetReceiveFunctor& netFunctor = callBack.mxReceiveCallBack[packet.mModuleId][packet.nMsgId];
+            NET_RECEIVE_FUNCTOR& pFun = netFunctor.m_pFunctor;
+            if (pFun != nullptr)
             {
-                NET_RECEIVE_FUNCTOR &pFun = netFunctor.m_pFunctor;
-                if (pFun)
+                int iRet = 0;
+                if (netFunctor.m_createCo)
                 {
-                    int iRet = 0;
-                    if (netFunctor.m_createCo)
-                    {
-                        int64_t coId = FindModule<NFICoroutineModule>()->MakeCoroutine(
-                                [objectLinkId, packet, pFun]
-                                {
-                                    //从消息层传过来的包中的数据，会在处理函数执行完后销毁掉，所以携程必须复制一份，以防万一yield后又用到。
-                                    std::string tempCopyBuffer(packet.GetBuffer(), packet.GetSize());
-                                    NFDataPackage tempPackage = packet;
-                                    tempPackage.nBuffer = (char *) tempCopyBuffer.data();
-                                    pFun(objectLinkId, tempPackage);
-                                });
-                        if (coId == INVALID_ID)
+                    int64_t coId = FindModule<NFICoroutineModule>()->MakeCoroutine(
+                        [objectLinkId, packet, pFun]
                         {
-                            iRet = NFrame::ERR_CODE_RPC_TASK_OVERLOAD;
-                        }
-                    }
-                    else
+                            //从消息层传过来的包中的数据，会在处理函数执行完后销毁掉，所以携程必须复制一份，以防万一yield后又用到。
+                            std::string tempCopyBuffer(packet.GetBuffer(), packet.GetSize());
+                            NFDataPackage tempPackage = packet;
+                            tempPackage.nBuffer = (char*)tempCopyBuffer.data();
+                            pFun(objectLinkId, tempPackage);
+                        });
+                    if (coId == INVALID_ID)
                     {
-                        iRet = pFun(objectLinkId, packet);
+                        iRet = NFrame::ERR_CODE_RPC_TASK_OVERLOAD;
                     }
-                    netFunctor.m_iCount++;
-                    uint64_t useTime = NFGetMicroSecondTime() - startTime;
-                    netFunctor.m_iAllUseTime += useTime;
-                    if (useTime > netFunctor.m_iMaxTime)
-                    {
-                        netFunctor.m_iMaxTime = useTime;
-                    }
-                    if (useTime < netFunctor.m_iMinTime)
-                    {
-                        netFunctor.m_iMinTime = useTime;
-                    }
-                    if (useTime / 1000 > 33)
-                    {
-                        NFLogError(NF_LOG_DEFAULT, 0, "moduleId:{}, nMsgId:{} use time:{} ms, too long", packet.mModuleId, packet.nMsgId,
-                                   useTime / 1000);
-                    }
-
-                    if (!NFGlobalSystem::Instance()->IsSpecialMsg(packet.mModuleId, packet.nMsgId))
-                    {
-                        NFLogTrace(NF_LOG_DEFAULT, 0, "packet:{} use time:{} us, count:{} allTime:{} perTime:{} minTime:{} maxTime:{}",
-                                   packet.ToString(), useTime, netFunctor.m_iCount, netFunctor.m_iAllUseTime,
-                                   netFunctor.m_iAllUseTime / netFunctor.m_iCount, netFunctor.m_iMinTime, netFunctor.m_iMaxTime);
-                    }
-
-                    CHECK_RET(iRet, "packet:{}", packet.ToString());
                 }
                 else
                 {
-                    NFLogError(NF_LOG_DEFAULT, 0, "moduleId:{}, nMsgId:{} not find", packet.mModuleId, packet.nMsgId);
+                    iRet = pFun(objectLinkId, packet);
                 }
+                netFunctor.m_iCount++;
+                uint64_t useTime = NFGetMicroSecondTime() - startTime;
+                netFunctor.m_iAllUseTime += useTime;
+                if (useTime > netFunctor.m_iMaxTime)
+                {
+                    netFunctor.m_iMaxTime = useTime;
+                }
+                if (useTime < netFunctor.m_iMinTime)
+                {
+                    netFunctor.m_iMinTime = useTime;
+                }
+                if (useTime / 1000 > 33)
+                {
+                    NFLogError(NF_LOG_DEFAULT, 0, "moduleId:{}, nMsgId:{} use time:{} ms, too long", packet.mModuleId, packet.nMsgId,
+                               useTime / 1000);
+                }
+
+                if (!NFGlobalSystem::Instance()->IsSpecialMsg(packet.mModuleId, packet.nMsgId))
+                {
+                    NFLogTrace(NF_LOG_DEFAULT, 0, "packet:{} use time:{} us, count:{} allTime:{} perTime:{} minTime:{} maxTime:{}",
+                               packet.ToString(), useTime, netFunctor.m_iCount, netFunctor.m_iAllUseTime,
+                               netFunctor.m_iAllUseTime / netFunctor.m_iCount, netFunctor.m_iMinTime, netFunctor.m_iMaxTime);
+                }
+
+                CHECK_RET(iRet, "packet:{}", packet.ToString());
 
                 return 0;
             }
@@ -533,21 +580,21 @@ int NFCMessageModule::OnHandleReceiveNetPack(uint64_t connectionLink, uint64_t o
         auto iterator2 = callBack.mxOtherMsgCallBackList.find(connectionLink);
         if (iterator2 != callBack.mxOtherMsgCallBackList.end())
         {
-            NET_RECEIVE_FUNCTOR &pFun = iterator2->second.m_pFunctor;
+            NET_RECEIVE_FUNCTOR& pFun = iterator2->second.m_pFunctor;
             if (pFun)
             {
                 int iRet = 0;
                 if (iterator2->second.m_createCo)
                 {
                     int64_t coId = FindModule<NFICoroutineModule>()->MakeCoroutine(
-                            [objectLinkId, packet, pFun]
-                            {
-                                //从消息层传过来的包中的数据，会在处理函数执行完后销毁掉，所以携程必须复制一份，以防万一yield后又用到。
-                                std::string tempCopyBuffer(packet.GetBuffer(), packet.GetSize());
-                                NFDataPackage tempPackage = packet;
-                                tempPackage.nBuffer = (char *) tempCopyBuffer.data();
-                                pFun(objectLinkId, tempPackage);
-                            });
+                        [objectLinkId, packet, pFun]
+                        {
+                            //从消息层传过来的包中的数据，会在处理函数执行完后销毁掉，所以携程必须复制一份，以防万一yield后又用到。
+                            std::string tempCopyBuffer(packet.GetBuffer(), packet.GetSize());
+                            NFDataPackage tempPackage = packet;
+                            tempPackage.nBuffer = (char*)tempCopyBuffer.data();
+                            pFun(objectLinkId, tempPackage);
+                        });
                     if (coId == INVALID_ID)
                     {
                         iRet = NFrame::ERR_CODE_RPC_TASK_OVERLOAD;
@@ -597,13 +644,13 @@ int NFCMessageModule::OnHandleReceiveNetPack(uint64_t connectionLink, uint64_t o
     return 0;
 }
 
-int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectLinkId, NFDataPackage &packet)
+int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectLinkId, NFDataPackage& packet)
 {
     uint32_t eServerType = GetServerTypeFromUnlinkId(objectLinkId);
     if (eServerType < mxCallBack.size())
     {
         uint64_t startTime = NFGetMicroSecondTime();
-        if (!IsRouteServer((NF_SERVER_TYPE) eServerType))
+        if (!IsRouteServer((NF_SERVER_TYPE)eServerType))
         {
             if (packet.nErrCode != 0)
             {
@@ -618,15 +665,15 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
 
                 if (svrPkg.trans_info().rsp_trans_id() > 0)
                 {
-                    NFTransBase *pTrans = FindModule<NFIMemMngModule>()->GetTrans(svrPkg.trans_info().rsp_trans_id());
+                    NFTransBase* pTrans = FindModule<NFIMemMngModule>()->GetTrans(svrPkg.trans_info().rsp_trans_id());
                     if (pTrans && !pTrans->IsFinished())
                     {
                         NFDataPackage transPacket;
                         transPacket.nParam1 = svrPkg.trans_info().req_trans_id();
                         transPacket.nParam2 = svrPkg.trans_info().rsp_trans_id();
-                        transPacket.mModuleId = 0;
+                        transPacket.mModuleId = svrPkg.module_id();
                         transPacket.nMsgId = svrPkg.msg_id();
-                        transPacket.nBuffer = (char *) svrPkg.msg_data().data();
+                        transPacket.nBuffer = (char*)svrPkg.msg_data().data();
                         transPacket.nMsgLen = svrPkg.msg_data().length();
 
                         pTrans->ProcessDispSvrRes(svrPkg.msg_id(), transPacket, svrPkg.trans_info().req_trans_id(), svrPkg.trans_info().rsp_trans_id());
@@ -649,12 +696,12 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
                 }
                 else
                 {
-                    NFDataPackage transPacket;
+                    NFDataPackage transPacket = packet;
                     transPacket.nParam1 = svrPkg.trans_info().req_trans_id();
                     transPacket.nParam2 = svrPkg.trans_info().rsp_trans_id();
-                    transPacket.mModuleId = 0;
+                    transPacket.mModuleId = svrPkg.module_id();
                     transPacket.nMsgId = svrPkg.msg_id();
-                    transPacket.nBuffer = (char *) svrPkg.msg_data().data();
+                    transPacket.nBuffer = (char*)svrPkg.msg_data().data();
                     transPacket.nMsgLen = svrPkg.msg_data().length();
                     OnHandleReceiveNetPack(connectionLink, objectLinkId, transPacket);
                 }
@@ -670,7 +717,7 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
                 {
                     if (svrPkg.store_info().id() > 0)
                     {
-                        NFTransBase *pTrans = FindModule<NFIMemMngModule>()->GetTrans(svrPkg.store_info().id());
+                        NFTransBase* pTrans = FindModule<NFIMemMngModule>()->GetTrans(svrPkg.store_info().id());
                         if (pTrans && !pTrans->IsFinished())
                         {
                             pTrans->ProcessDBMsgRes(svrPkg);
@@ -703,15 +750,15 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
                 NFrame::Proto_STSBroadPlayerMsgNotify xMsg;
                 CLIENT_MSG_PROCESS_WITH_PRINTF(packet, xMsg);
 
-                for (int i = 0; i < (int) xMsg.user_id_size(); i++)
+                for (int i = 0; i < (int)xMsg.user_id_size(); i++)
                 {
                     uint64_t userId = xMsg.user_id(i);
-                    NFDataPackage transPacket;
+                    NFDataPackage transPacket = packet;
                     transPacket.nParam1 = userId;
                     transPacket.nParam2 = packet.nParam2;
                     transPacket.mModuleId = 0;
                     transPacket.nMsgId = xMsg.msg_id();
-                    transPacket.nBuffer = (char *) xMsg.msg_data().data();
+                    transPacket.nBuffer = (char*)xMsg.msg_data().data();
                     transPacket.nMsgLen = xMsg.msg_data().length();
 
                     OnHandleReceiveNetPack(connectionLink, objectLinkId, transPacket);
@@ -736,7 +783,7 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
 
                 if (pEventInfo->server_type() > 0 && !pEventInfo->full_message_name().empty())
                 {
-                    ::google::protobuf::Message *pMessage = NFProtobufCommon::CreateMessageByName(pEventInfo->full_message_name());
+                    ::google::protobuf::Message* pMessage = NFProtobufCommon::CreateMessageByName(pEventInfo->full_message_name());
                     if (pMessage == NULL)
                     {
                         NFLogError(NF_LOG_DEFAULT, 0, "NFProtobufCommon::CreateMessageByName Failed, full name:{}",
@@ -754,13 +801,13 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
 
                     if (m_pObjPluginManager->FindModule<NFIMemMngModule>())
                     {
-                        m_pObjPluginManager->FindModule<NFIMemMngModule>()->FireExecute((NF_SERVER_TYPE) pEventInfo->server_type(), pEventInfo->event_id(),
-                                                                                           pEventInfo->src_type(), pEventInfo->src_id(), *pMessage);
+                        m_pObjPluginManager->FindModule<NFIMemMngModule>()->FireExecute((NF_SERVER_TYPE)pEventInfo->server_type(), pEventInfo->event_id(),
+                                                                                        pEventInfo->src_type(), pEventInfo->src_id(), *pMessage);
                     }
 
                     if (m_pObjPluginManager->FindModule<NFIEventModule>())
                     {
-                        m_pObjPluginManager->FindModule<NFIEventModule>()->FireExecute((NF_SERVER_TYPE) pEventInfo->server_type(), pEventInfo->event_id(),
+                        m_pObjPluginManager->FindModule<NFIEventModule>()->FireExecute((NF_SERVER_TYPE)pEventInfo->server_type(), pEventInfo->event_id(),
                                                                                        pEventInfo->src_type(), pEventInfo->src_id(), *pMessage);
                     }
 
@@ -782,8 +829,8 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
                 {
                     if (svrPkg.rpc_info().is_script_rpc())
                     {
-                        NFrame::Proto_ScriptRpcResult *pRespone = dynamic_cast<NFrame::Proto_ScriptRpcResult *>(FindModule<NFICoroutineModule>()->GetUserData(
-                                svrPkg.rpc_info().rsp_rpc_id()));
+                        NFrame::Proto_ScriptRpcResult* pRespone = dynamic_cast<NFrame::Proto_ScriptRpcResult*>(FindModule<NFICoroutineModule>()->GetUserData(
+                            svrPkg.rpc_info().rsp_rpc_id()));
                         if (pRespone && svrPkg.rpc_info().rpc_ret_code() == 0)
                         {
                             if (svrPkg.rpc_info().req_rpc_hash() == NFHash::hash<std::string>()(pRespone->req_type()) &&
@@ -806,7 +853,7 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
                     }
                     else
                     {
-                        google::protobuf::Message *pRespone = FindModule<NFICoroutineModule>()->GetUserData(svrPkg.rpc_info().rsp_rpc_id());
+                        google::protobuf::Message* pRespone = FindModule<NFICoroutineModule>()->GetUserData(svrPkg.rpc_info().rsp_rpc_id());
                         if (pRespone && svrPkg.rpc_info().rpc_ret_code() == 0)
                         {
                             if (svrPkg.rpc_info().rsp_rpc_hash() == NFHash::hash<std::string>()(pRespone->GetTypeName()))
@@ -856,7 +903,7 @@ int NFCMessageModule::OnReceiveNetPack(uint64_t connectionLink, uint64_t objectL
     return 0;
 }
 
-int NFCMessageModule::OnHandleRpcService(uint64_t connectionLink, uint64_t objectLinkId, const NFrame::Proto_FramePkg &reqSvrPkg, uint64_t param1, uint64_t param2)
+int NFCMessageModule::OnHandleRpcService(uint64_t connectionLink, uint64_t objectLinkId, const NFrame::Proto_FramePkg& reqSvrPkg, uint64_t param1, uint64_t param2)
 {
     int iRet = 0;
     uint32_t nMsgId = reqSvrPkg.msg_id();
@@ -865,42 +912,42 @@ int NFCMessageModule::OnHandleRpcService(uint64_t connectionLink, uint64_t objec
     if (eServerType < mxCallBack.size())
     {
         uint64_t startTime = NFGetMicroSecondTime();
-        CallBack &callBack = mxCallBack[eServerType];
+        CallBack& callBack = mxCallBack[eServerType];
 
         CHECK_EXPR(nModuleId < NF_MODULE_MAX, -1, "nModuleId:{} >= NF_MODULE_MAX", nModuleId);
         if ((nModuleId <= NF_MODULE_CLIENT && nMsgId < NF_NET_MAX_MSG_ID) || (nModuleId > NF_MODULE_CLIENT && nMsgId < NF_NET_OTHER_MAX_MSG_ID))
         {
-            NetRpcService &netRpcService = callBack.mxRpcCallBack[nModuleId][nMsgId];
-            if (netRpcService.m_pTarget != NULL && netRpcService.m_pRpcService != NULL)
+            NetRpcService& netRpcService = callBack.mxRpcCallBack[nModuleId][nMsgId];
+            if (netRpcService.m_pRpcService != nullptr)
             {
                 if (netRpcService.m_createCo)
                 {
-                    NFIRpcService *pRpcService = netRpcService.m_pRpcService;
+                    NFIRpcService* pRpcService = netRpcService.m_pRpcService;
                     int64_t coId = FindModule<NFICoroutineModule>()->MakeCoroutine(
-                            [this, pRpcService, objectLinkId, reqSvrPkg, param1, param2]()
+                        [this, pRpcService, objectLinkId, reqSvrPkg, param1, param2]()
+                        {
+                            int iRet = pRpcService->run(objectLinkId, reqSvrPkg, param1, param2);
+                            if (iRet != 0)
                             {
-                                int iRet = pRpcService->run(objectLinkId, reqSvrPkg, param1, param2);
-                                if (iRet != 0)
-                                {
-                                    uint32_t eServerType = GetServerTypeFromUnlinkId(objectLinkId);
-                                    uint32_t nMsgId = reqSvrPkg.msg_id();
-                                    uint32_t reqBusId = reqSvrPkg.rpc_info().req_bus_id();
-                                    uint32_t reqServerType = reqSvrPkg.rpc_info().req_server_type();
+                                uint32_t eServerType = GetServerTypeFromUnlinkId(objectLinkId);
+                                uint32_t nMsgId = reqSvrPkg.msg_id();
+                                uint32_t reqBusId = reqSvrPkg.rpc_info().req_bus_id();
+                                uint32_t reqServerType = reqSvrPkg.rpc_info().req_server_type();
 
-                                    NFrame::Proto_FramePkg rspSvrPkg;
-                                    rspSvrPkg.set_msg_id(nMsgId);
-                                    rspSvrPkg.mutable_rpc_info()->set_req_rpc_id(0);
-                                    rspSvrPkg.mutable_rpc_info()->set_rsp_rpc_id(reqSvrPkg.rpc_info().req_rpc_id());
-                                    rspSvrPkg.mutable_rpc_info()->set_req_rpc_hash(reqSvrPkg.rpc_info().req_rpc_hash());
-                                    rspSvrPkg.mutable_rpc_info()->set_rsp_rpc_hash(reqSvrPkg.rpc_info().rsp_rpc_hash());
-                                    rspSvrPkg.mutable_rpc_info()->set_rpc_ret_code(iRet);
-                                    rspSvrPkg.mutable_rpc_info()->set_is_script_rpc(reqSvrPkg.rpc_info().is_script_rpc());
+                                NFrame::Proto_FramePkg rspSvrPkg;
+                                rspSvrPkg.set_msg_id(nMsgId);
+                                rspSvrPkg.mutable_rpc_info()->set_req_rpc_id(0);
+                                rspSvrPkg.mutable_rpc_info()->set_rsp_rpc_id(reqSvrPkg.rpc_info().req_rpc_id());
+                                rspSvrPkg.mutable_rpc_info()->set_req_rpc_hash(reqSvrPkg.rpc_info().req_rpc_hash());
+                                rspSvrPkg.mutable_rpc_info()->set_rsp_rpc_hash(reqSvrPkg.rpc_info().rsp_rpc_hash());
+                                rspSvrPkg.mutable_rpc_info()->set_rpc_ret_code(iRet);
+                                rspSvrPkg.mutable_rpc_info()->set_is_script_rpc(reqSvrPkg.rpc_info().is_script_rpc());
 
-                                    FindModule<NFIMessageModule>()->SendMsgToServer((NF_SERVER_TYPE) eServerType, (NF_SERVER_TYPE) reqServerType, 0,
-                                                                                    reqBusId,
-                                                                                    NF_MODULE_FRAME, NFrame::NF_SERVER_TO_SERVER_RPC_CMD, rspSvrPkg);
-                                }
-                            });
+                                FindModule<NFIMessageModule>()->SendMsgToServer((NF_SERVER_TYPE)eServerType, (NF_SERVER_TYPE)reqServerType, 0,
+                                                                                reqBusId,
+                                                                                NF_MODULE_FRAME, NFrame::NF_SERVER_TO_SERVER_RPC_CMD, rspSvrPkg);
+                            }
+                        });
                     if (coId == INVALID_ID)
                     {
                         iRet = NFrame::ERR_CODE_RPC_TASK_OVERLOAD;
@@ -952,7 +999,7 @@ int NFCMessageModule::OnHandleRpcService(uint64_t connectionLink, uint64_t objec
             rspSvrPkg.mutable_rpc_info()->set_rpc_ret_code(iRet);
             rspSvrPkg.mutable_rpc_info()->set_is_script_rpc(reqSvrPkg.rpc_info().is_script_rpc());
 
-            FindModule<NFIMessageModule>()->SendMsgToServer((NF_SERVER_TYPE) eServerType, (NF_SERVER_TYPE) reqServerType, 0, reqBusId,
+            FindModule<NFIMessageModule>()->SendMsgToServer((NF_SERVER_TYPE)eServerType, (NF_SERVER_TYPE)reqServerType, 0, reqBusId,
                                                             NF_MODULE_FRAME, NFrame::NF_SERVER_TO_SERVER_RPC_CMD, rspSvrPkg);
         }
     }
@@ -968,16 +1015,16 @@ int NFCMessageModule::OnSocketNetEvent(eMsgType nEvent, uint64_t serverLinkId, u
         auto iter = mxCallBack[eServerType].mxEventCallBack.find(serverLinkId);
         if (iter != mxCallBack[eServerType].mxEventCallBack.end())
         {
-            NET_EVENT_FUNCTOR &pFun = iter->second.m_pFunctor;
+            NET_EVENT_FUNCTOR& pFun = iter->second.m_pFunctor;
             if (pFun)
             {
                 if (iter->second.m_createCo)
                 {
                     int64_t coId = FindModule<NFICoroutineModule>()->MakeCoroutine(
-                            [pFun, nEvent, objectLinkId]
-                            {
-                                pFun(nEvent, objectLinkId);
-                            });
+                        [pFun, nEvent, objectLinkId]
+                        {
+                            pFun(nEvent, objectLinkId);
+                        });
                     CHECK_EXPR(coId != INVALID_ID, NFrame::ERR_CODE_RPC_TASK_OVERLOAD, "nEvent:{}", (int)nEvent);
                 }
                 else
@@ -993,12 +1040,12 @@ int NFCMessageModule::OnSocketNetEvent(eMsgType nEvent, uint64_t serverLinkId, u
 
 int NFCMessageModule::SendMsgToServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t nModuleId,
                                       uint32_t nMsgId,
-                                      const google::protobuf::Message &xData, uint64_t param1, uint64_t param2)
+                                      const google::protobuf::Message& xData, uint64_t param1, uint64_t param2)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), -1, "eType error:{}", (int) eSendType);
-    ServerLinkData &linkData = mServerLinkData[eSendType];
+    ServerLinkData& linkData = mServerLinkData[eSendType];
 
-    NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
+    NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
     CHECK_EXPR(pConfig, -1, "can't find server config! servertype:{}", GetServerName(eSendType));
 
     uint64_t destServerLinkId = GetUnLinkId(NF_IS_NONE, recvType, dstBusId, 0);
@@ -1047,12 +1094,12 @@ int NFCMessageModule::SendMsgToServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE r
 }
 
 int NFCMessageModule::SendMsgToServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t nModuleId,
-                                      uint32_t nMsgId, const std::string &xData, uint64_t param1, uint64_t param2)
+                                      uint32_t nMsgId, const std::string& xData, uint64_t param1, uint64_t param2)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), -1, "eType error:{}", (int) eSendType);
-    ServerLinkData &linkData = mServerLinkData[eSendType];
+    ServerLinkData& linkData = mServerLinkData[eSendType];
 
-    NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
+    NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
     CHECK_EXPR(pConfig, -1, "can't find server config! servertype:{}", GetServerName(eSendType));
 
     uint64_t destServerLinkId = GetUnLinkId(NF_IS_NONE, recvType, dstBusId, 0);
@@ -1089,19 +1136,30 @@ int NFCMessageModule::SendMsgToServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE r
     return 0;
 }
 
-int NFCMessageModule::SendTrans(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t nMsgID,
-                                const google::protobuf::Message &xData, uint32_t req_trans_id, uint32_t rsp_trans_id)
+int NFCMessageModule::SendTrans(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t nMsgID, const google::protobuf::Message& xData, uint32_t req_trans_id, uint32_t rsp_trans_id)
+{
+    return SendTrans(eSendType, recvType, srcBusId, dstBusId, NF_MODULE_SERVER, nMsgID, xData, req_trans_id, rsp_trans_id);
+}
+
+int NFCMessageModule::SendTrans(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t nMsgID, const std::string& xData, uint32_t req_trans_id, uint32_t rsp_trans_id)
+{
+    return SendTrans(eSendType, recvType, srcBusId, dstBusId, NF_MODULE_SERVER, nMsgID, xData, req_trans_id, rsp_trans_id);
+}
+
+int NFCMessageModule::SendTrans(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t moduleId, uint32_t nMsgID,
+                                const google::protobuf::Message& xData, uint32_t req_trans_id, uint32_t rsp_trans_id)
 {
     NFrame::Proto_FramePkg svrPkg;
+    svrPkg.set_module_id(moduleId);
     svrPkg.set_msg_id(nMsgID);
     svrPkg.mutable_trans_info()->set_req_trans_id(req_trans_id);
     svrPkg.mutable_trans_info()->set_rsp_trans_id(rsp_trans_id);
     svrPkg.set_msg_data(xData.SerializePartialAsString());
 
     CHECK_EXPR(eSendType < mServerLinkData.size(), -1, "eType error:{}", (int) eSendType);
-    ServerLinkData &linkData = mServerLinkData[eSendType];
+    ServerLinkData& linkData = mServerLinkData[eSendType];
 
-    NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
+    NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
     CHECK_EXPR(pConfig, -1, "can't find server config! servertype:{}", GetServerName(eSendType));
 
     uint64_t destServerLinkId = GetUnLinkId(NF_IS_NONE, recvType, dstBusId, 0);
@@ -1130,19 +1188,20 @@ int NFCMessageModule::SendTrans(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvTyp
     return 0;
 }
 
-int NFCMessageModule::SendTrans(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t nMsgID,
-                                const std::string &xData, uint32_t req_trans_id, uint32_t rsp_trans_id)
+int NFCMessageModule::SendTrans(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE recvType, uint32_t srcBusId, uint32_t dstBusId, uint32_t moduleId, uint32_t nMsgID,
+                                const std::string& xData, uint32_t req_trans_id, uint32_t rsp_trans_id)
 {
     NFrame::Proto_FramePkg svrPkg;
+    svrPkg.set_module_id(moduleId);
     svrPkg.set_msg_id(nMsgID);
     svrPkg.mutable_trans_info()->set_req_trans_id(req_trans_id);
     svrPkg.mutable_trans_info()->set_rsp_trans_id(rsp_trans_id);
     svrPkg.set_msg_data(xData);
 
     CHECK_EXPR(eSendType < mServerLinkData.size(), -1, "eType error:{}", (int) eSendType);
-    ServerLinkData &linkData = mServerLinkData[eSendType];
+    ServerLinkData& linkData = mServerLinkData[eSendType];
 
-    NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
+    NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(eSendType);
     CHECK_EXPR(pConfig, -1, "can't find server config! servertype:{}", GetServerName(eSendType));
 
     uint64_t destServerLinkId = GetUnLinkId(NF_IS_NONE, recvType, dstBusId, 0);
@@ -1191,7 +1250,7 @@ void NFCMessageModule::CloseServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE dest
 }
 
 NF_SHARE_PTR<NFServerData> NFCMessageModule::CreateServerByServerId(NF_SERVER_TYPE eSendType, uint32_t busId, NF_SERVER_TYPE busServerType,
-                                                                    const NFrame::ServerInfoReport &data)
+                                                                    const NFrame::ServerInfoReport& data)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].CreateServerByServerId(busId, busServerType, data);
@@ -1203,25 +1262,25 @@ void NFCMessageModule::DelServerLink(NF_SERVER_TYPE eSendType, uint64_t linkId)
     mServerLinkData[eSendType].DelServerLink(linkId);
 }
 
-NFServerData *NFCMessageModule::GetRouteData(NF_SERVER_TYPE eSendType)
+NFServerData* NFCMessageModule::GetRouteData(NF_SERVER_TYPE eSendType)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetRouteData();
 }
 
-const NFServerData *NFCMessageModule::GetRouteData(NF_SERVER_TYPE eSendType) const
+const NFServerData* NFCMessageModule::GetRouteData(NF_SERVER_TYPE eSendType) const
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetRouteData();
 }
 
-NFServerData *NFCMessageModule::GetMasterData(NF_SERVER_TYPE eSendType)
+NFServerData* NFCMessageModule::GetMasterData(NF_SERVER_TYPE eSendType)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetMasterData();
 }
 
-const NFServerData *NFCMessageModule::GetMasterData(NF_SERVER_TYPE eSendType) const
+const NFServerData* NFCMessageModule::GetMasterData(NF_SERVER_TYPE eSendType) const
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetMasterData();
@@ -1263,7 +1322,7 @@ void NFCMessageModule::SetClientLinkId(NF_SERVER_TYPE eSendType, uint64_t linkId
     mServerLinkData[eSendType].SetClientLinkId(linkId);
 }
 
-std::vector<NF_SHARE_PTR<NFServerData> > NFCMessageModule::GetServerByServerType(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes)
+std::vector<NF_SHARE_PTR<NFServerData>> NFCMessageModule::GetServerByServerType(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), std::vector<NF_SHARE_PTR < NFServerData>>(), "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetServerByServerType(serverTypes);
@@ -1293,7 +1352,7 @@ NF_SHARE_PTR<NFServerData> NFCMessageModule::GetSuitServerByServerType(NF_SERVER
     return mServerLinkData[eSendType].GetSuitServerByServerType(serverTypes, value);
 }
 
-NF_SHARE_PTR<NFServerData> NFCMessageModule::GetSuitServerByServerType(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes, const std::string &value)
+NF_SHARE_PTR<NFServerData> NFCMessageModule::GetSuitServerByServerType(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes, const std::string& value)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetSuitServerByServerType(serverTypes, value);
@@ -1311,25 +1370,25 @@ NF_SHARE_PTR<NFServerData> NFCMessageModule::GetSuitServerByServerType(NF_SERVER
     return mServerLinkData[eSendType].GetSuitServerByServerType(serverTypes, value, crossServer);
 }
 
-NF_SHARE_PTR<NFServerData> NFCMessageModule::GetSuitServerByServerType(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes, const std::string &value, bool crossServer)
+NF_SHARE_PTR<NFServerData> NFCMessageModule::GetSuitServerByServerType(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes, const std::string& value, bool crossServer)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), NULL, "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetSuitServerByServerType(serverTypes, value, crossServer);
 }
 
-std::vector<NF_SHARE_PTR<NFServerData> > NFCMessageModule::GetAllServer(NF_SERVER_TYPE eSendType)
+std::vector<NF_SHARE_PTR<NFServerData>> NFCMessageModule::GetAllServer(NF_SERVER_TYPE eSendType)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), std::vector<NF_SHARE_PTR < NFServerData>>(), "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetAllServer();
 }
 
-std::vector<NF_SHARE_PTR<NFServerData> > NFCMessageModule::GetAllServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes)
+std::vector<NF_SHARE_PTR<NFServerData>> NFCMessageModule::GetAllServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), std::vector<NF_SHARE_PTR < NFServerData>>(), "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetAllServer(serverTypes);
 }
 
-std::vector<NF_SHARE_PTR<NFServerData> > NFCMessageModule::GetAllServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes, bool isCrossServer)
+std::vector<NF_SHARE_PTR<NFServerData>> NFCMessageModule::GetAllServer(NF_SERVER_TYPE eSendType, NF_SERVER_TYPE serverTypes, bool isCrossServer)
 {
     CHECK_EXPR(eSendType < mServerLinkData.size(), std::vector<NF_SHARE_PTR < NFServerData>>(), "eType error:{}", (int) eSendType);
     return mServerLinkData[eSendType].GetAllServer(serverTypes, isCrossServer);
@@ -1341,8 +1400,8 @@ std::vector<std::string> NFCMessageModule::GetDBNames(NF_SERVER_TYPE eSendType)
     return mServerLinkData[eSendType].GetDBNames();
 }
 
-bool NFCMessageModule::ResponseHttpMsg(NF_SERVER_TYPE serverType, const NFIHttpHandle &req, const string &strMsg,
-                                       NFWebStatus code, const string &reason)
+bool NFCMessageModule::ResponseHttpMsg(NF_SERVER_TYPE serverType, const NFIHttpHandle& req, const string& strMsg,
+                                       NFWebStatus code, const string& reason)
 {
     if (m_netModule)
     {
@@ -1351,8 +1410,8 @@ bool NFCMessageModule::ResponseHttpMsg(NF_SERVER_TYPE serverType, const NFIHttpH
     return false;
 }
 
-bool NFCMessageModule::ResponseHttpMsg(NF_SERVER_TYPE serverType, uint64_t requestId, const string &strMsg,
-                                       NFWebStatus code, const string &reason)
+bool NFCMessageModule::ResponseHttpMsg(NF_SERVER_TYPE serverType, uint64_t requestId, const string& strMsg,
+                                       NFWebStatus code, const string& reason)
 {
     if (m_netModule)
     {
@@ -1361,8 +1420,8 @@ bool NFCMessageModule::ResponseHttpMsg(NF_SERVER_TYPE serverType, uint64_t reque
     return false;
 }
 
-bool NFCMessageModule::AddHttpMsgCB(NF_SERVER_TYPE serverType, const string &strCommand, NFHttpType eRequestType,
-                                    const HTTP_RECEIVE_FUNCTOR &cb)
+bool NFCMessageModule::AddHttpMsgCB(NF_SERVER_TYPE serverType, const string& strCommand, NFHttpType eRequestType,
+                                    const HTTP_RECEIVE_FUNCTOR& cb)
 {
     if (serverType > NF_ST_NONE && serverType < NF_ST_MAX)
     {
@@ -1375,7 +1434,7 @@ bool NFCMessageModule::AddHttpMsgCB(NF_SERVER_TYPE serverType, const string &str
 }
 
 bool NFCMessageModule::AddHttpOtherMsgCB(NF_SERVER_TYPE serverType, NFHttpType eRequestType,
-                                         const HTTP_RECEIVE_FUNCTOR &cb)
+                                         const HTTP_RECEIVE_FUNCTOR& cb)
 {
     if (serverType > NF_ST_NONE && serverType < NF_ST_MAX)
     {
@@ -1386,7 +1445,7 @@ bool NFCMessageModule::AddHttpOtherMsgCB(NF_SERVER_TYPE serverType, NFHttpType e
     return false;
 }
 
-bool NFCMessageModule::AddHttpFilterCB(NF_SERVER_TYPE serverType, const string &strCommand, const HTTP_FILTER_FUNCTOR &cb)
+bool NFCMessageModule::AddHttpFilterCB(NF_SERVER_TYPE serverType, const string& strCommand, const HTTP_FILTER_FUNCTOR& cb)
 {
     if (serverType > NF_ST_NONE && serverType < NF_ST_MAX)
     {
@@ -1398,12 +1457,12 @@ bool NFCMessageModule::AddHttpFilterCB(NF_SERVER_TYPE serverType, const string &
     return true;
 }
 
-bool NFCMessageModule::OnHttpReceiveNetPack(uint32_t serverType, const NFIHttpHandle &req)
+bool NFCMessageModule::OnHttpReceiveNetPack(uint32_t serverType, const NFIHttpHandle& req)
 {
     if (serverType <= NF_ST_NONE || serverType >= NF_ST_MAX)
         return false;
 
-    auto iter = mxCallBack[serverType].mxHttpMsgCBMap.find((NFHttpType) req.GetType());
+    auto iter = mxCallBack[serverType].mxHttpMsgCBMap.find((NFHttpType)req.GetType());
     if (iter != mxCallBack[serverType].mxHttpMsgCBMap.end())
     {
         std::string lowerPath = NFStringUtility::ToLower(req.GetPath());
@@ -1411,31 +1470,33 @@ bool NFCMessageModule::OnHttpReceiveNetPack(uint32_t serverType, const NFIHttpHa
         auto itPath = iter->second.find(lowerPath);
         if (itPath != iter->second.end())
         {
-            HTTP_RECEIVE_FUNCTOR &pFunPtr = itPath->second;
+            HTTP_RECEIVE_FUNCTOR& pFunPtr = itPath->second;
             try
             {
                 pFunPtr(serverType, req);
-            } catch (const std::exception &)
+            }
+            catch (const std::exception&)
             {
-                ResponseHttpMsg((NF_SERVER_TYPE) serverType, req, "unknow error", NFWebStatus::WEB_INTER_ERROR);
+                ResponseHttpMsg((NF_SERVER_TYPE)serverType, req, "unknow error", NFWebStatus::WEB_INTER_ERROR);
             }
             return true;
         }
         else
         {
-            for (int i = 0; i < (int) mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType) req.GetType()].size(); ++i)
+            for (int i = 0; i < (int)mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType)req.GetType()].size(); ++i)
             {
-                HTTP_RECEIVE_FUNCTOR &pFunPtr = mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType) req.GetType()][i];
+                HTTP_RECEIVE_FUNCTOR& pFunPtr = mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType)req.GetType()][i];
                 try
                 {
                     pFunPtr(serverType, req);
-                } catch (const std::exception &)
+                }
+                catch (const std::exception&)
                 {
-                    ResponseHttpMsg((NF_SERVER_TYPE) serverType, req, "unknow error", NFWebStatus::WEB_INTER_ERROR);
+                    ResponseHttpMsg((NF_SERVER_TYPE)serverType, req, "unknow error", NFWebStatus::WEB_INTER_ERROR);
                     return true;
                 }
             }
-            if (mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType) req.GetType()].size() > 0)
+            if (mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType)req.GetType()].size() > 0)
             {
                 return true;
             }
@@ -1443,28 +1504,29 @@ bool NFCMessageModule::OnHttpReceiveNetPack(uint32_t serverType, const NFIHttpHa
     }
     else
     {
-        for (int i = 0; i < (int) mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType) req.GetType()].size(); ++i)
+        for (int i = 0; i < (int)mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType)req.GetType()].size(); ++i)
         {
-            HTTP_RECEIVE_FUNCTOR &pFunPtr = mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType) req.GetType()][i];
+            HTTP_RECEIVE_FUNCTOR& pFunPtr = mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType)req.GetType()][i];
             try
             {
                 pFunPtr(serverType, req);
-            } catch (const std::exception &)
+            }
+            catch (const std::exception&)
             {
-                ResponseHttpMsg((NF_SERVER_TYPE) serverType, req, "unknow error", NFWebStatus::WEB_INTER_ERROR);
+                ResponseHttpMsg((NF_SERVER_TYPE)serverType, req, "unknow error", NFWebStatus::WEB_INTER_ERROR);
                 return true;
             }
         }
-        if (mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType) req.GetType()].size() > 0)
+        if (mxCallBack[serverType].mxHttpOtherMsgCBMap[(NFHttpType)req.GetType()].size() > 0)
         {
             return true;
         }
     }
 
-    return ResponseHttpMsg((NF_SERVER_TYPE) serverType, req, "", NFWebStatus::WEB_ERROR);
+    return ResponseHttpMsg((NF_SERVER_TYPE)serverType, req, "", NFWebStatus::WEB_ERROR);
 }
 
-NFWebStatus NFCMessageModule::OnHttpFilterPack(uint32_t serverType, const NFIHttpHandle &req)
+NFWebStatus NFCMessageModule::OnHttpFilterPack(uint32_t serverType, const NFIHttpHandle& req)
 {
     if (serverType <= NF_ST_NONE || serverType >= NF_ST_MAX)
         return NFWebStatus::WEB_ERROR;
@@ -1474,15 +1536,15 @@ NFWebStatus NFCMessageModule::OnHttpFilterPack(uint32_t serverType, const NFIHtt
     auto itPath = mxCallBack[serverType].mxHttpMsgFliterMap.find(lowerPath);
     if (itPath != mxCallBack[serverType].mxHttpMsgFliterMap.end())
     {
-        HTTP_FILTER_FUNCTOR &pFunPtr = itPath->second;
+        HTTP_FILTER_FUNCTOR& pFunPtr = itPath->second;
         return pFunPtr(serverType, req);
     }
 
     return NFWebStatus::WEB_OK;
 }
 
-int NFCMessageModule::HttpGet(NF_SERVER_TYPE serverType, const string &strUri, const HTTP_CLIENT_RESPONE &respone,
-                              const map<std::string, std::string> &xHeaders, int timeout)
+int NFCMessageModule::HttpGet(NF_SERVER_TYPE serverType, const string& strUri, const HTTP_CLIENT_RESPONE& respone,
+                              const map<std::string, std::string>& xHeaders, int timeout)
 {
     if (m_netModule)
     {
@@ -1491,8 +1553,8 @@ int NFCMessageModule::HttpGet(NF_SERVER_TYPE serverType, const string &strUri, c
     return -1;
 }
 
-int NFCMessageModule::HttpPost(NF_SERVER_TYPE serverType, const string &strUri, const string &strPostData,
-                               const HTTP_CLIENT_RESPONE &respone, const map<std::string, std::string> &xHeaders,
+int NFCMessageModule::HttpPost(NF_SERVER_TYPE serverType, const string& strUri, const string& strPostData,
+                               const HTTP_CLIENT_RESPONE& respone, const map<std::string, std::string>& xHeaders,
                                int timeout)
 {
     if (m_netModule)
@@ -1502,7 +1564,7 @@ int NFCMessageModule::HttpPost(NF_SERVER_TYPE serverType, const string &strUri, 
     return -1;
 }
 
-int NFCMessageModule::SendEmail(NF_SERVER_TYPE serverType, const string &title, const string &subject, const string &content)
+int NFCMessageModule::SendEmail(NF_SERVER_TYPE serverType, const string& title, const string& subject, const string& content)
 {
     if (m_netModule)
     {
@@ -1511,9 +1573,9 @@ int NFCMessageModule::SendEmail(NF_SERVER_TYPE serverType, const string &title, 
     return -1;
 }
 
-int NFCMessageModule::SendWxWork(NF_SERVER_TYPE serverType, const string &content)
+int NFCMessageModule::SendWxWork(NF_SERVER_TYPE serverType, const string& content)
 {
-    NFServerConfig *pConfig = FindModule<NFIConfigModule>()->GetAppConfig(NF_ST_MASTER_SERVER);
+    NFServerConfig* pConfig = FindModule<NFIConfigModule>()->GetAppConfig(NF_ST_MASTER_SERVER);
     CHECK_NULL(0, pConfig);
 
     std::string url = pConfig->wxWorkdRobot;
@@ -1529,7 +1591,7 @@ int NFCMessageModule::SendWxWork(NF_SERVER_TYPE serverType, const string &conten
     xHeaders.emplace("Accept", "application/json");
     xHeaders.emplace("Content-Type", "application/json;charset=utf-8");
 
-    HttpPost(NF_ST_MASTER_SERVER, url, json, [](int code, const std::string &resp)
+    HttpPost(NF_ST_MASTER_SERVER, url, json, [](int code, const std::string& resp)
     {
         NFLogInfo(NF_LOG_DEFAULT, 0, "send wxWork info, code:{} rsp:{}", code, resp);
     }, xHeaders);
@@ -1537,7 +1599,7 @@ int NFCMessageModule::SendWxWork(NF_SERVER_TYPE serverType, const string &conten
 }
 
 int NFCMessageModule::BroadcastEventToServer(NF_SERVER_TYPE eType, NF_SERVER_TYPE recvType, uint32_t dstBusId, uint32_t nEventID,
-                                             uint32_t bySrcType, uint64_t nSrcID, const google::protobuf::Message &message)
+                                             uint32_t bySrcType, uint64_t nSrcID, const google::protobuf::Message& message)
 {
     NFrame::Proto_FramePkg svrPkg;
     svrPkg.set_msg_id(0);
@@ -1560,32 +1622,32 @@ int NFCMessageModule::BroadcastEventToServer(NF_SERVER_TYPE eType, NF_SERVER_TYP
 }
 
 int NFCMessageModule::BroadcastEventToServer(NF_SERVER_TYPE eType, NF_SERVER_TYPE recvType, uint32_t nEventID, uint32_t bySrcType, uint64_t nSrcID,
-                                             const google::protobuf::Message &message)
+                                             const google::protobuf::Message& message)
 {
     return BroadcastEventToServer(eType, recvType, LOCAL_ALL_ROUTE, nEventID, bySrcType, nSrcID, message);
 }
 
 int NFCMessageModule::BroadcastEventToAllServer(NF_SERVER_TYPE eType, uint32_t nEventID, uint32_t bySrcType, uint64_t nSrcID,
-                                                const google::protobuf::Message &message)
+                                                const google::protobuf::Message& message)
 {
     for (int i = NF_ST_NONE + 1; i < NF_ST_MAX; ++i)
     {
-        if (IsWorkServer((NF_SERVER_TYPE) i))
+        if (IsWorkServer((NF_SERVER_TYPE)i))
         {
-            BroadcastEventToServer(eType, (NF_SERVER_TYPE) i, nEventID, bySrcType, nSrcID, message);
+            BroadcastEventToServer(eType, (NF_SERVER_TYPE)i, nEventID, bySrcType, nSrcID, message);
         }
     }
     return 0;
 }
 
 int NFCMessageModule::BroadcastEventToAllServer(NF_SERVER_TYPE eType, uint32_t busId, uint32_t nEventID, uint32_t bySrcType, uint64_t nSrcID,
-                                                const google::protobuf::Message &message)
+                                                const google::protobuf::Message& message)
 {
     for (int i = NF_ST_NONE + 1; i < NF_ST_MAX; ++i)
     {
-        if (IsWorkServer((NF_SERVER_TYPE) i))
+        if (IsWorkServer((NF_SERVER_TYPE)i))
         {
-            BroadcastEventToServer(eType, (NF_SERVER_TYPE) i, busId, nEventID, bySrcType, nSrcID, message);
+            BroadcastEventToServer(eType, (NF_SERVER_TYPE)i, busId, nEventID, bySrcType, nSrcID, message);
         }
     }
     return 0;

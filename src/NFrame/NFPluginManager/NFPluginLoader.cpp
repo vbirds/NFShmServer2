@@ -17,6 +17,7 @@
 #include "NFPluginManager/NFProcessParameter.h"
 #include "NFComm/NFPluginModule/NFGlobalSystem.h"
 #include "NFSignalHandleMgr.h"
+#include "NFComm/NFPluginModule/NFCheck.h"
 
 #if NF_PLATFORM == NF_PLATFORM_WIN
 #elif NF_PLATFORM == NF_PLATFORM_LINUX
@@ -26,6 +27,7 @@
 
 int c_main(int argc, char* argv[])
 {
+    int iRetCode = 0;
     // 平台相关初始化
 #if NF_PLATFORM == NF_PLATFORM_WIN
     // 设置未处理异常过滤器（Windows专用崩溃处理）
@@ -44,7 +46,12 @@ int c_main(int argc, char* argv[])
     for (int i = 0; i < static_cast<int>(vecPluginManager.size()); i++)
     {
         NFIPluginManager* pPluginManager = vecPluginManager[i];
-        pPluginManager->Begin(); // 执行插件管理器的初始化流程
+        iRetCode = pPluginManager->Begin(); // 执行插件管理器的初始化流程
+        if (iRetCode != 0)
+        {
+            NFSLEEP(1000000);
+            assert(false);
+        }
     }
 
     // 主服务循环
@@ -54,7 +61,7 @@ int c_main(int argc, char* argv[])
         for (int i = 0; i < static_cast<int>(vecPluginManager.size()); i++)
         {
             NFIPluginManager* pPluginManager = vecPluginManager[i];
-            pPluginManager->Execute(); // 驱动插件模块的主逻辑
+            pPluginManager->Tick(); // 驱动插件模块的主逻辑
         }
 
         // 配置重载处理
@@ -84,7 +91,8 @@ int c_main(int argc, char* argv[])
                 {
                     NFIPluginManager* pPluginManager = vecPluginManager[i];
                     pPluginManager->SetServerStopping(true);
-                    if (!pPluginManager->StopServer())
+                    int iRet = pPluginManager->StopServer();
+                    if (iRet != 0)
                     {
                         // 执行停服逻辑
                         bExit = false; // 存在未完成停服的插件管理器
@@ -100,7 +108,8 @@ int c_main(int argc, char* argv[])
                     for (int i = 0; i < static_cast<int>(vecPluginManager.size()); i++)
                     {
                         NFIPluginManager* pPluginManager = vecPluginManager[i];
-                        if (!pPluginManager->OnServerKilling())
+                        int iRet = pPluginManager->OnServerKilling();
+                        if (iRet != 0)
                         {
                             // 执行强制终止
                             bExit = false;
@@ -126,7 +135,8 @@ int c_main(int argc, char* argv[])
             {
                 NFIPluginManager* pPluginManager = vecPluginManager[i];
                 pPluginManager->SetHotfixServer(true);
-                if (!pPluginManager->HotfixServer())
+                int iRet = pPluginManager->HotfixServer();
+                if (iRet != 0)
                 {
                     // 执行热更新操作
                     bHotFail = true; // 记录热更新失败
@@ -154,6 +164,7 @@ int c_main(int argc, char* argv[])
         pPluginManager->End(); // 执行插件管理器终止逻辑
         NF_SAFE_DELETE(pPluginManager); // 安全删除插件管理器实例
     }
+
 #if NF_PLATFORM == NF_PLATFORM_WIN
     if (NFGlobalSystem::Instance()->IsServerKilling())
     {

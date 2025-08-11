@@ -4,8 +4,39 @@
 //    @Date             :   2022-09-18
 //    @Email			:    445267987@qq.com
 //    @Module           :    NFPluginModule
+//    @Description      :    高性能日志管理器，提供编译期格式检查和安全日志输出功能
 //
 // -------------------------------------------------------------------------
+
+/**
+ * @file NFLogMgr.h
+ * @brief 高性能安全日志管理器
+ * @details 该文件实现了一个功能强大的日志管理系统，主要特性包括：
+ * 
+ * **核心特性：**
+ * - **编译期格式检查**：在编译时验证格式字符串的正确性
+ * - **混合格式支持**：同时支持C风格（printf）和现代风格（fmt）格式
+ * - **类型安全**：防止格式字符串与参数类型不匹配
+ * - **性能优化**：零开销的编译期检查和运行时优化
+ * - **线程安全**：支持多线程环境下的安全日志输出
+ * 
+ * **技术实现：**
+ * - 使用模板元编程和SFINAE技术进行编译期检查
+ * - 支持constexpr常量表达式进行编译期计算
+ * - 实现了完整的格式字符串解析和验证算法
+ * - 提供了丰富的日志宏，支持条件日志输出
+ * 
+ * **设计优势：**
+ * - 编译期错误检测，避免运行时格式错误
+ * - 自动格式类型识别和转换
+ * - 完善的错误处理和降级机制
+ * - 灵活的日志级别和模块化管理
+ * 
+ * @author Gao.Yi
+ * @date 2022-09-18
+ * @version 1.0
+ */
+
 #pragma once
 
 #include <NFComm/NFCore/NFStringUtility.h>
@@ -22,6 +53,15 @@ namespace spdlog
     class logger;
 }
 
+/**
+ * @brief 编译期字符串字面量检查函数
+ * @tparam T 类型参数
+ * @param 未使用的参数
+ * @return 始终返回0
+ * 
+ * 该函数用于编译期检查参数是否为字符串字面量，
+ * 配合noexcept和模板特化实现类型检查。
+ */
 template <typename T>
 constexpr int NFCheckStringLiteral(T)
 {
@@ -31,7 +71,14 @@ constexpr int NFCheckStringLiteral(T)
 // ========================
 // 阶段1：编译期字符串常量检查
 // ========================
-// 判断是否为字符串字面量的类型特征
+
+/**
+ * @brief 字符串字面量类型特征检查
+ * @tparam T 待检查的类型
+ * 
+ * 通过模板特化技术判断类型是否为字符串字面量，
+ * 支持各种cv修饰符的字符数组类型。
+ */
 template <typename T>
 struct is_string_literal : std::false_type
 {
@@ -60,8 +107,25 @@ struct is_string_literal<const volatile char[N]> : std::true_type
 // ========================
 // 阶段2：格式类型识别（编译期/运行时）
 // ========================
+
+/**
+ * @enum FormatType
+ * @brief 格式字符串类型枚举
+ * 
+ * 用于标识和区分不同的格式字符串类型：
+ * - C_Format: C风格格式（如printf）
+ * - Fmt_Format: 现代格式（如fmt库）
+ * - Invalid: 无效或混合格式
+ */
 enum FormatType { C_Format, Fmt_Format, Invalid };
 
+/**
+ * @namespace nf_safe_format_detail
+ * @brief 安全格式化实现细节命名空间
+ * 
+ * 包含所有编译期格式检查和验证的实现函数，
+ * 这些函数使用constexpr实现零开销的编译期计算。
+ */
 namespace nf_safe_format_detail
 {
     // 编译期C格式验证
@@ -344,25 +408,142 @@ namespace nf_safe_format_detail
 }
 
 
+/**
+ * @class NFLogMgr
+ * @brief 高性能日志管理器主类
+ * @details 该类是整个日志系统的核心，实现了：
+ * 
+ * **核心功能：**
+ * - **单例模式**：确保全局唯一的日志管理器实例
+ * - **格式安全**：编译期和运行时的格式字符串验证
+ * - **多后端支持**：支持多种日志输出后端（文件、控制台等）
+ * - **性能优化**：使用模板和内联优化减少运行时开销
+ * - **错误处理**：完善的异常捕获和降级机制
+ * 
+ * **技术特点：**
+ * - 继承自NFSingleton，提供线程安全的单例访问
+ * - 支持C风格和Fmt风格的格式字符串
+ * - 自动格式类型检测和转换
+ * - 内置日志级别过滤和模块化管理
+ * - 提供备用日志机制，确保关键信息不丢失
+ * 
+ * **使用方式：**
+ * @code
+ * // 通过宏使用（推荐）
+ * LOG_INFO(playerId, "Player {} login success", playerName);
+ * 
+ * // 直接使用
+ * NFLogMgr::Instance()->LogFormat(NLL_INFO_NORMAL, loc, logId, guid, 
+ *                                  moduleId, retCode, "Format string {}", arg);
+ * @endcode
+ * 
+ * @warning 应使用提供的宏而非直接调用方法，以获得完整的编译期检查
+ * @see 使用LOG_INFO, LOG_ERROR等宏进行日志输出
+ */
 class NFLogMgr : public NFSingleton<NFLogMgr>
 {
 public:
+    /**
+     * @brief 构造函数
+     * 
+     * 初始化日志管理器，设置默认状态。
+     * 实际的初始化工作在Init()方法中完成。
+     */
     NFLogMgr();
 
+    /**
+     * @brief 析构函数
+     * 
+     * 清理日志管理器资源，确保所有日志输出完成。
+     */
     virtual ~NFLogMgr();
 
 public:
+    /**
+     * @brief 初始化日志管理器
+     * @param pSpdlogModule 日志模块指针，如果为nullptr则使用备用日志
+     * @return 初始化是否成功
+     * 
+     * **功能说明：**
+     * 设置日志后端模块，配置日志输出参数。
+     * 如果没有提供日志模块，会创建备用的控制台日志输出。
+     * 
+     * **初始化过程：**
+     * - 设置日志模块关联
+     * - 配置日志级别和过滤器
+     * - 创建备用日志实例
+     * - 验证配置有效性
+     */
     bool Init(NFILogModule* pSpdlogModule = nullptr);
 
+    /**
+     * @brief 清理日志管理器
+     * 
+     * **清理过程：**
+     * - 刷新所有待输出的日志
+     * - 关闭日志文件和连接
+     * - 清理内存资源
+     * - 重置状态标志
+     * 
+     * @note 清理后需要重新调用Init()才能继续使用
+     */
     void UnInit();
 
 public:
+    // ========================================================================
+    // 核心日志输出接口 - 模板方法
+    // ========================================================================
+    
+    /**
+     * @brief Fmt风格日志格式化输出（std::string版本）
+     * @tparam Args 可变参数类型包
+     * @param logLevel 日志级别
+     * @param loc 源码位置信息（文件、行号、函数名）
+     * @param logId 日志ID，用于日志过滤和分类
+     * @param guid 全局唯一标识符（通常是玩家ID）
+     * @param moduleId 模块ID，用于标识日志来源模块
+     * @param retCode 返回码，用于错误跟踪
+     * @param myFmt 格式字符串（std::string）
+     * @param args 格式化参数
+     * 
+     * **功能说明：**
+     * 使用现代C++格式化语法（{}占位符）进行日志输出。
+     * 内部会转换为const char*版本进行实际处理。
+     * 
+     * **格式示例：**
+     * @code
+     * LogFormat(NLL_INFO_NORMAL, loc, logId, playerId, moduleId, 0, 
+     *          "Player {} level up to {}", playerName, newLevel);
+     * @endcode
+     */
     template <typename... Args>
     void LogFormat(NF_LOG_LEVEL logLevel, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, int moduleId, int retCode, const std::string& myFmt, const Args&... args)
     {
         LogFormat(logLevel, loc, logId, guid, moduleId, retCode, myFmt.c_str(), args...);
     }
 
+    /**
+     * @brief C风格日志格式化输出（std::string版本）
+     * @tparam Args 可变参数类型包
+     * @param logLevel 日志级别
+     * @param loc 源码位置信息
+     * @param logId 日志ID
+     * @param guid 全局唯一标识符
+     * @param moduleId 模块ID
+     * @param retCode 返回码
+     * @param myFmt 格式字符串（std::string）
+     * @param args 格式化参数
+     * 
+     * **功能说明：**
+     * 使用传统C风格格式化语法（%占位符）进行日志输出。
+     * 内部会转换为const char*版本进行实际处理。
+     * 
+     * **格式示例：**
+     * @code
+     * LogSprintf(NLL_INFO_NORMAL, loc, logId, playerId, moduleId, 0,
+     *           "Player %s level up to %d", playerName.c_str(), newLevel);
+     * @endcode
+     */
     template <typename... Args>
     void LogSprintf(NF_LOG_LEVEL logLevel, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, int moduleId, int retCode, const std::string& myFmt, const Args&... args)
     {
@@ -467,6 +648,21 @@ public:
         }
     }
 
+    /**
+     * @brief 检查指定日志ID是否启用
+     * @param logLevel 日志级别
+     * @param logId 日志ID
+     * @return 如果该日志ID已启用返回true，否则返回false
+     * 
+     * **功能说明：**
+     * 用于日志过滤，避免不必要的格式化开销。
+     * 如果日志模块未初始化，默认返回false。
+     * 
+     * **性能优势：**
+     * - 早期过滤，避免昂贵的字符串格式化
+     * - 支持动态日志级别调整
+     * - 模块化的日志控制策略
+     */
     virtual bool IsLogIdEnable(NF_LOG_LEVEL logLevel, uint32_t logId)
     {
         if (m_pLogModule)
@@ -476,32 +672,102 @@ public:
         return false;
     }
 
+    /**
+     * @brief 创建备用日志器
+     * 
+     * 当主日志模块不可用时，创建备用的控制台日志器，
+     * 确保关键错误信息不会丢失。
+     * 
+     * @note 备用日志器通常输出到控制台，用于调试和紧急情况
+     */
     void CreateNoLog();
 
+    /**
+     * @brief 备用日志输出方法
+     * @param logLevel 日志级别
+     * @param loc 源码位置信息
+     * @param logId 日志ID
+     * @param guid 全局唯一标识符
+     * @param log 已格式化的日志内容
+     * 
+     * 当主日志模块不可用时使用的备用日志输出方法。
+     * 确保即使在系统异常情况下也能输出关键信息。
+     */
     void NoLog(NF_LOG_LEVEL logLevel, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, const std::string& log);
 
 protected:
-    NFILogModule* m_pLogModule;
-    std::shared_ptr<spdlog::logger> m_noLogger;
+    NFILogModule* m_pLogModule;                      ///< 主日志模块指针，提供实际的日志输出功能
+    std::shared_ptr<spdlog::logger> m_noLogger;     ///< 备用日志器，用于紧急情况下的日志输出
 };
 
+/**
+ * @brief Protocol Buffers日志处理函数
+ * @param format 格式字符串
+ * @param ... 可变参数
+ * 
+ * 专用于处理Protocol Buffers相关的日志输出，
+ * 提供与protobuf库的集成支持。
+ * 
+ * @note 该函数用于protobuf内部日志回调，通常不需要直接调用
+ */
 void NanoFromPbLogHandle(const char* format, ...);
 
 
+/**
+ * @brief 安全格式化实现模板类（默认/无效格式版本）
+ * @tparam IsStringLiteral 是否为字符串字面量
+ * @tparam IsCStyle 是否为C风格格式
+ * @tparam IsFmtStyle 是否为Fmt风格格式
+ * @tparam Args 可变参数类型包
+ * 
+ * **功能说明：**
+ * 这是安全格式化系统的核心模板类，通过模板特化技术
+ * 实现编译期格式检查和运行时安全格式化。
+ * 
+ * **特化策略：**
+ * - 默认版本：处理未知或混合格式，使用运行时检测
+ * - C风格特化：针对printf风格格式优化
+ * - Fmt风格特化：针对现代C++格式优化
+ * 
+ * **安全机制：**
+ * - 编译期检查混合格式，防止格式错误
+ * - 运行时格式类型自动检测和转换
+ * - 异常安全的格式化操作
+ * 
+ * @note 该版本用于处理无法在编译期确定格式类型的情况
+ */
 template <bool IsStringLiteral, bool IsCStyle, bool IsFmtStyle, typename... Args>
 struct NFSafeFormatImpl
 {
-    //编译期间检查字符串 同时带有C格式字符串和fmt格式，直接编译失败
+    /// @brief 编译期检查：禁止同时使用C格式和Fmt格式
     static_assert(!(IsCStyle && IsFmtStyle), "Mixed C-style and Fmt-style format specifiers detected");
 
+    /**
+     * @brief 执行日志输出（const char*版本）
+     * @note 默认版本为空实现，由特化版本提供具体功能
+     */
     static void execute(NF_LOG_LEVEL logLevel, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, int module, int iRetCode, const char* fmt, Args&&... args)
     {
     }
 
+    /**
+     * @brief 执行日志输出（std::string版本）
+     * @note 默认版本为空实现，由特化版本提供具体功能
+     */
     static void execute(NF_LOG_LEVEL logLevel, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, int module, int iRetCode, const std::string fmt, Args&&... args)
     {
     }
 
+    /**
+     * @brief 获取格式化字符串（const char*版本）
+     * @param fmt 格式字符串
+     * @param args 格式化参数
+     * @return 格式化后的字符串
+     * 
+     * **运行时格式检测：**
+     * 当无法在编译期确定格式类型时，使用运行时检测，
+     * 根据格式字符串特征选择合适的格式化函数。
+     */
     static std::string GetString(const char* fmt, Args&&... args)
     {
         // 运行时路径
@@ -516,6 +782,12 @@ struct NFSafeFormatImpl
         }
     }
 
+    /**
+     * @brief 获取格式化字符串（std::string版本）
+     * @param fmt 格式字符串
+     * @param args 格式化参数
+     * @return 格式化后的字符串
+     */
     static std::string GetString(const std::string& fmt, Args&&... args)
     {
         // 运行时路径
@@ -752,12 +1024,42 @@ public:
     }
 };
 
+/**
+ * @brief 安全格式化主入口函数（const char*版本）
+ * @tparam IsStringLiteral 是否为字符串字面量（编译期确定）
+ * @tparam IsCStyle 是否为C风格格式（编译期确定）
+ * @tparam IsFmtStyle 是否为Fmt风格格式（编译期确定）
+ * @tparam Args 可变参数类型包
+ * @param logLevel 日志级别
+ * @param loc 源码位置信息
+ * @param logId 日志ID
+ * @param guid 全局唯一标识符
+ * @param module 模块ID
+ * @param iRetCode 返回码
+ * @param fmt 格式字符串
+ * @param args 格式化参数
+ * 
+ * **核心功能：**
+ * 这是整个安全格式化系统的统一入口点，根据模板参数
+ * 选择最合适的格式化实现版本。
+ * 
+ * **编译期优化：**
+ * - 模板参数在编译期确定，实现零开销抽象
+ * - 类型安全的格式化操作
+ * - 编译期错误检测和报告
+ * 
+ * @note 通常不直接调用，而是通过LOG_*宏间接使用
+ */
 template <bool IsStringLiteral, bool IsCStyle, bool IsFmtStyle, typename... Args>
 void NFSafeFormat(NF_LOG_LEVEL logLevel, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, int module, int iRetCode, const char* fmt, Args&&... args)
 {
     NFSafeFormatImpl<IsStringLiteral, IsCStyle, IsFmtStyle, Args...>::execute(logLevel, loc, logId, guid, module, iRetCode, fmt, std::forward<Args>(args)...);
 }
 
+/**
+ * @brief 安全格式化主入口函数（std::string版本）
+ * @note 功能与const char*版本相同，但接受std::string类型的格式字符串
+ */
 template <bool IsStringLiteral, bool IsCStyle, bool IsFmtStyle, typename... Args>
 void NFSafeFormat(NF_LOG_LEVEL logLevel, const NFSourceLoc& loc, uint32_t logId, uint64_t guid, int module, int iRetCode, const std::string& fmt, Args&&... args)
 {
