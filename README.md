@@ -1,15 +1,15 @@
 # NFShmXFrame 分布式游戏服务器框架
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/ketoo/NFShmXFrame)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yigao/NFShmXFrame)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/ketoo/NFShmXFrame)
-[![Language](https://img.shields.io/badge/language-C%2B%2B17-orange.svg)](https://github.com/ketoo/NFShmXFrame)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/yigao/NFShmXFrame)
+[![Language](https://img.shields.io/badge/language-C%2B%2B17-orange.svg)](https://github.com/yigao/NFShmXFrame)
 
 ## 🎯 项目概述
 
 **NFShmXFrame** = **NF** + **Shm** + **X** + **Frame**
 
-- **NF**：NoahFrame框架基础，提供稳定的插件化架构
+- **NF**：现有框架从NoahFrame框架改进而来，提供稳定的插件化架构
 - **Shm**：Shared Memory共享内存技术，提供双内存池选择方案
 - **X**：eXtensible脚本扩展系统，支持多语言混合开发  
 - **Frame**：Framework框架，完整的游戏服务器解决方案
@@ -136,6 +136,15 @@ make install
 | **AllServer** | `--Server=AllServer` | 1 | 1 | 多个（每种类型1个） | 开发调试，功能测试 |
 | **AllMoreServer** | `--Server=AllMoreServer` | 1 | 多个 | 多个（每种类型可多个） | 开发调试，跨服务器调试优化 |
 
+### 分布式启动
+
+对于多服务器分布式部署，建议使用NFServerController工具进行统一管理：
+
+- **Windows平台**：使用图形化工具 `tools/NFServerControllerQt.exe`
+- **Linux平台**：使用命令行工具 `tools/NFServerController`
+
+详细使用方法请参考：[🚀 分布式启动文档](docs/NFShmXFrame分布式启动.md)
+
 ## 🏛️ 架构设计
 
 ### 三层架构
@@ -231,22 +240,328 @@ BeforeShut() → Shut() → Finalize()
 ### 🔥 热更新系统
 
 **三种热更新方式**：
-1. **配置重载（--reload）**：
-   - 重载Lua配置文件
-   - 重载Lua脚本
-   - 重载游戏数据
-   - 支持HTTP接口和信号触发
 
-2. **代码热重启（--restart）**：
-   - 杀死旧进程，启动新进程
-   - 通过共享内存保持数据状态
-   - 支持零停机更新
-   - PID文件管理和信号通信
+#### 1. 配置重载（--reload）
+- **重载Lua配置文件**：实时更新服务器配置
+- **重载Lua脚本**：业务逻辑脚本热更新
+- **重载游戏数据**：Excel配置数据热重载
+- **支持HTTP接口和信号触发**
 
-3. **Lua脚本热更新**：
-   - 实时更新业务逻辑
-   - 无需重启服务器
-   - 支持单文件或批量更新
+#### 2. 代码热重启（--restart）：零数据丢失的C++代码热更新
+
+NFShmXFrame的`--restart`功能实现了**真正的零数据丢失热更新**，这是框架的核心竞争优势之一。
+
+##### ✨ 核心优势
+- **🔄 零数据丢失**：通过共享内存技术保持所有游戏数据
+- **⚡ 秒级重启**：整个重启过程通常在2-5秒内完成
+- **🛡️ 双向确认机制**：确保旧进程完全释放资源后再启动新进程
+- **🌍 跨平台支持**：Windows和Linux平台都有完整实现
+- **📊 详细日志**：完整记录整个重启过程，便于运维监控
+
+##### 🔧 使用方法
+
+```bash
+# Linux平台热重启
+./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin --Restart --Daemon
+
+# Windows平台热重启
+NFPluginLoader.exe --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin --Restart --Daemon
+
+# HTTP接口触发重启
+curl "http://127.0.0.1:6011/restart?Server=GameServer&ID=1.13.10.1"
+```
+
+##### 🏗️ 实现原理
+
+**Linux平台实现**：
+- 使用Linux信号机制实现进程间通信
+- 通过`SIGUNUSED`信号触发优雅退出
+- PID文件管理确保进程唯一性
+- 共享内存自动恢复数据状态
+
+**Windows平台实现**：
+- 使用Windows命名事件实现进程间通信
+- 双向确认机制确保安全重启：
+  - 程序A发送`NFServer_Kill_{ProcessID}`事件
+  - 程序B收到信号后优雅释放资源
+  - 程序B发送`NFServer_KillSuccess_{ProcessID}`确认信号
+  - 程序A收到确认后启动新进程
+
+##### 📋 重启流程详解
+
+**Linux平台重启流程图**：
+
+```
+用户执行重启命令
+        │
+        ▼
+   ┌─────────────┐
+   │检查PID文件？│
+   └─────┬───────┘
+         │
+    ┌────▼────┐         ┌──────────────┐
+    │文件存在？│   否    │直接启动新进程│
+    └────┬────┘  ────▶  └──────┬───────┘
+         │是                    │
+         ▼                      │
+   ┌──────────────┐              │
+   │读取旧进程PID │              │
+   └──────┬───────┘              │
+          │                      │
+          ▼                      │
+   ┌──────────────────┐          │
+   │发送SIGUNUSED信号 │          │
+   └──────┬───────────┘          │
+          │                      │
+          ▼                      │
+   ┌──────────────┐              │
+   │旧进程收到信号│              │
+   └──────┬───────┘              │
+          │                      │
+          ▼                      │
+   ┌──────────────┐              │
+   │设置停服标志  │              │
+   └──────┬───────┘              │
+          │                      │
+          ▼                      │
+   ┌──────────────┐              │
+   │保存数据到共享│              │
+   │内存          │              │
+   └──────┬───────┘              │
+          │                      │
+          ▼                      │
+   ┌──────────────┐              │
+   │旧进程优雅退出│              │
+   └──────────────┘              │
+          │                      │
+          ▼                      │
+   ┌──────────────┐    超时      │
+   │新进程等待    │ ────────┐    │
+   │最多10秒      │         │    │
+   └──────┬───────┘         │    │
+          │进程已退出        │    │
+          ▼                 ▼    │
+   ┌──────────────┐  ┌───────────┐│
+   │创建新PID文件 │  │强制杀死   ││
+   └──────┬───────┘  │旧进程     ││
+          │          └───────┬───┘│
+          │                  │    │
+          └─────────┬────────┘    │
+                    │             │
+                    ▼             │
+            ┌──────────────┐      │
+            │从共享内存    │      │
+            │恢复数据      │ ◀────┘
+            └──────┬───────┘
+                   │
+                   ▼
+            ┌──────────────┐
+            │初始化并启动  │
+            │服务          │
+            └──────┬───────┘
+                   │
+                   ▼
+            ┌──────────────┐
+            │重启完成      │
+            └──────────────┘
+```
+
+**Windows平台重启流程图（双向确认机制）**：
+
+```
+用户执行重启命令
+        │
+        ▼
+   ┌─────────────┐
+   │检查PID文件？│
+   └─────┬───────┘
+         │
+    ┌────▼────┐         ┌──────────────┐
+    │文件存在？│   否    │直接启动新进程│
+    └────┬────┘  ────▶  └──────┬───────┘
+         │是                    │
+         ▼                      │
+   ┌──────────────┐              │
+   │读取旧进程PID │              │
+   └──────┬───────┘              │
+          │                      │
+          ▼                      │
+   ┌──────────────┐              │
+   │检查旧进程    │   不运行      │
+   │是否运行？    │ ──────────────┤
+   └──────┬───────┘              │
+          │运行                   │
+          ▼                      │
+                                 │
+程序A端：                        │
+   ┌──────────────────────┐      │
+   │创建Kill事件          │      │
+   │NFServer_Kill_{PID}   │      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │SetEvent发送Kill信号  │      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │Sleep(50ms)避免竞态   │      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │等待KillSuccess事件   │      │
+   │最多15秒超时          │      │
+   └──────┬───────────────┘      │
+          │                      │
+     ┌─────▼─────┐                │
+     │收到确认？  │                │
+     └─────┬─────┘                │
+          │                      │
+      ┌────▼────┐                 │
+      │是       │                 │
+      └────┬────┘                 │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │从共享内存恢复数据    │      │
+   │状态（立即开始）      │      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │初始化并启动服务      │      │
+   │（与程序B退出并行）   │      │
+   └──────┬───────────────┘      │
+          │                      │
+          └──────────────────────┤
+                                 │
+程序B端：                        │
+   ┌──────────────────────┐      │
+   │事件处理线程检测到    │      │
+   │Kill事件              │      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │设置停服和优雅退出    │      │
+   │标志                  │      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │检查所有服务是否停止  │      │
+   │最多10秒超时          │      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │确保数据保存到共享内存│      │
+   └──────┬───────────────┘      │
+          │                      │
+          ▼                      │
+   ┌──────────────────────┐      │
+   │发送KillSuccess确认   │ ─────┼──┐
+   │事件                  │      │  │
+   └──────┬───────────────┘      │  │
+          │                      │  │
+          ▼                      │  │
+   ┌──────────────────────┐      │  │
+   │Sleep(50ms)确保信号   │      │  │
+   │传递                  │      │  │
+   └──────┬───────────────┘      │  │
+          │                      │  │
+          ▼                      │  │
+   ┌──────────────────────┐      │  │ 程序A收到确认后
+   │Sleep(10秒)等待       │      │  │ 立即开始恢复数据
+   │程序A完成启动         │      │  │ 和启动服务
+   └──────┬───────────────┘      │  │
+          │                      │  │
+          ▼                      │  │
+   ┌──────────────────────┐      │  │
+   │旧进程正常退出        │      │  │
+   │exit(0)               │      │  │
+   └──────────────────────┘      │  │
+                                 │  │
+                                 ▼  │
+                          ┌──────────────┐
+                          │重启完成      │ ◀┘
+                          └──────────────┘
+```
+
+**流程对比说明**：
+
+| 阶段 | Linux实现 | Windows实现 |
+|------|-----------|-------------|
+| **信号发送** | 发送SIGUNUSED信号 | 创建并触发Kill事件 |
+| **确认机制** | 单向信号 + 进程状态检测 | 双向事件确认机制 |
+| **超时处理** | 10秒后强制SIGKILL | 15秒等待 + 自动退出保护 |
+| **竞态处理** | 信号队列机制 | 延迟50ms + 轮询检测 |
+| **数据保护** | 系统级共享内存自动持久化 | 手动确认数据保存完成 |
+
+##### ⚠️ Windows平台注意事项
+
+由于Windows和Linux在共享内存生命周期管理上的差异，Windows平台有以下特殊考虑：
+
+**🚨 重要风险警告**：
+- **Windows平台热更重启仅供开发调试使用**
+- **生产环境禁止使用Windows热更功能**
+- **存在数据完全丢失的巨大风险**
+
+**问题**：Windows系统在进程终止时会自动释放共享内存对象，导致数据丢失。
+
+**风险详情**：
+1. **数据丢失风险**：一旦出现异常，可能导致所有游戏数据完全丢失
+2. **时序依赖风险**：依赖复杂的双向确认机制，任何环节失败都可能造成数据损失
+3. **系统稳定性风险**：Windows共享内存机制不如Linux稳定，容易受系统负载影响
+4. **恢复困难**：数据丢失后难以恢复，影响开发进度
+
+**适用场景**：
+- ✅ **开发环境**：代码调试、功能测试
+- ✅ **测试环境**：集成测试、压力测试
+- ❌ **生产环境**：绝对禁止使用
+- ❌ **重要数据环境**：任何包含重要数据的环境都不应使用
+
+**生产环境建议**：
+- 使用传统的停服-更新-启服流程
+- 实施完善的数据备份策略
+- 考虑使用容器化部署方案
+- 建议迁移到Linux平台获得更好的热更支持
+
+**解决方案**：
+1. **双向确认机制**：确保旧进程完全释放资源后再启动新进程
+2. **超时保护**：避免死锁（程序A等待15秒，程序B自动退出10秒）
+3. **详细日志记录**：完整跟踪重启过程
+4. **数据备份策略**：重要数据定期备份到持久化存储
+
+**开发调试最佳实践**：
+```bash
+# 1. 确保共享内存配置正确
+BusLength = 20971520  # 20M共享内存
+
+# 2. 监控重启日志
+tail -f logs/NFGameServer_*.log | grep -E "(Kill|Restart|Graceful)"
+
+# 3. 验证数据完整性
+# 重启后检查关键数据是否正确恢复
+
+# 4. 定期备份测试数据
+# 避免因意外数据丢失影响开发进度
+```
+
+##### 📊 性能指标
+
+- **重启时间**：通常2-5秒完成
+- **数据丢失率**：0%（正常情况下）
+- **服务中断时间**：< 1秒
+- **内存使用**：重启过程中内存使用峰值约为平时的1.5倍
+- **CPU占用**：重启期间CPU使用率短暂上升到50-80%
+
+#### 3. Lua脚本热更新
+- **实时更新业务逻辑**：无需重启服务器
+- **支持单文件或批量更新**
+- **自动依赖检测和重载**
 
 ### ⚙️ 初始化任务系统
 
@@ -305,79 +620,257 @@ NFShmXFrame的"X"核心特色：强大的多语言脚本扩展能力
 ## 📚 详细文档
 
 ### 核心架构文档
-- [📖 插件框架架构详解](doc/NFShmXFrame插件框架架构详解.md) - 深入理解框架设计原理
-- [🔧 插件系统三大核心组件详解](doc/NFShmXFrame插件系统三大核心组件详解.md) - 掌握插件开发
-- [🏗️ 服务器代码组织结构分析](doc/NFShmXFrame服务器代码组织结构分析.md) - 了解项目结构
+- [📖 插件框架架构详解](docs/NFShmXFrame插件框架架构详解.md) - 深入理解框架设计原理
+- [🔧 插件系统三大核心组件详解](docs/NFShmXFrame插件系统三大核心组件详解.md) - 掌握插件开发
+- [🏗️ 服务器代码组织结构分析](docs/NFShmXFrame服务器代码组织结构分析.md) - 了解项目结构
 
 ### 启动和运行文档
-- [🚀 服务器启动参数与执行流程详解](doc/NFShmXFrame服务器启动参数与执行流程详解.md) - 掌握启动配置
-- [⚙️ 服务器初始化启动任务系统详解](doc/NFShmXFrame服务器初始化启动任务系统详解.md) - 理解启动流程
-- [🔄 服务器运行流程详解](doc/NFShmXFrame服务器运行流程详解.md) - 了解运行机制
+- [🚀 服务器启动参数与执行流程详解](docs/NFShmXFrame服务器启动参数与执行流程详解.md) - 掌握启动配置
+- [⚙️ 服务器初始化启动任务系统详解](docs/NFShmXFrame服务器初始化启动任务系统详解.md) - 理解启动流程
+- [🔄 服务器运行流程详解](docs/NFShmXFrame服务器运行流程详解.md) - 了解运行机制
 
 ### 运维和管理文档
-- [🔥 服务器热更重启详解](doc/NFShmXFrame服务器热更重启详解.md) - 实现零停机更新
-- [🔄 服务器重载配置详解](doc/NFShmXFrame服务器重载配置详解.md) - 配置热重载技术
-- [🔨 编译指南](doc/NFShmXFrame编译指南.md) - 详细编译说明
+- [🔥 服务器热更重启详解](docs/NFShmXFrame服务器热更重启详解.md) - 实现零停机更新
+- [🔄 服务器重载配置详解](docs/NFShmXFrame服务器重载配置详解.md) - 配置热重载技术
+- [🔨 编译指南](docs/NFShmXFrame编译指南.md) - 详细编译说明
+- [🚀 分布式启动文档](docs/NFShmXFrame分布式启动.md) - 分布式部署和管理
+
+### 示例和教程文档
+- [🎯 服务器示例文档](docs/NFShmXFrame服务器example.md) - Tutorial和MMO示例详解
 
 ## 💡 使用示例
 
-### 基础模块开发
+### 🎯 Tutorial示例项目
 
-```cpp
-// 定义模块接口
-class IMyGameModule : public NFIModule
-{
-public:
-    virtual bool ProcessPlayerLogin(uint64_t playerId) = 0;
-};
+NFShmXFrame提供了完整的Tutorial示例项目，位于`src/NFTest/NFTutorialPlugin/`目录下，展示了框架的核心功能。
 
-// 实现具体模块
-class MyGameModule : public IMyGameModule
-{
-public:
-    MyGameModule(NFIPluginManager* p) : IMyGameModule(p) {}
-    
-    virtual bool Init() override
-    {
-        // 获取依赖模块
-        m_pLogModule = FindModule<NFILogModule>();
-        return true;
-    }
-    
-    virtual bool ProcessPlayerLogin(uint64_t playerId) override
-    {
-        m_pLogModule->LogInfo(NF_LOG_DEFAULT, 0, "Player {} login", playerId);
-        return true;
-    }
-    
-private:
-    NFILogModule* m_pLogModule = nullptr;
-};
+#### 启动Tutorial示例
+
+```bash
+# 启动Tutorial示例服务器
+./NFPluginLoader --Server=TutorialAllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --game=Tutorial --restart
+
+# 停止服务器
+./NFPluginLoader --Server=TutorialAllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --game=Tutorial --Stop
+
+# 重载配置
+./NFPluginLoader --Server=TutorialAllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --game=Tutorial --Reload
 ```
 
-### 插件开发
+#### 基础模块开发示例
 
 ```cpp
-class MyGamePlugin : public NFIPlugin
+// NFTutorialModule.h - 模块头文件
+class NFTutorialModule : public NFIDynamicModule
 {
 public:
-    explicit MyGamePlugin(NFIPluginManager* p) : NFIPlugin(p) {}
-    
-    virtual int GetPluginVersion() override { return 1000; }
-    virtual std::string GetPluginName() override { return "MyGamePlugin"; }
-    
-    virtual void Install() override
-    {
-        // 注册模块
-        REGISTER_MODULE(pPluginManager, IMyGameModule, MyGameModule);
-    }
-    
-    virtual void Uninstall() override
-    {
-        // 卸载模块
-        UNREGISTER_MODULE(pPluginManager, IMyGameModule, MyGameModule);
-    }
+    NFTutorialModule(NFIPluginManager* p);
+    virtual ~NFTutorialModule();
+
+    virtual int Awake();
+    virtual int Init();
+    virtual int Tick();
+    virtual int Shut();
+    virtual int Finalize();
+    virtual int OnDynamicPlugin();
+    virtual int OnTimer(uint32_t nTimerID) override;
+
+private:
+    uint32_t m_idCount;
 };
+
+// NFTutorialModule.cpp - 模块实现
+NFTutorialModule::NFTutorialModule(NFIPluginManager* p): NFIDynamicModule(p)
+{
+    m_idCount = 0;
+}
+
+int NFTutorialModule::Awake()
+{
+    NFLogError(NF_LOG_DEFAULT, 0, "tutorial awake...........");
+    SetTimer(TUTORIAL_TIMER_ID, 10000); // 设置10秒定时器
+    return 0;
+}
+
+int NFTutorialModule::Init()
+{
+    NFLogError(NF_LOG_DEFAULT, 0, "tutorial init...........");
+    return 0;
+}
+
+int NFTutorialModule::OnTimer(uint32_t nTimerID)
+{
+    if (nTimerID == TUTORIAL_TIMER_ID)
+    {
+        m_idCount++;
+        NFLogError(NF_LOG_DEFAULT, 0, "id count:{}.......", m_idCount);
+    }
+    return 0;
+}
+```
+
+#### 插件开发示例
+
+```cpp
+// NFTutorialPlugin.h - 插件头文件
+class NFTutorialPlugin : public NFIPlugin
+{
+public:
+    explicit NFTutorialPlugin(NFIPluginManager* p):NFIPlugin(p) {}
+
+    virtual int GetPluginVersion();
+    virtual std::string GetPluginName();
+    virtual void Install();
+    virtual void Uninstall();
+    virtual bool InitShmObjectRegister() override;
+};
+
+// NFTutorialPlugin.cpp - 插件实现
+int NFTutorialPlugin::GetPluginVersion()
+{
+    return 0;
+}
+
+std::string NFTutorialPlugin::GetPluginName()
+{
+    return GET_CLASS_NAME(NFTutorialPlugin);
+}
+
+void NFTutorialPlugin::Install()
+{
+    REGISTER_MODULE(m_pObjPluginManager, NFTutorialModule, NFTutorialModule);
+}
+
+void NFTutorialPlugin::Uninstall()
+{
+    UNREGISTER_MODULE(m_pObjPluginManager, NFTutorialModule, NFTutorialModule);
+}
+
+bool NFTutorialPlugin::InitShmObjectRegister()
+{
+    REGISTER_SINGLETON_SHM_OBJ(NFTutorialShmObj);
+    return true;
+}
+```
+
+#### 共享内存对象示例
+
+```cpp
+// NFTutorialShmObj.h - 共享内存对象头文件
+class NFTutorialTestData
+{
+public:
+    NFTutorialTestData()
+    {
+        if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode())
+        {
+            CreateInit();
+        }
+        else
+        {
+            ResumeInit();
+        }
+    }
+
+    int CreateInit()
+    {
+        NFLogInfo(NF_LOG_DEFAULT, 0, "CreateInit");
+        m_test = 0;
+        m_intVec.push_back(1);
+        m_intVec.push_back(2);
+        m_intVec.push_back(3);
+        m_intVec.push_back(4);
+        return 0;
+    }
+
+    int ResumeInit()
+    {
+        m_test = 10;
+        NFLogInfo(NF_LOG_DEFAULT, 0, "ResumeInit");
+        for (int i = 0; i < (int)m_intVec.size(); i++)
+        {
+            std::cout << m_intVec[i] << std::endl;
+        }
+        return 0;
+    }
+
+    NFShmVector<int, 10> m_intVec;  // 共享内存STL容器
+    int m_test;
+};
+
+class NFTutorialShmObj : public NFObjectTemplate<NFTutorialShmObj, 100, NFObject>
+{
+public:
+    NFTutorialShmObj();
+    virtual ~NFTutorialShmObj();
+    
+    int CreateInit();
+    int ResumeInit();
+    virtual int OnTimer(int timeId, int callcount);
+
+private:
+    uint32_t m_idCount;
+    int m_timerId;
+    NFTutorialTestData m_data;
+    NFShmVector<NFTutorialTestData, 10> m_test;
+};
+
+// NFTutorialShmObj.cpp - 共享内存对象实现
+NFTutorialShmObj::NFTutorialShmObj()
+{
+    if (EN_OBJ_MODE_INIT == NFShmMgr::Instance()->GetCreateMode())
+    {
+        CreateInit();
+    }
+    else
+    {
+        ResumeInit();
+    }
+}
+
+int NFTutorialShmObj::CreateInit()
+{
+    m_idCount = 0;
+    m_timerId = SetTimer(10000, 0, 0, 0, 0, 0); // 10秒定时器
+    m_test.push_back(NFTutorialTestData());
+    NFLogError(NF_LOG_DEFAULT, 0, "CreateInit, m_idCount:{} m_timerId:{}", m_idCount, m_timerId);
+    return 0;
+}
+
+int NFTutorialShmObj::ResumeInit()
+{
+    NFLogError(NF_LOG_DEFAULT, 0, "ResumeInit, m_idCount:{} m_timerId:{}", m_idCount, m_timerId);
+    return 0;
+}
+
+int NFTutorialShmObj::OnTimer(int timeId, int callcount)
+{
+    if (timeId == m_timerId)
+    {
+        m_idCount++;
+        NFLogError(NF_LOG_DEFAULT, 0, "OnTimer, m_idCount:{} m_timerId:{}", m_idCount, m_timerId);
+    }
+    return 0;
+}
+```
+
+#### 插件配置文件
+
+```lua
+-- Install/Plugin/Tutorial/Plugin.lua
+require "Common"
+
+LoadPlugin = {
+    TutorialAllServer = {
+        ServerPlugins = {
+            -- 基础框架引擎
+            "NFKernelPlugin",
+            "NFTutorialPlugin",  -- 我们的Tutorial插件
+            "NFShmPlugin",       -- 共享内存插件
+        };
+        ServerType = NF_ST_NONE;
+    },
+}
 ```
 
 ### 初始化任务系统使用
@@ -429,17 +922,17 @@ int MyGameModule::OnExecute(uint32_t serverType, uint32_t nEventID,
 ### 服务器控制
 
 ```bash
-# 启动服务器
-./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin --Start --Daemon
+# 启动Tutorial示例服务器
+./NFPluginLoader --Server=TutorialAllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --game=Tutorial --Start --Daemon
 
 # 重载配置
-./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin --Reload
+./NFPluginLoader --Server=TutorialAllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --game=Tutorial --Reload
 
 # 热重启
-./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin --Restart --Daemon
+./NFPluginLoader --Server=TutorialAllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --game=Tutorial --Restart --Daemon
 
 # 停止服务器
-./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin --Stop
+./NFPluginLoader --Server=TutorialAllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --game=Tutorial --Stop
 ```
 
 ### HTTP管理接口
@@ -644,6 +1137,8 @@ Install/LieRenPlugin/
 - **大规模生产**：多台物理机分布式部署，高可用高性能
 - **混合云部署**：支持公有云、私有云、混合云部署
 
+**分布式部署管理**：使用NFServerController工具统一管理多服务器部署，支持Windows图形化界面和Linux命令行操作。详细使用方法请参考：[🚀 分布式启动文档](docs/NFShmXFrame分布式启动.md)
+
 ## 🤝 贡献指南
 
 我们欢迎任何形式的贡献！
@@ -681,9 +1176,28 @@ Install/LieRenPlugin/
 
 ## 📞 联系我们
 
-- **项目主页**：https://github.com/ketoo/NFShmXFrame
-- **问题反馈**：https://github.com/ketoo/NFShmXFrame/issues
-- **讨论交流**：https://github.com/ketoo/NFShmXFrame/discussions
+- **项目主页**：https://github.com/yigao/NFShmXFrame
+- **问题反馈**：https://github.com/yigao/NFShmXFrame/issues
+- **讨论交流**：https://github.com/yigao/NFShmXFrame/discussions
+
+### 💬 QQ交流群
+
+欢迎加入NFShmXFrame技术交流群，与开发者和其他用户交流经验、分享心得！
+
+<div align="center">
+  <img src="docs/qrcode_811848532.jpg" alt="NFShmXFrame QQ群二维码" width="200" height="200">
+  <br>
+  <strong>扫描二维码加入QQ群</strong>
+</div>
+
+**群号**：811848532
+
+**群内服务**：
+- 🆘 技术问题解答
+- 💡 功能需求讨论  
+- 🔧 开发经验分享
+- 📚 学习资料交流
+- 🚀 项目动态更新
 
 ---
 

@@ -33,3 +33,5 @@
 /cmake-build-tools_release
 /cmake-build-build_tools
 /cmake-build-release-visual-studio
+/.history
+/build_vscode/
