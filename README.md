@@ -103,16 +103,16 @@ make install
 
 ```bash
 # 1. 单一服务器模式启动
-./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin
+./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Config=../../Config --Plugin=../../Plugin --Game==MMO --Start
 
 # 2. 多服务器模式启动（每种服务器一个实例）
-./NFPluginLoader --Server=AllServer --ID=1.13.1.1 --Plugin=LieRenPlugin
+./NFPluginLoader --Server=AllServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --Game==MMO --Start
 
 # 3. 调试模式启动（便于跨服务器调试，每种服务器可多个实例）
-./NFPluginLoader --Server=AllMoreServer --ID=1.13.1.1 --Plugin=LieRenPlugin
+./NFPluginLoader --Server=AllMoreServer --ID=1.13.1.1 --Config=../../Config --Plugin=../../Plugin --Game==MMO --Start
 
 # 4. 生产环境守护进程模式
-./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Plugin=LieRenPlugin --Start --Daemon
+./NFPluginLoader --Server=GameServer --ID=1.13.10.1 --Config=../../Config --Plugin=../../Plugin --Game==MMO --Start --Daemon
 ```
 
 ### 常用启动参数
